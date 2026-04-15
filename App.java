@@ -39,6 +39,21 @@ public class App {
             if (choice == 0) {
                 break;
             }
+            else if (choice == 1) {
+
+            }
+            else if (choice == 2) {
+
+            }
+            else if (choice == 3) {
+
+            }
+            else if (choice == 4) {
+                
+            }
+            else {
+                System.out.println("Please choose 0, 1, 2, 3, or 4,");
+            }
         }
     }
 
