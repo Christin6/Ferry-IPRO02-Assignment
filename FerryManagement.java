@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class FerryManagement {
+public class FerryManagement implements AssignDiscount {
     private HashMap<Ferry, ArrayList<FerryTrip>> trips;
     private HashMap<Customer, ArrayList<FerryTrip>> customerBookings;
 
@@ -57,7 +57,48 @@ public class FerryManagement {
         }
 
         return availableTrips;
+    //Get all current bookings and their revenue
+    void getFerryTripsData() {
+      System.out.println("Here are all the ferry trips:\n");
+
+      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+        ArrayList<FerryTrip> ferryTrip = trip.getValue();
+
+        for (FerryTrip f : ferryTrip) {
+          System.out.println(f);
+          System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+        }
+
+      }
+
+      System.out.println("");
     }
+
+    public void assignDiscount(double amount, FerryTrip tripTarget) {
+      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+        ArrayList<FerryTrip> ferryTrip = trip.getValue();
+        
+        for (FerryTrip f : ferryTrip) {
+          if (f == tripTarget) {
+            f.setDiscount(amount);
+          }
+        }
+
+      }
+    };
+
+    public void assignDiscount(int percentage, FerryTrip tripTarget) {
+      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+        ArrayList<FerryTrip> ferryTrip = trip.getValue();
+        
+        for (FerryTrip f : ferryTrip) {
+          if (f == tripTarget) {
+            f.setDiscount(percentage);
+          }
+        }
+
+      }
+    };
 
     public String toString() {
         return trips.toString();
