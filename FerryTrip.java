@@ -49,7 +49,11 @@ public class FerryTrip {
   }
 
   double getPrice() {
-    return basePrice * (1 - discount);
+    return basePrice - discount;
+  }
+
+  double getBasePrice() {
+    return this.basePrice;
   }
 
   public String toString() {

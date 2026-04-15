@@ -117,8 +117,9 @@ public class FerryManagement implements AssignDiscount {
                     f.setDiscount(amount);
                 }
             }
-
         }
+
+        System.out.println("The applied discount is $" + amount + "\n");
     };
 
     public void assignDiscount(int percentage, FerryTrip tripTarget) {
@@ -127,11 +128,14 @@ public class FerryManagement implements AssignDiscount {
 
             for (FerryTrip f : ferryTrip) {
                 if (f == tripTarget) {
-                    f.setDiscount(percentage);
+                    double newAmount = (((double)percentage/100)*(f.getBasePrice()));
+
+                    f.setDiscount(newAmount);
                 }
             }
-
         }
+        
+        System.out.println("The applied discount is " + percentage + "%\n");
     };
 
     public String toString() {

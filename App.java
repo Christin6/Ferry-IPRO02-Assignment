@@ -140,7 +140,7 @@ public class App {
             System.out.println("Is it a fixed amount or disount?");
             System.out.println("0. Cancel");
             System.out.println("1. Fixed amount");
-            System.out.println("2. Discount");
+            System.out.println("2. Percentage");
             int discChoice = In.nextInt();
 
             if (discChoice == 0 ) {
