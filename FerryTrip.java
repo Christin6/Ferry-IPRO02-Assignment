@@ -16,16 +16,8 @@ public class FerryTrip {
     this.customers = new ArrayList<>();
   }
 
-<<<<<<< HEAD
   String getDestination() {
     return this.destination;
-=======
-  double getCurrentRevenue() {
-    double totalRevenue = 0;
-    totalRevenue = getPrice() * customers.size();
-
-    return totalRevenue;
->>>>>>> 0785c76e7f446e2805dc8fafe401a3a4b347cf80
   }
 
   String getStartingPoint() {
