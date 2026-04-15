@@ -89,7 +89,7 @@ public class App {
             } else if (choice == 4) {
 
             } else {
-                System.out.println("Please choose 0, 1, 2, 3, or 4,");
+                System.out.println("Please choose 0, 1, 2, 3, or 4");
             }
         }
     }
