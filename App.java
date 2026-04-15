@@ -39,10 +39,11 @@ public class App {
 
         while (true) {
             if (choice == 0) {
+                System.out.println("Returning to main menu...");
                 break;
             }
             else if (choice == 1) {
-
+                
             }
             else if (choice == 2) {
 
