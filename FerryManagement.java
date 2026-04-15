@@ -34,13 +34,17 @@ public class FerryManagement {
     }
 
     void getFerryTrips() {
-      System.out.println("Here are all the ferry trips: ");
+      System.out.println("Here are all the ferry trips:\n");
+
       for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
         ArrayList<FerryTrip> ferryTrip = trip.getValue();
         for (FerryTrip f : ferryTrip) {
           System.out.println(f);
+          System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
         }
       }
+
+      System.out.println("");
     }
 
     public String toString() {

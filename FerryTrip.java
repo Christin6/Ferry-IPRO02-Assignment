@@ -44,16 +44,6 @@ public class FerryTrip {
     return totalRevenue;
   }
 
-  void getTotalCustomers() {
-    int num = 1;
-
-    for (Customer customer : customers) {
-      System.out.println("---Here is a list of customers boarding the ferry---");
-      System.out.println(num + "." + customer);
-      num++;
-    }
-  }
-
   void setDiscount(double newValue) {
     this.discount = newValue;
   }

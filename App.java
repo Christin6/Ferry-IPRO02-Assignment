@@ -93,7 +93,7 @@ public class App {
             } else if (choice == 1) {
                 System.out.println(ferryManagement);
             } else if (choice == 2) {
-                
+                ferryManagement.getFerryTrips();
             } else if (choice == 3) {
 
             } else if (choice == 4) {
