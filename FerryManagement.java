@@ -25,11 +25,15 @@ public class FerryManagement {
         }
     }
 
-    void checkBooking(Customer customer) {
+    void checkBooking(Customer customer, FerryTrip trip) {
         ArrayList<FerryTrip> bookingList = customerBookings.get(customer);
-        for (FerryTrip trip : bookingList) {
-            System.out.println(trip);
+        if (!bookingList.contains(trip)){
+            System.out.println("No booking made.");
+        } else {
+        for (FerryTrip t : bookingList) {
+            System.out.println(t);
         }
+    }
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
