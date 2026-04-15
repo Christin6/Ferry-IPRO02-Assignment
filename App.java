@@ -69,7 +69,7 @@ public class App {
             } else if (choice == 1) {
                 System.out.println();
                 ferryManagement.getAllBookingList();
-                System.out.println("Which ticket do you want to book?");
+                System.out.println("Which trip do you want to book?");
                 int tripChoice = In.nextInt();
                 FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
 
@@ -99,7 +99,9 @@ public class App {
                 }
 
             } else if (choice == 2) {
-                System.out.println("");
+                System.out.println("Enter your assigned name in the booking: ");
+                String name = In.nextLine();
+
             } else if (choice == 3) {
                 System.out.println("Date of the trip? (YYYY-MM-DD)");
                 String dateInput = In.nextLine();

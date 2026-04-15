@@ -34,7 +34,7 @@ public class FerryManagement implements AssignDiscount {
         }
     }
 
-    void checkBookedTrip(Customer customer) {
+    public ArrayList<FerryTrip> checkBookedTrip(Customer customer) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
 
         for (ArrayList<FerryTrip> tripList : trips.values()) {
@@ -48,13 +48,25 @@ public class FerryManagement implements AssignDiscount {
         }
 
         if (bookingList.isEmpty()) {
-            System.out.println("No booking made.");
+            System.out.println("No booking has been made.");
         } else {
-            for (FerryTrip t : bookingList) {
-                System.out.println(t);
+            for (FerryTrip trip : bookingList) {
+                System.out.println(trip);
             }
         }
+        return bookingList;
     }
+    
+    void checkGuardian(Customer customer){
+        ArrayList<FerryTrip> guardianInBooking = 
+
+
+        for (Customer guardian : bookingList) {
+            
+                
+            }
+        } 
+    
 
     private boolean seatAvailability(FerryTrip trip, Ferry ferry) {
         if (trip.getCustomers().size() < ferry.getMaxSeats()) {
