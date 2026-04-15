@@ -17,6 +17,22 @@ public class FerryManagement implements AssignDiscount {
         trips.get(ferry).add(trip);
     }
 
+    void setFerryTripList(FerryTrip trip, int index) {
+        int count = 1;
+
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> ferry : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = ferry.getValue();
+
+            for (int i = 0; i < ferryTrip.size(); i++) {
+                if (count == index) {
+                    ferryTrip.set(i, trip);
+                    return;
+                }
+                count++;
+            }
+        }
+    }
+
     void bookTrip(Customer customer, FerryTrip trip) {
         trip.addCustomer(customer);
     }
@@ -48,6 +64,9 @@ public class FerryManagement implements AssignDiscount {
 
         for (Ferry ferry : trips.keySet()) {
             for (FerryTrip trip : trips.get(ferry)) {
+                if (trip == null) {
+                    continue;
+                }
                 if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
                         && trip.getStartingPoint().equals(startingPoint)) {
                     availableTrips.add(trip);
@@ -64,6 +83,9 @@ public class FerryManagement implements AssignDiscount {
 
         for (Ferry ferry : trips.keySet()) {
             for (FerryTrip trip : trips.get(ferry)) {
+                if (trip == null) {
+                    continue;
+                }
                 if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
                         && trip.getStartingPoint().equals(startingPoint) && trip.getPrice() <= priceMaximum) {
                     availableTrips.add(trip);

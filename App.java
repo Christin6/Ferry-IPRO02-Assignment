@@ -70,39 +70,11 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
-            
+
             } else if (choice == 2) {
 
             } else if (choice == 3) {
-                System.out.println("Date of the trip? (YYYY-MM-DD)");
-                String dateInput = In.nextLine();
-                try {
-                    LocalDate date = LocalDate.parse(dateInput);
-                    System.out.println("Destination?");
-                    String destination = In.nextLine();
-                    System.out.println("Starting point?");
-                    String startingPoint = In.nextLine();
-                    System.out.println("Would you like to filter by price? (Y/N)");
-                    String priceFilterInput = In.nextLine();
-                    if (priceFilterInput.equals("Y")) {
-                        System.out.println("What is the maximum price you are willing to pay?");
-                        double priceMaximum = In.nextDouble();
-                        ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date,
-                                destination, startingPoint, priceMaximum);
-                        for (FerryTrip trip : availableTrips) {
-                            System.out.println("\n" + trip);
-                        }
-                    } else {
-                        ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination,
-                                startingPoint);
-                        for (FerryTrip trip : availableTrips) {
-                            System.out.println("\n" + trip);
-                        }
-                    }
-                } catch (Exception e) {
-                    System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-                }
-
+                checkFerryAvailabilityMenu();
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
             }
@@ -121,14 +93,80 @@ public class App {
             if (choice == 0) {
                 break;
             } else if (choice == 1) {
-                System.out.println("Current ferry trips:");
+                addFerryTripMenu();
+            } else if (choice == 2) { // view bookings of all ferries
                 ferryManagement.getFerryTripsData();
-            } else if (choice == 2) { //view bookings of all ferries
-                ferryManagement.getFerryTripsData();
-            } else if (choice == 3) { //applying discount
+            } else if (choice == 3) { // applying discount
                 adminApplyDiscountMenu();
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
+            }
+        }
+    }
+
+    void checkFerryAvailabilityMenu() {
+        System.out.println("Date of the trip? (YYYY-MM-DD)");
+        String dateInput = In.nextLine();
+        try {
+            LocalDate date = LocalDate.parse(dateInput);
+            System.out.println("Destination?");
+            String destination = In.nextLine();
+            System.out.println("Starting point?");
+            String startingPoint = In.nextLine();
+            System.out.println("Would you like to filter by price? (Y/N)");
+            String priceFilterInput = In.nextLine();
+            if (priceFilterInput.toLowerCase().equals("y")) {
+                System.out.println("What is the maximum price you are willing to pay?");
+                double priceMaximum = In.nextDouble();
+                ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date,
+                        destination, startingPoint, priceMaximum);
+                if (availableTrips.isEmpty()) {
+                    System.out.println("No ferry trip available for the specified date, destination, and starting point.");
+                }
+                for (FerryTrip trip : availableTrips) {
+                    System.out.println("\n" + trip);
+                }
+            } else {
+                ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination,
+                        startingPoint);
+                if (availableTrips.isEmpty()) {
+                    System.out.println("No ferry trip available for the specified date, destination, and starting point.");
+                }
+                for (FerryTrip trip : availableTrips) {
+                    System.out.println("\n" + trip);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+        }
+    }
+
+    void addFerryTripMenu() {
+        System.out.println("Current ferry trips:");
+        ferryManagement.getFerryTripsData();
+        System.out.println(
+                "Which ferry do you want to add a trip to (choose the number with 'no trip scheduled' section)?");
+        int ferryTarget = In.nextInt();
+        FerryTrip ferryTrip = ferryManagement.selectTripBasedOnIndex(ferryTarget);
+        if (ferryTrip != null) {
+            System.out.println(
+                    "The ferry you selected already has a trip scheduled, please select a ferry with 'no trip scheduled' section.");
+        } else {
+            System.out.println("Where is the starting point of the trip?");
+            String startingPoint = In.nextLine();
+            System.out.println("Where is the destination of the trip?");
+            String destination = In.nextLine();
+            System.out.println("What is the price of the trip?");
+            double price = In.nextDouble();
+            System.out.println("When is the date and time of the trip? (YYYY-MM-DDTHH:MM)");
+            String dateTimeInput = In.nextLine();
+            try {
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput);
+                FerryTrip newTrip = new FerryTrip(destination, startingPoint, price, dateTime);
+                ferryManagement.setFerryTripList(newTrip, ferryTarget);
+                System.out.println("Successfully added ferry trip.");
+            } catch (Exception e) {
+                System.out.println("Invalid date and time format. Please use YYYY-MM-DDTHH:MM.");
             }
         }
     }
@@ -153,7 +191,7 @@ public class App {
                     System.out.println("2. Percentage");
                     int discChoice = In.nextInt();
 
-                    if (discChoice == 0 ) {
+                    if (discChoice == 0) {
                         System.out.println("Cancelling applying discount...");
                         isDiscUnsuccesful = false;
                         break;
