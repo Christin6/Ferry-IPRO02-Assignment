@@ -16,6 +16,18 @@ public class FerryTrip {
     this.customers = new ArrayList<>();
   }
 
+  String getDestination() {
+    return this.destination;
+  }
+
+  String getStartingPoint() {
+    return this.startingPoint;
+  }
+
+  LocalDateTime getTripDateTime() {
+    return this.tripDateTime;
+  }
+
   double getCurrentRevenue() {
     double totalRevenue = 0;
     totalRevenue = getPrice()*customers.size();

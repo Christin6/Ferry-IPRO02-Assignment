@@ -69,6 +69,7 @@ public class App {
             } else if (choice == 2) {
 
             } else if (choice == 3) {
+                System.out.println("Date of the trip?");
 
             } else if (choice == 4) {
 
