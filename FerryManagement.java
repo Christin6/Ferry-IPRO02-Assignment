@@ -14,21 +14,18 @@ public class FerryManagement {
         trips.get(ferry).add(trip);
     }
 
-<<<<<<< HEAD
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
       return new ArrayList<>();
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint, double priceMaximum) {
       return new ArrayList<>();
-=======
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String detination, String startingPoint) {
         return new ArrayList<>();
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String detination, String startingPoint, double priceMaximum) {
         return new ArrayList<>();
->>>>>>> 86847f4fa74f94f468a816fd1aefc3bd32cda1cf
     }
 
     public String toString() {
@@ -37,13 +34,7 @@ public class FerryManagement {
 }
 
 interface AssignDiscount {
-<<<<<<< HEAD
-  void assignDiscount(double amount, FerryTrip tripTarget);
-
-  void assignDiscount(int percentage, FerryTrip tripTarget);
-=======
     void assignDiscount(double amount, FerryTrip tripTarget);
     
     void assignDiscount(int percentage, FerryTrip tripTarget);
->>>>>>> 86847f4fa74f94f468a816fd1aefc3bd32cda1cf
 }
