@@ -70,7 +70,7 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
-            
+
             } else if (choice == 2) {
 
             } else if (choice == 3) {
@@ -121,7 +121,8 @@ public class App {
                 ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date,
                         destination, startingPoint, priceMaximum);
                 if (availableTrips.isEmpty()) {
-                    System.out.println("No ferry trip available for the specified date, destination, and starting point.");
+                    System.out.println(
+                            "No ferry trip available for the specified date, destination, and starting point.");
                 }
                 for (FerryTrip trip : availableTrips) {
                     System.out.println("\n" + trip);
@@ -130,7 +131,8 @@ public class App {
                 ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination,
                         startingPoint);
                 if (availableTrips.isEmpty()) {
-                    System.out.println("No ferry trip available for the specified date, destination, and starting point.");
+                    System.out.println(
+                            "No ferry trip available for the specified date, destination, and starting point.");
                 }
                 for (FerryTrip trip : availableTrips) {
                     System.out.println("\n" + trip);
@@ -191,21 +193,23 @@ public class App {
                     System.out.println("2. Percentage");
                     int discChoice = In.nextInt();
 
-            if (discChoice == 0) {
-                System.out.println("Cancelling applying discount...");
-                break;
-            } else if (discChoice == 1) {
-                System.out.println("How much do you want to apply the discount?");
-                double amount = In.nextDouble();
-                ferryManagement.assignDiscount(amount, selectedTrip);
-                break;
-            } else if (discChoice == 2) {
-                System.out.println("How much to you want to apply the discount?");
-                int percentage = In.nextInt();
-                ferryManagement.assignDiscount(percentage, selectedTrip);
-                break;
-            } else {
-                System.out.println("Please choose 1 or 2");
+                    if (discChoice == 0) {
+                        System.out.println("Cancelling applying discount...");
+                        break;
+                    } else if (discChoice == 1) {
+                        System.out.println("How much do you want to apply the discount?");
+                        double amount = In.nextDouble();
+                        ferryManagement.assignDiscount(amount, selectedTrip);
+                        break;
+                    } else if (discChoice == 2) {
+                        System.out.println("How much to you want to apply the discount?");
+                        int percentage = In.nextInt();
+                        ferryManagement.assignDiscount(percentage, selectedTrip);
+                        break;
+                    } else {
+                        System.out.println("Please choose 1 or 2");
+                    }
+                }
             }
         }
     }
