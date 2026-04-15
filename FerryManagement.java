@@ -3,14 +3,15 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class FerryManagement {
-    private HashMap<FerryTrip, ArrayList<Customer>> trips;
+    private HashMap<Ferry, ArrayList<FerryTrip>> trips;
 
     FerryManagement() {
         trips = new HashMap<>();
     }
 
-    void addFerryTrip(FerryTrip trip, ArrayList<Customer> customers) {
-        trips.put(trip, customers);
+    void addFerryTrip(Ferry ferry, FerryTrip trip) {
+        trips.put(ferry, new ArrayList<>());
+        trips.get(ferry).add(trip);
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String detination, String startingPoint) {

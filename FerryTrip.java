@@ -12,15 +12,13 @@ public class FerryTrip {
   private double discount = 0;
   private ArrayList <Customer> customers;
   private LocalDateTime tripDateTime;
-  private Ferry ferry;
 
-  FerryTrip(String destination, String startingPoint, TripType tripType, double basePrice, LocalDateTime tripDateTime, Ferry ferry) {
+  FerryTrip(String destination, String startingPoint, TripType tripType, double basePrice, LocalDateTime tripDateTime) {
     this.destination = destination;
     this.startingPoint = startingPoint;
     this.tripType = tripType;
     this.basePrice = basePrice;
     this.tripDateTime = tripDateTime;
-    this.ferry = ferry;
     this.customers = new ArrayList<>();
   }
 
