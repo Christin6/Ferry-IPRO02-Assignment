@@ -1,11 +1,20 @@
-public abstract class Ferry {
-  
-}
+import java.util.ArrayList;
 
-class EconomyFerry extends Ferry {
-  
-}
+public class Ferry {
+  protected String name;
+  protected ArrayList<FerryTrip> trips;
+  Ferry(String name) {
+    this.name = name;
+    trips = new ArrayList<>();
+  }
 
-class LuxuryFerry extends Ferry {
-  
+  void addTrip(FerryTrip trip) {
+    trips.add(trip);
+  }
+
+  public String toString() {
+    return "Ferry\n" +
+            "name: " + name + '\n' +
+            "trips: " + trips + '\n';
+  }
 }

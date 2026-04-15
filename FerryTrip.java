@@ -1,5 +1,5 @@
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.ArrayList;
 
 enum TripType {
   ONE_WAY_TRIP, TWO_WAY_TRIP
@@ -10,15 +10,18 @@ public class FerryTrip {
   private TripType tripType;
   private double basePrice;
   private double discount = 0;
-  private List <Customer> customers;
+  private ArrayList <Customer> customers;
   private LocalDateTime tripDateTime;
+  private Ferry ferry;
 
-  FerryTrip(String destination, String startingPoint, TripType tripType, double basePrice, LocalDateTime tripDateTime) {
+  FerryTrip(String destination, String startingPoint, TripType tripType, double basePrice, LocalDateTime tripDateTime, Ferry ferry) {
     this.destination = destination;
     this.startingPoint = startingPoint;
     this.tripType = tripType;
     this.basePrice = basePrice;
     this.tripDateTime = tripDateTime;
+    this.ferry = ferry;
+    this.customers = new ArrayList<>();
   }
 
   double getCurrentRevenue() {
