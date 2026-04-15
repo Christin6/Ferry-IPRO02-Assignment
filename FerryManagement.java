@@ -5,11 +5,9 @@ import java.util.Map;
 
 public class FerryManagement implements AssignDiscount {
     private HashMap<Ferry, ArrayList<FerryTrip>> trips;
-    private HashMap<Customer, ArrayList<FerryTrip>> customerBookings;
 
     FerryManagement() {
         trips = new HashMap<>();
-        customerBookings = new HashMap<>();
     }
 
     void addFerryTrip(Ferry ferry, FerryTrip trip) {
@@ -20,23 +18,29 @@ public class FerryManagement implements AssignDiscount {
     }
 
     void bookTrip(Customer customer, FerryTrip trip) {
-        for (ArrayList<FerryTrip> tripList : trips.values()) {
-            if (tripList.contains(trip)) {
-                customerBookings.put(customer, new ArrayList<>());
-                customerBookings.get(customer).add(trip);
-            }
-        }
+        trip.addCustomer(customer);
     }
 
-    void checkBooking(Customer customer, FerryTrip trip) {
-        ArrayList<FerryTrip> bookingList = customerBookings.get(customer);
-        if (!bookingList.contains(trip)){
+    void checkBooking(Customer customer) {
+        ArrayList<FerryTrip> bookingList = new ArrayList<>();
+
+        for (ArrayList<FerryTrip> tripList : trips.values()) {
+            for (FerryTrip trip : tripList) {
+                for (Customer cust : trip.getCustomers()) {
+                    if (cust.getName().equals(customer.getName())) {
+                        bookingList.add(trip);
+                    }
+                }
+            }
+        }
+
+        if (bookingList.isEmpty()) {
             System.out.println("No booking made.");
         } else {
-        for (FerryTrip t : bookingList) {
-            System.out.println(t);
+            for (FerryTrip t : bookingList) {
+                System.out.println(t);
+            }
         }
-    }
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
