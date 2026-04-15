@@ -8,8 +8,6 @@ public class Ferry {
   }
 
   public String toString() {
-    return "Ferry\n" +
-            "name: " + name + '\n' +
-            "maxSeats: " + maxSeats + '\n';
+    return name + " | maxSeats: " + maxSeats;
   }
 }

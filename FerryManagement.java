@@ -82,12 +82,20 @@ public class FerryManagement implements AssignDiscount {
 
         for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
             ArrayList<FerryTrip> ferryTrip = trip.getValue();
+            Ferry ferry = trip.getKey();
+            System.out.println("Ferry: " + ferry + "\n");
 
             for (FerryTrip f : ferryTrip) {
-                System.out.println(count + ". " + f);
-                System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+                if (f == null) {
+                    System.out.println(count + ". (No trip scheduled)");
+                } else {
+                    System.out.println(count + ". " + f);
+                    System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+                }
                 count++;
             }
+
+            System.out.println("-----------------------------\n");
 
         }
 

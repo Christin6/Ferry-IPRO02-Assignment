@@ -10,6 +10,7 @@ public class App {
         Ferry f1 = new Ferry("F1", 100);
         Ferry f2 = new Ferry("F2", 100);
         Ferry f3 = new Ferry("F3", 100);
+        Ferry f4 = new Ferry("F4", 100);
 
         FerryTrip t1 = new FerryTrip("Sydney", "Jakarta", 80, LocalDateTime.of(2026, Month.MAY, 15, 10, 30));
         FerryTrip t2 = new FerryTrip("Jakarta", "Sydney", 70, LocalDateTime.of(2026, Month.MAY, 20, 12, 30));
@@ -24,6 +25,8 @@ public class App {
         ferryManagement.addFerryTrip(f2, t4);
         ferryManagement.addFerryTrip(f3, t5);
         ferryManagement.addFerryTrip(f3, t6);
+        ferryManagement.addFerryTrip(f4, null);
+        ferryManagement.addFerryTrip(f4, null);
 
         App app = new App();
         app.runMainMenu();
@@ -118,6 +121,7 @@ public class App {
             if (choice == 0) {
                 break;
             } else if (choice == 1) {
+                System.out.println("Current ferry trips:");
                 ferryManagement.getFerryTripsData();
             } else if (choice == 2) { //view bookings of all ferries
                 ferryManagement.getFerryTripsData();
