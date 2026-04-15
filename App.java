@@ -9,6 +9,22 @@ public class App {
         System.out.println("Are you a customer or admin?");
         System.out.println("1. Customer");
         System.out.println("2. Admin");
+        System.out.println("0. Exit");
+
+        int choice = In.nextInt();
+
+        while (true) {
+            if (choice == 1) {
+                customerMenu();
+            } else if (choice == 2) {
+                adminMenu();
+            } else if (choice == 0) {
+                System.out.println("Exiting...");
+                break;
+            } else {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
     }
 
     void customerMenu() {
