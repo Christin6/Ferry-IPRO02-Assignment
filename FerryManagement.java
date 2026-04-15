@@ -27,8 +27,6 @@ public class FerryManagement {
     }
 }
 
-import java.util.ArrayList;
-
 interface AssignDiscount {
   void assignDiscount(double amount, FerryTrip tripTarget);
 
