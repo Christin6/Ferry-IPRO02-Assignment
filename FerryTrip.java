@@ -8,8 +8,39 @@ enum TripType {
 public class FerryTrip {
   private String destination, startingPoint;
   private TripType tripType;
-  double basePrice;
-  double discount = 0;
-  List <Customer> customers;
-  LocalDateTime tripDateTime;
+  private double basePrice;
+  private double discount = 0;
+  private List <Customer> customers;
+  private LocalDateTime tripDateTime;
+
+  FerryTrip(String destination, String startingPoint, TripType tripType, double basePrice, LocalDateTime tripDateTime) {
+    this.destination = destination;
+    this.startingPoint = startingPoint;
+    this.tripType = tripType;
+    this.basePrice = basePrice;
+    this.tripDateTime = tripDateTime;
+  }
+
+  double getCurrentRevenue() {
+    return 0;
+  }
+
+  void setDiscount(double newValue) {
+    this.discount = newValue;
+  }
+
+  double getPrice() {
+    return basePrice * (1 - discount);
+  }
+
+  public String toString() {
+    return "FerryTrip\n" +
+            "destination: " + destination + '\n' +
+            "startingPoint: " + startingPoint + '\n' +
+            "tripType: " + tripType + '\n' +
+            "basePrice: " + basePrice + '\n' +
+            "discount: " + discount + '\n' +
+            "customers: " + customers + '\n' +
+            "tripDateTime: " + tripDateTime + '\n';
+  }
 }
