@@ -23,7 +23,20 @@ public class FerryTrip {
   }
 
   double getCurrentRevenue() {
-    return 0;
+    double totalRevenue = 0;
+    totalRevenue = getPrice()*customers.size();
+
+    return totalRevenue;
+  }
+
+  void getTotalCustomers() {
+    int num = 1;
+
+    for (Customer customer : customers) {
+      System.out.println("---Here is a list of customers boarding the ferry---");
+      System.out.println(num + "." + customer);
+      num++;
+    }
   }
 
   void setDiscount(double newValue) {
