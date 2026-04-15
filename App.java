@@ -71,27 +71,35 @@ public class App {
                 ferryManagement.getAllBookingList();
                 System.out.println("Which ticket do you want to book?");
                 int tripChoice = In.nextInt();
-                
-                
-                System.out.print("Please enter your name: ");
-                String name = In.nextLine();
+                FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
 
-                System.out.print("Please enter you age: ");
-                int age = In.nextInt();
+                if (ferryManagement.seatAvailable(tripSelected)) {
+                    System.out.print("Please enter your name: ");
+                    String name = In.nextLine();
 
-                if (age >= 18) {
-                    System.out.print("Please enter your passport number: ");
-                    String passNum = In.nextLine();
-                    AdultCustomer customer = new AdultCustomer(name, age, passNum);
-  
+                    System.out.print("Please enter you age: ");
+                    int age = In.nextInt();
+
+                    if (age >= 18) {
+                        System.out.print("Please enter your passport number: ");
+                        String passNum = In.nextLine();
+                        AdultCustomer customer = new AdultCustomer(name, age, passNum);
+                        ferryManagement.bookTrip(customer, tripSelected);
+                        System.out.println("Booking successful.");
+                        System.out.println("Your booking has been recorded.");
+
+                    } else {
+                        System.out.println("Please enter your guardian name: ");
+                        String guardian = In.nextLine();
+
+                        boolean guardianInBooking = false;
+                    }
                 } else {
-                    System.out.println("Please enter your guardian name: ");
-                    String guardian = In.nextLine();
-
+                    System.out.println("Ferry is full.");
                 }
 
             } else if (choice == 2) {
-
+                System.out.println("");
             } else if (choice == 3) {
                 System.out.println("Date of the trip? (YYYY-MM-DD)");
                 String dateInput = In.nextLine();

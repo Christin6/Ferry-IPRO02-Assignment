@@ -26,8 +26,8 @@ public class FerryManagement implements AssignDiscount {
 
         int count = 1;
 
-        for (ArrayList<FerryTrip> tripList : trips.values()){
-            for(FerryTrip trip : tripList){
+        for (ArrayList<FerryTrip> bookingList : trips.values()) {
+            for (FerryTrip trip : bookingList) {
                 System.out.println(count + ". " + trip);
                 count++;
             }
@@ -56,12 +56,22 @@ public class FerryManagement implements AssignDiscount {
         }
     }
 
-    boolean ferryHasSpace(FerryTrip trip, Ferry ferry){
-        if (trip.getCustomers().size() < ferry.getMaxSeats()){
+    private boolean seatAvailability(FerryTrip trip, Ferry ferry) {
+        if (trip.getCustomers().size() < ferry.getMaxSeats()) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public boolean seatAvailable(FerryTrip trip) {
+        for (Ferry ferry : trips.keySet()) {
+            ArrayList<FerryTrip> tripList = trips.get(ferry);
+            if (tripList.contains(trip)) {
+                return seatAvailability(trip, ferry);
+            }
+        }
+        return false;
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
@@ -153,13 +163,13 @@ public class FerryManagement implements AssignDiscount {
 
             for (FerryTrip f : ferryTrip) {
                 if (f == tripTarget) {
-                    double newAmount = (((double)percentage/100)*(f.getBasePrice()));
+                    double newAmount = (((double) percentage / 100) * (f.getBasePrice()));
 
                     f.setDiscount(newAmount);
                 }
             }
         }
-        
+
         System.out.println("The applied discount is " + percentage + "%\n");
     };
 
