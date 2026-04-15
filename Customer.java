@@ -1,13 +1,15 @@
-import java.util.ArrayList;
-
 public abstract class Customer {
     protected String name;
     protected int age;
-    protected ArrayList<FerryTrip> bookedTrip;
 
     Customer(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    void printAllCurrentBooking() {
+        System.out.println("Here are the list of your bookings: ");
+        
     }
 
     public String toString(){
