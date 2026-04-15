@@ -118,15 +118,13 @@ public class App {
             if (choice == 0) {
                 break;
             } else if (choice == 1) {
-                System.out.println(ferryManagement);
+                ferryManagement.getFerryTripsData();
             } else if (choice == 2) { //view bookings of all ferries
                 ferryManagement.getFerryTripsData();
             } else if (choice == 3) { //applying discount
                 adminApplyDiscountMenu();
-            } else if (choice == 4) {
-
             } else {
-                System.out.println("Please choose 0, 1, 2, 3, or 4");
+                System.out.println("Please choose 0, 1, 2, or 3");
             }
         }
     }
