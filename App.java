@@ -74,7 +74,7 @@ public class App {
             } else if (choice == 4) {
 
             } else {
-                System.out.println("Please choose 0, 1, 2, 3, or 4,");
+                System.out.println("Please choose 0, 1, 2, or 3");
             }
         }
     }
@@ -92,14 +92,46 @@ public class App {
                 break;
             } else if (choice == 1) {
                 System.out.println(ferryManagement);
-            } else if (choice == 2) {
-                ferryManagement.getFerryTrips();
-            } else if (choice == 3) {
-
+            } else if (choice == 2) { //view bookings of all ferries
+                ferryManagement.getFerryTripsData();
+            } else if (choice == 3) { //applying discount
+                adminApplyDiscountMenu();
             } else if (choice == 4) {
 
             } else {
-                System.out.println("Please choose 0, 1, 2, 3, or 4,");
+                System.out.println("Please choose 0, 1, 2, 3, or 4");
+            }
+        }
+    }
+
+    void adminApplyDiscountMenu() {
+        ferryManagement.getFerryTripsData();
+
+        System.out.println("Which trip do you want to add a discount?");
+        String tripTarget = In.nextLine();
+
+        while (true) {
+            System.out.println("Is it a fixed amount or disount?");
+            System.out.println("0. Cancel");
+            System.out.println("1. Fixed amount");
+            System.out.println("2. Discount");
+            int discChoice = In.nextInt();
+
+            if (discChoice == 0 ) {
+                System.out.println("Cancelling applying discount...");
+                break;
+            } else if (discChoice == 1) {
+                System.out.println("How much do you want to apply the discount?");
+                double amount = In.nextDouble();
+                ferryManagement.assignDiscount(amount, tripTarget);
+                break;
+            } else if (discChoice == 2) {
+                System.out.println("How much to you want to apply the discount?");
+                int percentage = In.nextInt();
+                ferryManagement.assignDiscount(percentage, null);
+                break;
+            } else {
+                System.out.println("Please choose 1 or 2");
             }
         }
     }
