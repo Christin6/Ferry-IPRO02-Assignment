@@ -7,7 +7,6 @@ public class FerryManagement {
     private HashMap<Ferry, ArrayList<FerryTrip>> trips;
     private HashMap<Customer, ArrayList<FerryTrip>> customerBookings;
 
-
     FerryManagement() {
         trips = new HashMap<>();
         customerBookings = new HashMap<>();
@@ -20,7 +19,15 @@ public class FerryManagement {
         trips.get(ferry).add(trip);
     }
 
-<<<<<<< HEAD
+    void bookTrip(Customer customer, FerryTrip trip){
+        for (ArrayList<FerryTrip> tripList : trips.values()){
+            if (tripList.contains(trip)){
+                customerBookings.put(customer, new ArrayList<>());
+                customerBookings.get(customer).add(trip);
+            }
+        }
+    }
+
     ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
       ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
@@ -33,19 +40,10 @@ public class FerryManagement {
       }
 
       return availableTrips;
-=======
-    void bookTrip(Customer customer, FerryTrip trip){
-        for (ArrayList<FerryTrip> tripList : trips.values()){
-            if (tripList.contains(trip)){
-                customerBookings.put(customer, new ArrayList<>());
-                customerBookings.get(customer).add(trip);
-            }
-        }
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
         return new ArrayList<>();
->>>>>>> f8dff5c835336f73ef54013ee940c0fafbbae536
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint, double priceMaximum) {
