@@ -9,23 +9,6 @@ public class App {
         System.out.println("Are you a customer or admin?");
         System.out.println("1. Customer");
         System.out.println("2. Admin");
-<<<<<<< HEAD
-=======
-        int choice = In.nextInt();
-        
-        while (true) {
-            if (choice == 1) {
-                customerMenu();
-            }
-            else if (choice == 2) {
-                adminMenu();
-            }
-            else {
-                System.out.println("Please choose 1 or 2");
-            }
-        }
-
->>>>>>> 876cb16173bf46d1e0005432b559f766ef49a7cf
     }
 
     void customerMenu() {
