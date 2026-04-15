@@ -100,10 +100,8 @@ public class App {
                     System.out.println("Invalid date format. Please use YYYY-MM-DD.");
                 }
 
-            } else if (choice == 4) {
-
             } else {
-                System.out.println("Please choose 0, 1, 2, 3, or 4");
+                System.out.println("Please choose 0, 1, 2, or 3");
             }
         }
     }

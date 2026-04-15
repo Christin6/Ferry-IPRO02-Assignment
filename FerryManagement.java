@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Map;
 
 public class FerryManagement implements AssignDiscount {
     private HashMap<Ferry, ArrayList<FerryTrip>> trips;
@@ -57,6 +57,7 @@ public class FerryManagement implements AssignDiscount {
         }
 
         return availableTrips;
+            }
     //Get all current bookings and their revenue
     void getFerryTripsData() {
       System.out.println("Here are all the ferry trips:\n");
