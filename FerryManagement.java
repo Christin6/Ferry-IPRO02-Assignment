@@ -57,48 +57,70 @@ public class FerryManagement implements AssignDiscount {
         }
 
         return availableTrips;
-            }
-    //Get all current bookings and their revenue
+    }
+
+    // Get all current bookings and their revenue
     void getFerryTripsData() {
-      System.out.println("Here are all the ferry trips:\n");
+        System.out.println("Here are all the ferry trips:\n");
 
-      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-        ArrayList<FerryTrip> ferryTrip = trip.getValue();
+        int count = 1;
 
-        for (FerryTrip f : ferryTrip) {
-          System.out.println(f);
-          System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+
+            for (FerryTrip f : ferryTrip) {
+                System.out.println(count + ". " + f);
+                System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+                count++;
+            }
+
         }
 
-      }
+        System.out.println("");
+    }
 
-      System.out.println("");
+    FerryTrip selectTripBasedOnIndex(int index) {
+        int count = 1;
+
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+
+            for (FerryTrip f : ferryTrip) {
+                if (count == index) {
+                    return f;
+                }
+                count++;
+            }
+
+        }
+
+        return null; // Return null if no trip is found at the specified index
     }
 
     public void assignDiscount(double amount, FerryTrip tripTarget) {
-      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-        ArrayList<FerryTrip> ferryTrip = trip.getValue();
-        
-        for (FerryTrip f : ferryTrip) {
-          if (f == tripTarget) {
-            f.setDiscount(amount);
-          }
-        }
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
-      }
+            for (FerryTrip f : ferryTrip) {
+                if (f == tripTarget) {
+                    f.setDiscount(amount);
+                }
+            }
+
+        }
     };
 
     public void assignDiscount(int percentage, FerryTrip tripTarget) {
-      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-        ArrayList<FerryTrip> ferryTrip = trip.getValue();
-        
-        for (FerryTrip f : ferryTrip) {
-          if (f == tripTarget) {
-            f.setDiscount(percentage);
-          }
-        }
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
-      }
+            for (FerryTrip f : ferryTrip) {
+                if (f == tripTarget) {
+                    f.setDiscount(percentage);
+                }
+            }
+
+        }
     };
 
     public String toString() {

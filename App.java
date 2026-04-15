@@ -134,8 +134,9 @@ public class App {
     void adminApplyDiscountMenu() {
         ferryManagement.getFerryTripsData();
 
-        System.out.println("Which trip do you want to add a discount?");
-        String tripTarget = In.nextLine();
+        System.out.println("Which trip do you want to add a discount (choose the number)?");
+        int tripTarget = In.nextInt();
+        FerryTrip selectedTrip = ferryManagement.selectTripBasedOnIndex(tripTarget);
 
         while (true) {
             System.out.println("Is it a fixed amount or disount?");
@@ -150,12 +151,12 @@ public class App {
             } else if (discChoice == 1) {
                 System.out.println("How much do you want to apply the discount?");
                 double amount = In.nextDouble();
-                ferryManagement.assignDiscount(amount, tripTarget);
+                ferryManagement.assignDiscount(amount, selectedTrip);
                 break;
             } else if (discChoice == 2) {
                 System.out.println("How much to you want to apply the discount?");
                 int percentage = In.nextInt();
-                ferryManagement.assignDiscount(percentage, null);
+                ferryManagement.assignDiscount(percentage, selectedTrip);
                 break;
             } else {
                 System.out.println("Please choose 1 or 2");
