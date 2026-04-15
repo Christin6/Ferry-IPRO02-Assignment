@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public abstract class Customer {
     protected String name;
     protected int age;
-    ArrayList<FerryTrip> bookedTrip;
+    protected ArrayList<FerryTrip> bookedTrip;
 
     Customer(String name, int age) {
         this.name = name;
@@ -11,7 +11,7 @@ public abstract class Customer {
     }
 
     public String toString(){
-    
+        return "Name: " + this.name + "\n" + "Age: " + this.age + "\n"; 
     }
 }
 
@@ -26,7 +26,7 @@ class ChildCustomer extends Customer {
 
     @Override
     public String toString(){
-
+        return super.toString() + "Guardian: " + this.guardian;
     }
 }
 
@@ -40,6 +40,6 @@ class AdultCustomer extends Customer {
 
   @Override
   public String toString(){
-
+    return super.toString() + "Passport: " + this.passportID;
   }
 }
