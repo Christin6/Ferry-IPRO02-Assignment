@@ -22,11 +22,24 @@ public class App {
                 System.out.println("Please choose 1 or 2");
             }
         }
-        
+
     }
 
     void customerMenu() {
+        System.out.println("---Customer Menu---");
+        System.out.println("What would you like to do?");
+        System.out.println("0. Back to main menu");
+        System.out.println("1. Book a trip");
+        System.out.println("2. Check current booking");
+        System.out.println("3. Check ferry availability for a trip");
 
+        int choice = In.nextInt();
+
+        while (true) {
+            if (choice == 0) {
+                break;
+            }
+        }
     }
 
     void adminMenu() {

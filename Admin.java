@@ -19,8 +19,12 @@ public class Admin {
 
   }
 
-  void getAllTrips() {
+  void removeFerryTrip(FerryTrip trip, Ferry ferr) {
 
+  }
+
+  void getAllTrips() {
+    
   }
 
   public String toString(){
