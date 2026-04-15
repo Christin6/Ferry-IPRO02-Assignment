@@ -9,8 +9,6 @@ public class App {
         System.out.println("Are you a customer or admin?");
         System.out.println("1. Customer");
         System.out.println("2. Admin");
-        
-    }
 
     void customerMenu() {
 
