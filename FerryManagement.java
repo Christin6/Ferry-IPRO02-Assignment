@@ -19,9 +19,9 @@ public class FerryManagement {
         trips.get(ferry).add(trip);
     }
 
-    void bookTrip(Customer customer, FerryTrip trip){
-        for (ArrayList<FerryTrip> tripList : trips.values()){
-            if (tripList.contains(trip)){
+    void bookTrip(Customer customer, FerryTrip trip) {
+        for (ArrayList<FerryTrip> tripList : trips.values()) {
+            if (tripList.contains(trip)) {
                 customerBookings.put(customer, new ArrayList<>());
                 customerBookings.get(customer).add(trip);
             }
@@ -29,25 +29,34 @@ public class FerryManagement {
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
-      ArrayList<FerryTrip> availableTrips = new ArrayList<>();
+        ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
-      for (Ferry ferry : trips.keySet()) {
-        for (FerryTrip trip : trips.get(ferry)) {
-          if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination) && trip.getStartingPoint().equals(startingPoint)) {
-            availableTrips.add(trip);
-          }
+        for (Ferry ferry : trips.keySet()) {
+            for (FerryTrip trip : trips.get(ferry)) {
+                if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
+                        && trip.getStartingPoint().equals(startingPoint)) {
+                    availableTrips.add(trip);
+                }
+            }
         }
-      }
 
-      return availableTrips;
+        return availableTrips;
     }
 
-    ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
-        return new ArrayList<>();
-    }
+    ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint,
+            double priceMaximum) {
+        ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
-    ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint, double priceMaximum) {
-        return new ArrayList<>();
+        for (Ferry ferry : trips.keySet()) {
+            for (FerryTrip trip : trips.get(ferry)) {
+                if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
+                        && trip.getStartingPoint().equals(startingPoint) && trip.getPrice() <= priceMaximum) {
+                    availableTrips.add(trip);
+                }
+            }
+        }
+
+        return availableTrips;
     }
 
     public String toString() {
@@ -56,7 +65,7 @@ public class FerryManagement {
 }
 
 interface AssignDiscount {
-  void assignDiscount(double amount, FerryTrip tripTarget);
+    void assignDiscount(double amount, FerryTrip tripTarget);
 
-  void assignDiscount(int percentage, FerryTrip tripTarget);
+    void assignDiscount(int percentage, FerryTrip tripTarget);
 }

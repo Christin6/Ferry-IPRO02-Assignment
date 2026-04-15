@@ -73,19 +73,33 @@ public class App {
             } else if (choice == 3) {
                 System.out.println("Date of the trip? (YYYY-MM-DD)");
                 String dateInput = In.nextLine();
-                System.out.println("Destination?");
-                String destination = In.nextLine();
-                System.out.println("Starting point?");
-                String startingPoint = In.nextLine();
                 try {
                     LocalDate date = LocalDate.parse(dateInput);
-                    ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination, startingPoint);
-                    for (FerryTrip trip : availableTrips) {
-                        System.out.println("\n" + trip);
+                    System.out.println("Destination?");
+                    String destination = In.nextLine();
+                    System.out.println("Starting point?");
+                    String startingPoint = In.nextLine();
+                    System.out.println("Would you like to filter by price? (Y/N)");
+                    String priceFilterInput = In.nextLine();
+                    if (priceFilterInput.equals("Y")) {
+                        System.out.println("What is the maximum price you are willing to pay?");
+                        double priceMaximum = In.nextDouble();
+                        ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date,
+                                destination, startingPoint, priceMaximum);
+                        for (FerryTrip trip : availableTrips) {
+                            System.out.println("\n" + trip);
+                        }
+                    } else {
+                        ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination,
+                                startingPoint);
+                        for (FerryTrip trip : availableTrips) {
+                            System.out.println("\n" + trip);
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println("Invalid date format. Please use YYYY-MM-DD.");
                 }
+
             } else if (choice == 4) {
 
             } else {
@@ -108,7 +122,7 @@ public class App {
             } else if (choice == 1) {
                 System.out.println(ferryManagement);
             } else if (choice == 2) {
-                
+
             } else if (choice == 3) {
 
             } else if (choice == 4) {
