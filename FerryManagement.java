@@ -21,7 +21,20 @@ public class FerryManagement implements AssignDiscount {
         trip.addCustomer(customer);
     }
 
-    void checkBooking(Customer customer) {
+    void getAllBookingList() {
+        System.out.println("List of all the bookings:");
+
+        int count = 1;
+
+        for (ArrayList<FerryTrip> tripList : trips.values()){
+            for(FerryTrip trip : tripList){
+                System.out.println(count + ". " + trip);
+                count++;
+            }
+        }
+    }
+
+    void checkBookedTrip(Customer customer) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
 
         for (ArrayList<FerryTrip> tripList : trips.values()) {
@@ -40,6 +53,14 @@ public class FerryManagement implements AssignDiscount {
             for (FerryTrip t : bookingList) {
                 System.out.println(t);
             }
+        }
+    }
+
+    boolean ferryHasSpace(FerryTrip trip, Ferry ferry){
+        if (trip.getCustomers().size() < ferry.getMaxSeats()){
+            return true;
+        } else {
+            return false;
         }
     }
 

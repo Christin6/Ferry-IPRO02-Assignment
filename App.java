@@ -67,7 +67,29 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
-            
+                System.out.println();
+                ferryManagement.getAllBookingList();
+                System.out.println("Which ticket do you want to book?");
+                int tripChoice = In.nextInt();
+                
+                
+                System.out.print("Please enter your name: ");
+                String name = In.nextLine();
+
+                System.out.print("Please enter you age: ");
+                int age = In.nextInt();
+
+                if (age >= 18) {
+                    System.out.print("Please enter your passport number: ");
+                    String passNum = In.nextLine();
+                    AdultCustomer customer = new AdultCustomer(name, age, passNum);
+  
+                } else {
+                    System.out.println("Please enter your guardian name: ");
+                    String guardian = In.nextLine();
+
+                }
+
             } else if (choice == 2) {
 
             } else if (choice == 3) {
@@ -119,9 +141,9 @@ public class App {
                 break;
             } else if (choice == 1) {
                 ferryManagement.getFerryTripsData();
-            } else if (choice == 2) { //view bookings of all ferries
+            } else if (choice == 2) { // view bookings of all ferries
                 ferryManagement.getFerryTripsData();
-            } else if (choice == 3) { //applying discount
+            } else if (choice == 3) { // applying discount
                 adminApplyDiscountMenu();
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
@@ -143,7 +165,7 @@ public class App {
             System.out.println("2. Percentage");
             int discChoice = In.nextInt();
 
-            if (discChoice == 0 ) {
+            if (discChoice == 0) {
                 System.out.println("Cancelling applying discount...");
                 break;
             } else if (discChoice == 1) {
