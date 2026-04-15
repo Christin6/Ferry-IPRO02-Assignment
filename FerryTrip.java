@@ -30,7 +30,16 @@ public class FerryTrip {
 
   double getCurrentRevenue() {
     double totalRevenue = 0;
-    totalRevenue = getPrice()*customers.size();
+
+    for (Customer customer : customers) {
+      if (customer instanceof AdultCustomer) {
+        totalRevenue += getPrice();
+      }
+      else {
+        ChildCustomer child = (ChildCustomer) customer;
+        totalRevenue += getPrice()*child.getChildFareMultiplier();
+      }
+    }
 
     return totalRevenue;
   }

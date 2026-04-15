@@ -26,6 +26,10 @@ class ChildCustomer extends Customer {
         this.guardian = guardian;
     }
 
+    double getChildFareMultiplier() {
+        return CHILD_FARE_MULTIPLIER;
+    }
+
     @Override
     public String toString(){
         return super.toString() + "Guardian: " + this.guardian;
