@@ -9,20 +9,6 @@ public class App {
         System.out.println("Are you a customer or admin?");
         System.out.println("1. Customer");
         System.out.println("2. Admin");
-        int choice = In.nextInt();
-        
-        while (true) {
-            if (choice == 1) {
-                customerMenu();
-            }
-            else if (choice == 2) {
-                adminMenu();
-            }
-            else {
-                System.out.println("Please choose 1 or 2");
-            }
-        }
-        
     }
 
     void customerMenu() {
@@ -30,6 +16,10 @@ public class App {
     }
 
     void adminMenu() {
-
+        System.out.println("--- Admin Menu ---");
+        System.out.println("0. Back to main menu");
+        System.out.println("1. Create a ferry trip");
+        System.out.println("2. View bookings of a ferry");
+        System.out.println("3. Assign discount to a ferry trip");
     }
 }
