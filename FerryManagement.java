@@ -15,11 +15,11 @@ public class FerryManagement {
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String detination, String startingPoint) {
-      return new ArrayList<>();
+        return new ArrayList<>();
     }
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String detination, String startingPoint, double priceMaximum) {
-      return new ArrayList<>();
+        return new ArrayList<>();
     }
 
     public String toString() {
@@ -27,44 +27,8 @@ public class FerryManagement {
     }
 }
 
-import java.util.ArrayList;
-
 interface AssignDiscount {
-  void assignDiscount(double amount, FerryTrip tripTarget);
-
-  void assignDiscount(int percentage, FerryTrip tripTarget);
-}
-
-public class Admin {
-  private String name;
-  private ArrayList<Ferry> managedFerries;
-  private ArrayList<FerryTrip> managedTrips;
-
-  Admin(String name) {
-    this.name = name;
-    this.managedTrips = new ArrayList<>();
-    this.managedFerries = new ArrayList<>();
-  }
-
-  Ferry f1 = new Ferry("F1", 100);
-  Ferry f2 = new Ferry("F2", 100);
-  Ferry f3 = new Ferry("F3", 100);
-
-  void addFerry() {
-    this.managedFerries.add(f1);
-    this.managedFerries.add(f2);
-    this.managedFerries.add(f3);
-  }
-
-  void assignFerryTrip(FerryTrip trip, Ferry ferry) {
-
-  }
-
-  void getAllTrips() {
-
-  }
-
-  public String toString(){
-    return 
-  }
+    void assignDiscount(double amount, FerryTrip tripTarget);
+    
+    void assignDiscount(int percentage, FerryTrip tripTarget);
 }
