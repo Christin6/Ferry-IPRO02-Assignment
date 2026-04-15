@@ -1,5 +1,7 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 
 public class App {
     static FerryManagement ferryManagement = new FerryManagement();
@@ -69,8 +71,21 @@ public class App {
             } else if (choice == 2) {
 
             } else if (choice == 3) {
-                System.out.println("Date of the trip?");
-
+                System.out.println("Date of the trip? (YYYY-MM-DD)");
+                String dateInput = In.nextLine();
+                System.out.println("Destination?");
+                String destination = In.nextLine();
+                System.out.println("Starting point?");
+                String startingPoint = In.nextLine();
+                try {
+                    LocalDate date = LocalDate.parse(dateInput);
+                    ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination, startingPoint);
+                    for (FerryTrip trip : availableTrips) {
+                        System.out.println("\n" + trip);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                }
             } else if (choice == 4) {
 
             } else {

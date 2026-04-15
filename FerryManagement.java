@@ -1,6 +1,6 @@
 import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class FerryManagement {
@@ -11,16 +11,18 @@ public class FerryManagement {
     }
 
     void addFerryTrip(Ferry ferry, FerryTrip trip) {
-        trips.put(ferry, new ArrayList<>());
+        if (!trips.containsKey(ferry)) {
+            trips.put(ferry, new ArrayList<>());
+        }
         trips.get(ferry).add(trip);
     }
 
-    ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
+    ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
       ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
       for (Ferry ferry : trips.keySet()) {
         for (FerryTrip trip : trips.get(ferry)) {
-          if (trip.getTripDateTime().equals(dateTime) && trip.getDestination().equals(destination) && trip.getStartingPoint().equals(startingPoint)) {
+          if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination) && trip.getStartingPoint().equals(startingPoint)) {
             availableTrips.add(trip);
           }
         }
@@ -31,16 +33,6 @@ public class FerryManagement {
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint, double priceMaximum) {
       return new ArrayList<>();
-    }
-
-    void getFerryTrips() {
-      System.out.println("Here are all the ferry trips: ");
-      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-        ArrayList<FerryTrip> ferryTrip = trip.getValue();
-        for (FerryTrip f : ferryTrip) {
-          System.out.println(f);
-        }
-      }
     }
 
     public String toString() {
