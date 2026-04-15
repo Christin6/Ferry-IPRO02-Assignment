@@ -123,6 +123,7 @@ public class FerryManagement implements AssignDiscount {
             }
         }
 
+        System.out.println("Successfully applied discount!");
         System.out.println("The applied discount is $" + amount + "\n");
     };
 
@@ -139,6 +140,7 @@ public class FerryManagement implements AssignDiscount {
             }
         }
         
+        System.out.println("Successfully applied discount!");
         System.out.println("The applied discount is " + percentage + "%\n");
     };
 
