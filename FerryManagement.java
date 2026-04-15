@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
@@ -20,6 +21,16 @@ public class FerryManagement {
 
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint, double priceMaximum) {
       return new ArrayList<>();
+    }
+
+    void getFerryTrips() {
+      System.out.println("Here are all the ferry trips: ");
+      for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+        ArrayList<FerryTrip> ferryTrip = trip.getValue();
+        for (FerryTrip f : ferryTrip) {
+          System.out.println(f);
+        }
+      }
     }
 
     public String toString() {
