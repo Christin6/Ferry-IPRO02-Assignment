@@ -5,7 +5,7 @@ public class FerryTrip {
   private String destination, startingPoint;
   private double basePrice;
   private double discount = 0;
-  private ArrayList <Customer> customers;
+  private ArrayList<Customer> customers;
   private LocalDateTime tripDateTime;
 
   FerryTrip(String destination, String startingPoint, double basePrice, LocalDateTime tripDateTime) {
@@ -18,7 +18,7 @@ public class FerryTrip {
 
   double getCurrentRevenue() {
     double totalRevenue = 0;
-    totalRevenue = getPrice()*customers.size();
+    totalRevenue = getPrice() * customers.size();
 
     return totalRevenue;
   }
@@ -33,6 +33,10 @@ public class FerryTrip {
     }
   }
 
+  void addCustomer(Customer customer) {
+    this.customers.add(customer);
+  }
+
   void setDiscount(double newValue) {
     this.discount = newValue;
   }
@@ -41,13 +45,17 @@ public class FerryTrip {
     return basePrice * (1 - discount);
   }
 
+  ArrayList<Customer> getCustomers() {
+    return this.customers;
+  }
+
   public String toString() {
     return "FerryTrip\n" +
-            "destination: " + destination + '\n' +
-            "startingPoint: " + startingPoint + '\n' +
-            "basePrice: " + basePrice + '\n' +
-            "discount: " + discount + '\n' +
-            "customers: " + customers + '\n' +
-            "tripDateTime: " + tripDateTime + '\n';
+        "destination: " + destination + '\n' +
+        "startingPoint: " + startingPoint + '\n' +
+        "basePrice: " + basePrice + '\n' +
+        "discount: " + discount + '\n' +
+        "customers: " + customers + '\n' +
+        "tripDateTime: " + tripDateTime + '\n';
   }
 }

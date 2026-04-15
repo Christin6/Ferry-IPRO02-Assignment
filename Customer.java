@@ -7,6 +7,10 @@ public abstract class Customer {
         this.age = age;
     }
 
+    String getName(){
+        return this.name;
+    }
+
     void printAllCurrentBooking() {
         System.out.println("Here are the list of your bookings: ");
         
