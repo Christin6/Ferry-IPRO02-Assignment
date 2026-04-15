@@ -26,6 +26,18 @@ public class FerryManagement {
         }
     }
 
+    void checkBooking(Customer customer){
+        ArrayList<FerryTrip> bookingList = customerBookings.get(customer);
+        if(bookingList.isEmpty()){
+            System.out.println("No booking made.");
+        } else {
+            for (FerryTrip trip : bookingList){
+                System.out.println(trip);
+            }
+        }
+    }
+    
+
     ArrayList<FerryTrip> getAvailability(LocalDateTime dateTime, String destination, String startingPoint) {
         return new ArrayList<>();
     }
