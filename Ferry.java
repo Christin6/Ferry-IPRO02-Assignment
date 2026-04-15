@@ -7,6 +7,10 @@ public class Ferry {
     this.maxSeats = maxSeats;
   }
 
+  public int getMaxSeats() {
+      return maxSeats;
+  }
+
   public String toString() {
     return name + " | maxSeats: " + maxSeats;
   }
