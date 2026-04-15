@@ -2,9 +2,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 public class App {
-    public static void main(String[] args) {
-        FerryManagement ferryManagement = new FerryManagement();
+    static FerryManagement ferryManagement = new FerryManagement();
 
+    public static void main(String[] args) {
         Ferry f1 = new Ferry("F1", 100);
         Ferry f2 = new Ferry("F2", 100);
         Ferry f3 = new Ferry("F3", 100);
@@ -28,15 +28,15 @@ public class App {
     }
 
     void runMainMenu() {
-        System.out.println("--- Main Menu ---");
-        System.out.println("Are you a customer or admin?");
-        System.out.println("1. Customer");
-        System.out.println("2. Admin");
-        System.out.println("0. Exit");
-
-        int choice = In.nextInt();
-
         while (true) {
+            System.out.println("--- Main Menu ---");
+            System.out.println("Are you a customer or admin?");
+            System.out.println("1. Customer");
+            System.out.println("2. Admin");
+            System.out.println("0. Exit");
+
+            int choice = In.nextInt();
+
             if (choice == 1) {
                 customerMenu();
             } else if (choice == 2) {
@@ -51,16 +51,16 @@ public class App {
     }
 
     void customerMenu() {
-        System.out.println("---Customer Menu---");
-        System.out.println("What would you like to do?");
-        System.out.println("0. Back to main menu");
-        System.out.println("1. Book a trip");
-        System.out.println("2. Check current booking");
-        System.out.println("3. Check ferry availability for a trip");
-
-        int choice = In.nextInt();
-
         while (true) {
+            System.out.println("---Customer Menu---");
+            System.out.println("What would you like to do?");
+            System.out.println("0. Back to main menu");
+            System.out.println("1. Book a trip");
+            System.out.println("2. Check current booking");
+            System.out.println("3. Check ferry availability for a trip");
+
+            int choice = In.nextInt();
+
             if (choice == 0) {
                 System.out.println("Returning to main menu...");
                 break;
@@ -79,19 +79,18 @@ public class App {
     }
 
     void adminMenu() {
-        System.out.println("--- Admin Menu ---");
-        System.out.println("0. Back to main menu");
-        System.out.println("1. Create a ferry trip");
-        System.out.println("2. View bookings of a ferry");
-        System.out.println("3. Assign discount to a ferry trip");
-
-        int choice = In.nextInt();
-
         while (true) {
+            System.out.println("--- Admin Menu ---");
+            System.out.println("0. Back to main menu");
+            System.out.println("1. Create a ferry trip");
+            System.out.println("2. View bookings of a ferry");
+            System.out.println("3. Assign discount to a ferry trip");
+
+            int choice = In.nextInt();
             if (choice == 0) {
                 break;
             } else if (choice == 1) {
-
+                System.out.println(ferryManagement);
             } else if (choice == 2) {
 
             } else if (choice == 3) {
