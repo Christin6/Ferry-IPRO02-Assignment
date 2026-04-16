@@ -193,7 +193,7 @@ public class App {
                     priceMaximum);
             if (availableTrips.isEmpty()) {
                 System.out.println(
-                        "No ferry trip available for the specified date, destination, and starting point.");
+                        "No ferry trip available for the specified destination, and starting point.");
             }
             for (FerryTrip trip : availableTrips) {
                 System.out.println("\n" + trip);
@@ -202,7 +202,7 @@ public class App {
             ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(destination, startingPoint);
             if (availableTrips.isEmpty()) {
                 System.out.println(
-                        "No ferry trip available for the specified date, destination, and starting point.");
+                        "No ferry trip available for the specified destination, and starting point.");
             }
             for (FerryTrip trip : availableTrips) {
                 System.out.println("\n" + trip);
