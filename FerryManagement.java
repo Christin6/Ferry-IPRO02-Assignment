@@ -36,7 +36,7 @@ public class FerryManagement implements AssignDiscount {
         trip.addCustomer(customer);
     }
 
-    void printAllTripsWithoutCustomer() {
+    void printAllTrips() {
         System.out.println("List of all the trips:");
 
         int count = 1;
@@ -72,7 +72,7 @@ public class FerryManagement implements AssignDiscount {
         return null; // new customer
     }
 
-    public ArrayList<FerryTrip> checkBookedTrip(String customerName) {
+    public ArrayList<FerryTrip> customerBookedTrip(String customerName) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
 
         for (ArrayList<FerryTrip> tripList : trips.values()) {

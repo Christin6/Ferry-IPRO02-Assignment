@@ -104,7 +104,7 @@ public class App {
     void checkCurrentBookingMenu() {
         System.out.println("Enter your assigned name in the booking: ");
         String name = In.nextLine();
-        ArrayList<FerryTrip> bookingList = ferryManagement.checkBookedTrip(name);
+        ArrayList<FerryTrip> bookingList = ferryManagement.customerBookedTrip(name);
         if (bookingList.isEmpty()) {
             System.out.println("No booking has been made under the name " + name);
             return;
@@ -147,14 +147,13 @@ public class App {
 
     void bookTripMenu() {
         System.out.println();
-        ferryManagement.printAllTripsWithoutCustomer();
+        ferryManagement.printAllTrips();
         System.out.println("Which trip do you want to book?");
         int tripChoice = In.nextInt();
 
         FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
 
         try {
-                
             if (ferryManagement.seatAvailable(tripSelected)) {
                 System.out.print("Please enter your name: ");
                 String name = In.nextLine();
