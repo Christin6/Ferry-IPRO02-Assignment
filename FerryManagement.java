@@ -37,14 +37,24 @@ public class FerryManagement implements AssignDiscount {
         trip.addCustomer(customer);
     }
 
-    void getAllBookingList() {
-        System.out.println("List of all the bookings:");
+    void printAllTripsWithoutCustomer() {
+        System.out.println("List of all the trips:");
 
         int count = 1;
 
-        for (ArrayList<FerryTrip> bookingList : trips.values()) {
-            for (FerryTrip trip : bookingList) {
-                System.out.println(count + ". " + trip);
+        for (ArrayList<FerryTrip> tripList : trips.values()) {
+            for (FerryTrip trip : tripList) {
+                if (trip == null) {
+                    System.out.println(count + ". (No trip scheduled)");
+                    count++;
+                    continue;
+                }
+                System.out.println(count + ". " + "Trip from "
+                    + trip.getStartingPoint() + " to " + 
+                    trip.getDestination() + " on " + trip.getTripDateTime()
+                    + " (Price: $" + trip.getPrice() + ")"
+                    );
+
                 count++;
             }
         }
@@ -79,7 +89,6 @@ public class FerryManagement implements AssignDiscount {
                 for (Customer cust : trip.getCustomers()) {
                     if (cust.getName().equals(parentName)) {
                         child.setGuardian((AdultCustomer) cust);
-                        guardianFound = true;
                         return true;
                     }
                 }

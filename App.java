@@ -70,44 +70,7 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
-                System.out.println();
-                ferryManagement.getAllBookingList();
-                System.out.println("Which trip do you want to book?");
-                int tripChoice = In.nextInt();
-                FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
-
-                if (ferryManagement.seatAvailable(tripSelected)) {
-                    System.out.print("Please enter your name: ");
-                    String name = In.nextLine();
-
-                    System.out.print("Please enter you age: ");
-                    int age = In.nextInt();
-
-                    if (age >= 18) {
-                        System.out.print("Please enter your passport number: ");
-                        String passNum = In.nextLine();
-                        AdultCustomer customer = new AdultCustomer(name, age, passNum);
-                        ferryManagement.bookTrip(customer, tripSelected);
-                        System.out.println("Booking successful.");
-                        System.out.println("Your booking has been recorded.");
-
-                    } else {
-                        System.out.println("Please enter your guardian name: ");
-                        String guardian = In.nextLine();
-
-                        if (ferryManagement.setGuardian(guardian, new ChildCustomer(name, age, null))) {
-                            ChildCustomer childCustomer = new ChildCustomer(name, age, null);
-                            ferryManagement.bookTrip(childCustomer, tripSelected);
-                            System.out.println("Booking successful.");
-                            System.out.println("Your booking has been recorded.");
-                        } else {
-                            System.out.println("Guardian not found in the booking list, please try again.");
-                        }
-                    }
-                } else {
-                    System.out.println("Ferry is full.");
-                }
-
+                bookTrip();
             } else if (choice == 2) {
                 System.out.println("Enter your assigned name in the booking: ");
                 String name = In.nextLine();
@@ -125,13 +88,13 @@ public class App {
             System.out.println("--- Admin Menu ---");
             System.out.println("0. Back to main menu");
             System.out.println("1. Create a ferry trip");
-            System.out.println("2. View bookings of a ferry");
+            System.out.println("2. View bookings of all ferries and the revenue");
             System.out.println("3. Assign discount to a ferry trip");
 
             int choice = In.nextInt();
             if (choice == 0) {
                 break;
-            } else if (choice == 1) {
+            } else if (choice == 1) { // create a ferry trip
                 addFerryTripMenu();
             } else if (choice == 2) { // view bookings of all ferries
                 ferryManagement.getFerryTripsData();
@@ -140,6 +103,47 @@ public class App {
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
             }
+        }
+    }
+
+    void bookTrip() {
+        System.out.println();
+        ferryManagement.printAllTripsWithoutCustomer();
+        System.out.println("Which trip do you want to book?");
+        int tripChoice = In.nextInt();
+        FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
+
+        if (ferryManagement.seatAvailable(tripSelected)) {
+            System.out.print("Please enter your name: ");
+            String name = In.nextLine();
+
+            System.out.print("Please enter you age: ");
+            int age = In.nextInt();
+
+            if (age >= 18) {
+                System.out.print("Please enter your passport number: ");
+                String passNum = In.nextLine();
+                AdultCustomer customer = new AdultCustomer(name, age, passNum);
+                ferryManagement.bookTrip(customer, tripSelected);
+                System.out.println("Booking successful.");
+                System.out.println("Your booking has been recorded.");
+
+            } else {
+                System.out.println("Please enter your guardian name: ");
+                String guardian = In.nextLine();
+
+                ChildCustomer childCustomer = new ChildCustomer(name, age, null);
+
+                if (ferryManagement.setGuardian(guardian, childCustomer)) {
+                    ferryManagement.bookTrip(childCustomer, tripSelected);
+                    System.out.println("Booking successful.");
+                    System.out.println("Your booking has been recorded.");
+                } else {
+                    System.out.println("Guardian not found in the booking list, please try again.");
+                }
+            }
+        } else {
+            System.out.println("Ferry is full.");
         }
     }
 
@@ -226,7 +230,7 @@ public class App {
                 System.out.println("Your selected trip is unavailable, try again.");
             } else {
                 while (true) {
-                    System.out.println("Is it a fixed amount or disount?");
+                    System.out.println("Is it a fixed amount or percentage?");
                     System.out.println("0. Cancel");
                     System.out.println("1. Fixed amount");
                     System.out.println("2. Percentage");
