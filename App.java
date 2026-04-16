@@ -114,11 +114,10 @@ public class App {
         }
         System.out.println("All of your current bookings:");
         for (FerryTrip trip : bookingList) {
-            System.out.println("-) " +trip.getStartingPoint()
-                + " to " + trip.getDestination() + " on " 
-                + trip.getTripDateTime() 
-                + " (Price: $" + trip.getPrice() + ")"
-            );
+            System.out.println("-) " + trip.getStartingPoint()
+                    + " to " + trip.getDestination() + " on "
+                    + trip.getTripDateTime()
+                    + " (Price: $" + trip.getPrice() + ")");
         }
     }
 
@@ -133,6 +132,27 @@ public class App {
             System.out.print("Please enter your name: ");
             String name = In.nextLine();
 
+            if (ferryManagement.findCustomerByName(name) != null) {
+                System.out.println("A booking has already been made under the name " + name
+                        + ", choose an option:");
+                System.out.println("1. Book another trip under the same name");
+                System.out.println("2. Cancel booking");
+                int bookingChoice = In.nextInt();
+
+                if (bookingChoice == 1) {
+                    System.out.println("Booking another trip under the same name...");
+                    Customer customer = ferryManagement.findCustomerByName(name);
+                    ferryManagement.bookTrip(customer, tripSelected);
+                    return;
+                } else if (bookingChoice == 2) {
+                    System.out.println("Cancelling booking...");
+                    return;
+                } else {
+                    System.out.println("Invalid input, cancelling booking...");
+                    return;
+                }
+
+            }
             System.out.print("Please enter you age: ");
             int age = In.nextInt();
 

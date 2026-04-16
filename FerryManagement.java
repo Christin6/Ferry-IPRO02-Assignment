@@ -50,14 +50,28 @@ public class FerryManagement implements AssignDiscount {
                     continue;
                 }
                 System.out.println(count + ". " + "Trip from "
-                    + trip.getStartingPoint() + " to " + 
-                    trip.getDestination() + " on " + trip.getTripDateTime()
-                    + " (Price: $" + trip.getPrice() + ")"
-                    );
+                        + trip.getStartingPoint() + " to " +
+                        trip.getDestination() + " on " + trip.getTripDateTime()
+                        + " (Price: $" + trip.getPrice() + ")");
 
                 count++;
             }
         }
+    }
+
+    Customer findCustomerByName(String name) {
+        for (ArrayList<FerryTrip> tripList : trips.values()) {
+            for (FerryTrip trip : tripList) {
+                if (trip == null)
+                    continue;
+                for (Customer cust : trip.getCustomers()) {
+                    if (cust.getName().equals(name)) {
+                        return cust;
+                    }
+                }
+            }
+        }
+        return null; // new customer
     }
 
     public ArrayList<FerryTrip> checkBookedTrip(String customerName) {
@@ -75,13 +89,16 @@ public class FerryManagement implements AssignDiscount {
                 }
             }
         }
-        
+
         return bookingList;
     }
 
     boolean setGuardian(String parentName, ChildCustomer child) {
         for (ArrayList<FerryTrip> bookingList : trips.values()) {
             for (FerryTrip trip : bookingList) {
+                if (trip == null) {
+                    continue;
+                }
                 for (Customer cust : trip.getCustomers()) {
                     if (cust.getName().equals(parentName)) {
                         child.setGuardian((AdultCustomer) cust);
