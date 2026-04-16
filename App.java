@@ -117,6 +117,34 @@ public class App {
         }
     }
 
+    MedicalCondition handleMedicalCondition(){
+        MedicalCondition medicalCondition = MedicalCondition.HEALTHY;
+        while (true){
+            System.out.println("Do you have any listed medical condition: ");
+            System.out.println("1. SEA_SICK");
+            System.out.println("2. PREGNANT");
+            System.out.println("3. SPECIAL DISABILITY");
+            System.out.println("4. NONE");
+            int choice = In.nextInt();
+            if (choice == 1){
+                medicalCondition = MedicalCondition.SEA_SICK;
+                break;
+            } else if (choice == 2){
+                medicalCondition = MedicalCondition.PREGNANT;
+                break;
+            } else if (choice == 3){
+                medicalCondition = MedicalCondition.SPECIAL_DISABILITY;
+                break;
+            } else if (choice == 4) {
+                medicalCondition = MedicalCondition.HEALTHY;
+                break;
+            } else {
+                System.out.println("Invalid choice ");
+            }
+        }
+        return medicalCondition;
+    }
+
     void bookTripMenu() {
         System.out.println();
         ferryManagement.printAllTripsWithoutCustomer();
@@ -155,7 +183,8 @@ public class App {
             if (age >= 18) {
                 System.out.print("Please enter your passport number: ");
                 String passNum = In.nextLine();
-                AdultCustomer customer = new AdultCustomer(name, age, passNum);
+                
+                AdultCustomer customer = new AdultCustomer(name, age, passNum, handleMedicalCondition());
                 ferryManagement.bookTrip(customer, tripSelected);
                 System.out.println("Booking successful.");
                 System.out.println("Your booking has been recorded.");
@@ -164,7 +193,7 @@ public class App {
                 System.out.println("Please enter your guardian name: ");
                 String guardian = In.nextLine();
 
-                ChildCustomer childCustomer = new ChildCustomer(name, age, null);
+                ChildCustomer childCustomer = new ChildCustomer(name, age, null, handleMedicalCondition());
 
                 if (ferryManagement.setGuardian(guardian, childCustomer)) {
                     ferryManagement.bookTrip(childCustomer, tripSelected);

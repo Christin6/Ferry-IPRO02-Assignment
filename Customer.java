@@ -1,18 +1,32 @@
+enum MedicalCondition{
+    HEALTHY,
+    SEA_SICK,
+    PREGNANT,
+    SPECIAL_DISABILITY;
+}
+
 public abstract class Customer {
     protected String name;
     protected int age;
+    protected MedicalCondition medicalCondition;
 
-    Customer(String name, int age) {
+    Customer(String name, int age, MedicalCondition medicalCondition) {
         this.name = name;
         this.age = age;
+        this.medicalCondition = medicalCondition;
     }
 
     String getName() {
         return this.name;
     }
 
+    MedicalCondition getMedicalCondition(){
+        return this.medicalCondition;
+    }
+    
+
     public String toString() {
-        return "Name: " + this.name + "\n" + "Age: " + this.age + "\n";
+        return "Name: " + this.name + "\nAge: " + this.age + "\nMedical Condition: " + this.medicalCondition;
     }
 }
 
@@ -20,8 +34,8 @@ class ChildCustomer extends Customer {
     private final double CHILD_FARE_MULTIPLIER = 0.7;
     private AdultCustomer guardian;
 
-    ChildCustomer(String name, int age, AdultCustomer guardian) {
-        super(name, age);
+    ChildCustomer(String name, int age, AdultCustomer guardian, MedicalCondition medicalCondition) {
+        super(name, age, medicalCondition);
         this.guardian = guardian;
     }
 
@@ -42,8 +56,8 @@ class ChildCustomer extends Customer {
 class AdultCustomer extends Customer {
     private String passportID;
 
-    AdultCustomer(String name, int age, String passportID) {
-        super(name, age);
+    AdultCustomer(String name, int age, String passportID, MedicalCondition medicalCondition) {
+        super(name, age, medicalCondition);
         this.passportID = passportID;
     }
 
