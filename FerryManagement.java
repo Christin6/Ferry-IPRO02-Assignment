@@ -72,17 +72,21 @@ public class FerryManagement implements AssignDiscount {
         }
         return bookingList;
     }
-    
-    void checkGuardian(Customer customer){
-        ArrayList<FerryTrip> guardianInBooking = 
 
-
-        for (Customer guardian : bookingList) {
-            
-                
+    boolean setGuardian(String parentName, ChildCustomer child) {
+        for (ArrayList<FerryTrip> bookingList : trips.values()) {
+            for (FerryTrip trip : bookingList) {
+                for (Customer cust : trip.getCustomers()) {
+                    if (cust.getName().equals(parentName)) {
+                        child.setGuardian((AdultCustomer) cust);
+                        guardianFound = true;
+                        return true;
+                    }
+                }
             }
-        } 
-    
+        }
+        return false;
+    }
 
     private boolean seatAvailability(FerryTrip trip, Ferry ferry) {
         if (trip.getCustomers().size() < ferry.getMaxSeats()) {
@@ -212,7 +216,7 @@ public class FerryManagement implements AssignDiscount {
                 }
             }
         }
-        
+
         System.out.println("Successfully applied discount!");
         System.out.println("The applied discount is " + percentage + "%\n");
     };

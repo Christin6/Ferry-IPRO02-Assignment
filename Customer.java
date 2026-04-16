@@ -30,6 +30,10 @@ class ChildCustomer extends Customer {
         this.guardian = guardian;
     }
 
+    void setGuardian(AdultCustomer guardian) {
+        this.guardian = guardian;
+    }
+
     double getChildFareMultiplier() {
         return CHILD_FARE_MULTIPLIER;
     }

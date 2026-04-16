@@ -95,7 +95,14 @@ public class App {
                         System.out.println("Please enter your guardian name: ");
                         String guardian = In.nextLine();
 
-                        boolean guardianInBooking = false;
+                        if (ferryManagement.setGuardian(guardian, new ChildCustomer(name, age, null))) {
+                            ChildCustomer childCustomer = new ChildCustomer(name, age, null);
+                            ferryManagement.bookTrip(childCustomer, tripSelected);
+                            System.out.println("Booking successful.");
+                            System.out.println("Your booking has been recorded.");
+                        } else {
+                            System.out.println("Guardian not found in the booking list, please try again.");
+                        }
                     }
                 } else {
                     System.out.println("Ferry is full.");
