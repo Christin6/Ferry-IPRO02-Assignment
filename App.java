@@ -72,9 +72,7 @@ public class App {
             } else if (choice == 1) {
                 bookTrip();
             } else if (choice == 2) {
-                System.out.println("Enter your assigned name in the booking: ");
-                String name = In.nextLine();
-
+                checkCurrentBooking();
             } else if (choice == 3) {
                 checkFerryAvailabilityMenu();
             } else {
@@ -103,6 +101,24 @@ public class App {
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
             }
+        }
+    }
+
+    void checkCurrentBooking() {
+        System.out.println("Enter your assigned name in the booking: ");
+        String name = In.nextLine();
+        ArrayList<FerryTrip> bookingList = ferryManagement.checkBookedTrip(name);
+        if (bookingList.isEmpty()) {
+            System.out.println("No booking has been made under the name " + name);
+            return;
+        }
+        System.out.println("All of your current bookings:");
+        for (FerryTrip trip : bookingList) {
+            System.out.println("-) " +trip.getStartingPoint()
+                + " to " + trip.getDestination() + " on " 
+                + trip.getTripDateTime() 
+                + " (Price: $" + trip.getPrice() + ")"
+            );
         }
     }
 

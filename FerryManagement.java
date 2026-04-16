@@ -60,26 +60,22 @@ public class FerryManagement implements AssignDiscount {
         }
     }
 
-    public ArrayList<FerryTrip> checkBookedTrip(Customer customer) {
+    public ArrayList<FerryTrip> checkBookedTrip(String customerName) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
 
         for (ArrayList<FerryTrip> tripList : trips.values()) {
             for (FerryTrip trip : tripList) {
+                if (trip == null) {
+                    continue;
+                }
                 for (Customer cust : trip.getCustomers()) {
-                    if (cust.getName().equals(customer.getName())) {
+                    if (cust.getName().equals(customerName)) {
                         bookingList.add(trip);
                     }
                 }
             }
         }
-
-        if (bookingList.isEmpty()) {
-            System.out.println("No booking has been made.");
-        } else {
-            for (FerryTrip trip : bookingList) {
-                System.out.println(trip);
-            }
-        }
+        
         return bookingList;
     }
 
