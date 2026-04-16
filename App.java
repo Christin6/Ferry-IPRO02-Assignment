@@ -70,8 +70,40 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
+                System.out.println();
+                ferryManagement.getAllBookingList();
+                System.out.println("Which trip do you want to book?");
+                int tripChoice = In.nextInt();
+                FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
+
+                if (ferryManagement.seatAvailable(tripSelected)) {
+                    System.out.print("Please enter your name: ");
+                    String name = In.nextLine();
+
+                    System.out.print("Please enter you age: ");
+                    int age = In.nextInt();
+
+                    if (age >= 18) {
+                        System.out.print("Please enter your passport number: ");
+                        String passNum = In.nextLine();
+                        AdultCustomer customer = new AdultCustomer(name, age, passNum);
+                        ferryManagement.bookTrip(customer, tripSelected);
+                        System.out.println("Booking successful.");
+                        System.out.println("Your booking has been recorded.");
+
+                    } else {
+                        System.out.println("Please enter your guardian name: ");
+                        String guardian = In.nextLine();
+
+                        boolean guardianInBooking = false;
+                    }
+                } else {
+                    System.out.println("Ferry is full.");
+                }
 
             } else if (choice == 2) {
+                System.out.println("Enter your assigned name in the booking: ");
+                String name = In.nextLine();
 
             } else if (choice == 3) {
                 checkFerryAvailabilityMenu();
