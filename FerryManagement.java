@@ -1,6 +1,5 @@
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.time.LocalDate;
 import java.util.Map;
 
 public class FerryManagement implements AssignDiscount {
@@ -51,8 +50,7 @@ public class FerryManagement implements AssignDiscount {
                 }
                 System.out.println(count + ". " + "Trip from "
                         + trip.getStartingPoint() + " to " +
-                        trip.getDestination() + " on " + trip.getTripDateTime()
-                        + " (Price: $" + trip.getPrice() + ")");
+                        trip.getDestination() + " (Price: $" + trip.getPrice() + ")");
 
                 count++;
             }
@@ -128,7 +126,7 @@ public class FerryManagement implements AssignDiscount {
         return false;
     }
 
-    ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint) {
+    ArrayList<FerryTrip> getAvailability(String destination, String startingPoint) {
         ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
         for (Ferry ferry : trips.keySet()) {
@@ -136,7 +134,7 @@ public class FerryManagement implements AssignDiscount {
                 if (trip == null) {
                     continue;
                 }
-                if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
+                if (trip.getDestination().equals(destination)
                         && trip.getStartingPoint().equals(startingPoint)) {
                     availableTrips.add(trip);
                 }
@@ -146,7 +144,7 @@ public class FerryManagement implements AssignDiscount {
         return availableTrips;
     }
 
-    ArrayList<FerryTrip> getAvailability(LocalDate date, String destination, String startingPoint,
+    ArrayList<FerryTrip> getAvailability(String destination, String startingPoint,
             double priceMaximum) {
         ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
@@ -155,8 +153,9 @@ public class FerryManagement implements AssignDiscount {
                 if (trip == null) {
                     continue;
                 }
-                if (trip.getTripDateTime().toLocalDate().equals(date) && trip.getDestination().equals(destination)
-                        && trip.getStartingPoint().equals(startingPoint) && trip.getPrice() <= priceMaximum) {
+                if (trip.getDestination().equals(destination) 
+                    && trip.getStartingPoint().equals(startingPoint) 
+                    && trip.getPrice() <= priceMaximum) {
                     availableTrips.add(trip);
                 }
             }

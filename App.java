@@ -1,6 +1,3 @@
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 
 public class App {
@@ -12,12 +9,12 @@ public class App {
         Ferry f3 = new Ferry("F3", 100);
         Ferry f4 = new Ferry("F4", 100);
 
-        FerryTrip t1 = new FerryTrip("Sydney", "Jakarta", 80, LocalDateTime.of(2026, Month.MAY, 15, 10, 30));
-        FerryTrip t2 = new FerryTrip("Jakarta", "Sydney", 70, LocalDateTime.of(2026, Month.MAY, 20, 12, 30));
-        FerryTrip t3 = new FerryTrip("Kuala Lumpur", "Tokyo", 120, LocalDateTime.of(2026, Month.DECEMBER, 13, 9, 30));
-        FerryTrip t4 = new FerryTrip("Tokyo", "Kuala Lumpur", 130, LocalDateTime.of(2026, Month.DECEMBER, 16, 9, 30));
-        FerryTrip t5 = new FerryTrip("London", "Paris", 180, LocalDateTime.of(2026, Month.NOVEMBER, 28, 16, 30));
-        FerryTrip t6 = new FerryTrip("Paris", "London", 190, LocalDateTime.of(2026, Month.DECEMBER, 2, 14, 30));
+        FerryTrip t1 = new FerryTrip("Sydney", "Jakarta", 80);
+        FerryTrip t2 = new FerryTrip("Jakarta", "Sydney", 70);
+        FerryTrip t3 = new FerryTrip("Kuala Lumpur", "Tokyo", 120);
+        FerryTrip t4 = new FerryTrip("Tokyo", "Kuala Lumpur", 130);
+        FerryTrip t5 = new FerryTrip("London", "Paris", 180);
+        FerryTrip t6 = new FerryTrip("Paris", "London", 190);
 
         ferryManagement.addFerryTrip(f1, t1);
         ferryManagement.addFerryTrip(f1, t2);
@@ -115,8 +112,7 @@ public class App {
         System.out.println("All of your current bookings:");
         for (FerryTrip trip : bookingList) {
             System.out.println("-) " + trip.getStartingPoint()
-                    + " to " + trip.getDestination() + " on "
-                    + trip.getTripDateTime()
+                    + " to " + trip.getDestination()
                     + " (Price: $" + trip.getPrice() + ")");
         }
     }
@@ -184,41 +180,33 @@ public class App {
     }
 
     void checkFerryAvailabilityMenu() {
-        System.out.println("Date of the trip? (YYYY-MM-DD)");
-        String dateInput = In.nextLine();
-        try {
-            LocalDate date = LocalDate.parse(dateInput);
-            System.out.println("Destination?");
-            String destination = In.nextLine();
-            System.out.println("Starting point?");
-            String startingPoint = In.nextLine();
-            System.out.println("Would you like to filter by price? (Y/N)");
-            String priceFilterInput = In.nextLine();
-            if (priceFilterInput.toLowerCase().equals("y")) {
-                System.out.println("What is the maximum price you are willing to pay?");
-                double priceMaximum = In.nextDouble();
-                ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date,
-                        destination, startingPoint, priceMaximum);
-                if (availableTrips.isEmpty()) {
-                    System.out.println(
-                            "No ferry trip available for the specified date, destination, and starting point.");
-                }
-                for (FerryTrip trip : availableTrips) {
-                    System.out.println("\n" + trip);
-                }
-            } else {
-                ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(date, destination,
-                        startingPoint);
-                if (availableTrips.isEmpty()) {
-                    System.out.println(
-                            "No ferry trip available for the specified date, destination, and starting point.");
-                }
-                for (FerryTrip trip : availableTrips) {
-                    System.out.println("\n" + trip);
-                }
+        System.out.println("Destination?");
+        String destination = In.nextLine();
+        System.out.println("Starting point?");
+        String startingPoint = In.nextLine();
+        System.out.println("Would you like to filter by price? (Y/N)");
+        String priceFilterInput = In.nextLine();
+        if (priceFilterInput.toLowerCase().equals("y")) {
+            System.out.println("What is the maximum price you are willing to pay?");
+            double priceMaximum = In.nextDouble();
+            ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(destination, startingPoint,
+                    priceMaximum);
+            if (availableTrips.isEmpty()) {
+                System.out.println(
+                        "No ferry trip available for the specified date, destination, and starting point.");
             }
-        } catch (Exception e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            for (FerryTrip trip : availableTrips) {
+                System.out.println("\n" + trip);
+            }
+        } else {
+            ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(destination, startingPoint);
+            if (availableTrips.isEmpty()) {
+                System.out.println(
+                        "No ferry trip available for the specified date, destination, and starting point.");
+            }
+            for (FerryTrip trip : availableTrips) {
+                System.out.println("\n" + trip);
+            }
         }
     }
 
@@ -239,16 +227,9 @@ public class App {
             String destination = In.nextLine();
             System.out.println("What is the price of the trip?");
             double price = In.nextDouble();
-            System.out.println("When is the date and time of the trip? (YYYY-MM-DDTHH:MM)");
-            String dateTimeInput = In.nextLine();
-            try {
-                LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput);
-                FerryTrip newTrip = new FerryTrip(destination, startingPoint, price, dateTime);
-                ferryManagement.setFerryTripList(newTrip, ferryTarget);
-                System.out.println("Successfully added ferry trip.");
-            } catch (Exception e) {
-                System.out.println("Invalid date and time format. Please use YYYY-MM-DDTHH:MM.");
-            }
+            FerryTrip newTrip = new FerryTrip(destination, startingPoint, price);
+            ferryManagement.setFerryTripList(newTrip, ferryTarget);
+            System.out.println("Successfully added ferry trip.");
         }
     }
 
