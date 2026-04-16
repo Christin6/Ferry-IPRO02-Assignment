@@ -70,9 +70,9 @@ public class App {
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
-                bookTrip();
+                bookTripMenu();
             } else if (choice == 2) {
-                checkCurrentBooking();
+                checkCurrentBookingMenu();
             } else if (choice == 3) {
                 checkFerryAvailabilityMenu();
             } else {
@@ -104,7 +104,7 @@ public class App {
         }
     }
 
-    void checkCurrentBooking() {
+    void checkCurrentBookingMenu() {
         System.out.println("Enter your assigned name in the booking: ");
         String name = In.nextLine();
         ArrayList<FerryTrip> bookingList = ferryManagement.checkBookedTrip(name);
@@ -121,7 +121,7 @@ public class App {
         }
     }
 
-    void bookTrip() {
+    void bookTripMenu() {
         System.out.println();
         ferryManagement.printAllTripsWithoutCustomer();
         System.out.println("Which trip do you want to book?");
