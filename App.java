@@ -210,7 +210,7 @@ public class App {
                 System.out.println("Ferry is full.");
             }
         } catch (NullPointerException e) {
-            System.err.println("You can't choose unregistered trip.");
+            System.err.println("You can't choose an unregistered trip.");
         }
         
     }
@@ -229,7 +229,7 @@ public class App {
                     priceMaximum);
             if (availableTrips.isEmpty()) {
                 System.out.println(
-                        "No ferry trip available for the specified destination, and starting point.");
+                        "No ferry trip available.");
             }
             for (FerryTrip trip : availableTrips) {
                 System.out.println("\n" + trip);
@@ -238,7 +238,7 @@ public class App {
             ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(destination, startingPoint);
             if (availableTrips.isEmpty()) {
                 System.out.println(
-                        "No ferry trip available for the specified destination, and starting point.");
+                        "No ferry trip available.");
             }
             for (FerryTrip trip : availableTrips) {
                 System.out.println("\n" + trip);
