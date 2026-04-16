@@ -212,35 +212,63 @@ public class FerryManagement implements AssignDiscount {
     }
 
     public void assignDiscount(double amount, FerryTrip tripTarget) {
+        boolean executeSettingDiscount = true;
+
+        // Making sure that the fixed price is not over the base price of the ticket
         for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
             ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
             for (FerryTrip f : ferryTrip) {
-                if (f == tripTarget) {
-                    f.setDiscount(amount);
+                //Making sure it is the targetted trip
+                if (!(f == tripTarget)) {
+                    continue;
+                }
+                if (amount > f.getBasePrice()) {
+                    System.out.println("Invalid amount, the discount cannot be over the base price!\n");
+                    executeSettingDiscount = false;
+                    break;
                 }
             }
         }
 
-        System.out.println("Successfully applied discount!");
-        System.out.println("The applied discount is $" + amount + "\n");
-    };
+        while (executeSettingDiscount) {
+            for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+                ArrayList<FerryTrip> ferryTrip = trip.getValue();
+
+                for (FerryTrip f : ferryTrip) {
+                    if (f == tripTarget) {
+                        f.setDiscount(amount);
+                    }
+                }
+            }
+
+            System.out.println("Successfully applied discount!");
+            System.out.println("The applied discount is $" + amount + "\n");
+            executeSettingDiscount = false;
+        }
+        }
 
     public void assignDiscount(int percentage, FerryTrip tripTarget) {
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+        if (percentage > 100) {
+            System.out.println("Invalid percentage amount, the discount cannot be over than 100%!\n");
+        }
+        else {
+            for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+                ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
-            for (FerryTrip f : ferryTrip) {
-                if (f == tripTarget) {
-                    double newAmount = (((double) percentage / 100) * (f.getBasePrice()));
+                for (FerryTrip f : ferryTrip) {
+                    if (f == tripTarget) {
+                        double newAmount = (((double) percentage / 100) * (f.getBasePrice()));
 
-                    f.setDiscount(newAmount);
+                        f.setDiscount(newAmount);
+                    }
                 }
             }
-        }
 
-        System.out.println("Successfully applied discount!");
-        System.out.println("The applied discount is " + percentage + "%\n");
+            System.out.println("Successfully applied discount!");
+            System.out.println("The applied discount is " + percentage + "%\n");
+
+        }
     };
 
     public String toString() {
