@@ -150,62 +150,69 @@ public class App {
         ferryManagement.printAllTripsWithoutCustomer();
         System.out.println("Which trip do you want to book?");
         int tripChoice = In.nextInt();
+
         FerryTrip tripSelected = ferryManagement.selectTripBasedOnIndex(tripChoice);
 
-        if (ferryManagement.seatAvailable(tripSelected)) {
-            System.out.print("Please enter your name: ");
-            String name = In.nextLine();
-
-            if (ferryManagement.findCustomerByName(name) != null) {
-                System.out.println("A booking has already been made under the name " + name
-                        + ", choose an option:");
-                System.out.println("1. Book another trip under the same name");
-                System.out.println("2. Cancel booking");
-                int bookingChoice = In.nextInt();
-
-                if (bookingChoice == 1) {
-                    System.out.println("Booking another trip under the same name...");
-                    Customer customer = ferryManagement.findCustomerByName(name);
-                    ferryManagement.bookTrip(customer, tripSelected);
-                    return;
-                } else if (bookingChoice == 2) {
-                    System.out.println("Cancelling booking...");
-                    return;
-                } else {
-                    System.out.println("Invalid input, cancelling booking...");
-                    return;
-                }
-
-            }
-            System.out.print("Please enter you age: ");
-            int age = In.nextInt();
-
-            if (age >= 18) {
-                System.out.print("Please enter your passport number: ");
-                String passNum = In.nextLine();
+        try {
                 
-                AdultCustomer customer = new AdultCustomer(name, age, passNum, handleMedicalCondition());
-                ferryManagement.bookTrip(customer, tripSelected);
-                System.out.println("Booking successful.");
-                System.out.println("Your booking has been recorded.");
+            if (ferryManagement.seatAvailable(tripSelected)) {
+                System.out.print("Please enter your name: ");
+                String name = In.nextLine();
 
-            } else {
-                System.out.println("Please enter your guardian name: ");
-                String guardian = In.nextLine();
+                if (ferryManagement.findCustomerByName(name) != null) {
+                    System.out.println("A booking has already been made under the name " + name
+                            + ", choose an option:");
+                    System.out.println("1. Book another trip under the same name");
+                    System.out.println("2. Cancel booking");
+                    int bookingChoice = In.nextInt();
 
-                ChildCustomer childCustomer = new ChildCustomer(name, age, null, handleMedicalCondition());
+                    if (bookingChoice == 1) {
+                        System.out.println("Booking another trip under the same name...");
+                        Customer customer = ferryManagement.findCustomerByName(name);
+                        ferryManagement.bookTrip(customer, tripSelected);
+                        return;
+                    } else if (bookingChoice == 2) {
+                        System.out.println("Cancelling booking...");
+                        return;
+                    } else {
+                        System.out.println("Invalid input, cancelling booking...");
+                        return;
+                    }
 
-                if (ferryManagement.setGuardian(guardian, childCustomer)) {
-                    ferryManagement.bookTrip(childCustomer, tripSelected);
+                }
+                System.out.print("Please enter you age: ");
+                int age = In.nextInt();
+
+                if (age >= 18) {
+                    System.out.print("Please enter your passport number: ");
+                    String passNum = In.nextLine();
+                    
+                    AdultCustomer customer = new AdultCustomer(name, age, passNum, handleMedicalCondition());
+                    ferryManagement.bookTrip(customer, tripSelected);
                     System.out.println("Booking successful.");
                     System.out.println("Your booking has been recorded.");
+
                 } else {
-                    System.out.println("Guardian not found in the booking list, please try again.");
+                    System.out.println("Please enter your guardian name: ");
+                    String guardian = In.nextLine();
+
+                    ChildCustomer childCustomer = new ChildCustomer(name, age, null, handleMedicalCondition());
+
+                    if (ferryManagement.setGuardian(guardian, childCustomer)) {
+                        ferryManagement.bookTrip(childCustomer, tripSelected);
+                        System.out.println("Booking successful.");
+                        System.out.println("Your booking has been recorded.");
+                    } else {
+                        System.out.println("Guardian not found in the booking list, please try again.");
+                    }
                 }
+            } else {
+                System.out.println("Ferry is full.");
             }
-        } else {
-            System.out.println("Ferry is full.");
+        } catch (NullPointerException e) {
+            System.err.println("You can't choose unregistered trip.");
         }
+        
     }
 
     void checkFerryAvailabilityMenu() {
