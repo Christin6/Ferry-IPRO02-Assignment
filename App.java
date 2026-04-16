@@ -259,7 +259,13 @@ public class App {
             ferryManagement.getFerryTripsData();
 
             System.out.println("Which trip do you want to add a discount (choose the number)?");
+            System.out.println("Type 0 to go back to the main menu");
             int tripTarget = In.nextInt();
+
+            if (tripTarget == 0) {
+                isDiscUnsuccesful = false;
+            }
+
             FerryTrip selectedTrip = ferryManagement.selectTripBasedOnIndex(tripTarget);
 
             if (selectedTrip == null) {
