@@ -26,7 +26,7 @@ public abstract class Customer {
     
 
     public String toString() {
-        return "Name: " + this.name + "\nAge: " + this.age + "\nMedical Condition: " + this.medicalCondition;
+        return "|| Name: " + this.name + "; Age: " + this.age + "; Medical Condition: " + this.medicalCondition;
     }
 }
 
@@ -49,7 +49,7 @@ class ChildCustomer extends Customer {
 
     @Override
     public String toString() {
-        return super.toString() + "Guardian: " + this.guardian;
+        return super.toString() + "; Guardian: " + this.guardian + " ||\n";
     }
 }
 
@@ -63,6 +63,6 @@ class AdultCustomer extends Customer {
 
     @Override
     public String toString() {
-        return super.toString() + "Passport: " + this.passportID;
+        return super.toString() + "; Passport Number: " + this.passportID + " ||\n";
     }
 }

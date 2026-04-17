@@ -31,6 +31,7 @@ public class App {
 
     void runMainMenu() {
         while (true) {
+            System.out.println();
             System.out.println("--- Main Menu ---");
             System.out.println("Are you a customer or admin?");
             System.out.println("1. Customer");
@@ -54,6 +55,7 @@ public class App {
 
     void customerMenu() {
         while (true) {
+            System.out.println();
             System.out.println("---Customer Menu---");
             System.out.println("What would you like to do?");
             System.out.println("0. Back to main menu");
@@ -64,6 +66,7 @@ public class App {
             int choice = In.nextInt();
 
             if (choice == 0) {
+                System.out.println();
                 System.out.println("Returning to main menu...");
                 break;
             } else if (choice == 1) {
@@ -80,6 +83,7 @@ public class App {
 
     void adminMenu() {
         while (true) {
+            System.out.println();
             System.out.println("--- Admin Menu ---");
             System.out.println("0. Back to main menu");
             System.out.println("1. Create a ferry trip");
@@ -102,6 +106,7 @@ public class App {
     }
 
     void checkCurrentBookingMenu() {
+        System.out.println();
         System.out.println("Enter your assigned name in the booking: ");
         String name = In.nextLine();
         ArrayList<FerryTrip> bookingList = ferryManagement.customerBookedTrip(name);
@@ -155,6 +160,7 @@ public class App {
 
         try {
             if (ferryManagement.seatAvailable(tripSelected)) {
+                System.out.println();
                 System.out.print("Please enter your name: ");
                 String name = In.nextLine();
 
@@ -210,11 +216,13 @@ public class App {
             }
         } catch (NullPointerException e) {
             System.err.println("You can't choose an unregistered trip.");
+        } catch (ClassCastException c) {
+            System.out.println("Guardian not found in the booking list, please try again.");
         }
-        
     }
 
     void checkFerryAvailabilityMenu() {
+        System.out.println();
         System.out.println("Destination?");
         String destination = In.nextLine();
         System.out.println("Starting point?");
@@ -246,6 +254,7 @@ public class App {
     }
 
     void addFerryTripMenu() {
+        System.out.println();
         System.out.println("Current ferry trips:");
         ferryManagement.getFerryTripsData();
         System.out.println(
