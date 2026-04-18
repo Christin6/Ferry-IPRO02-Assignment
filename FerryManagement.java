@@ -1,6 +1,8 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FerryManagement implements AssignDiscount {
     private HashMap<Ferry, ArrayList<FerryTrip>> trips;
@@ -8,7 +10,7 @@ public class FerryManagement implements AssignDiscount {
     FerryManagement() {
         trips = new HashMap<>();
     }
-
+    
     void addFerryTrip(Ferry ferry, FerryTrip trip) {
         if (!trips.containsKey(ferry)) {
             trips.put(ferry, new ArrayList<>());
@@ -190,6 +192,38 @@ public class FerryManagement implements AssignDiscount {
         }
 
         System.out.println("");
+    }
+
+    public static final Comparator<FerryTrip> compareByPriceAsc = Comparator.comparing(FerryTrip::getCurrentRevenue);
+    public static final Comparator<FerryTrip> compareByPriceDesc = Comparator.comparing(FerryTrip::getCurrentRevenue).reversed();
+
+    void getFerryTripsDataSorted(Comparator<FerryTrip> comparator) {
+        ArrayList<FerryTrip> sortedTrips = new ArrayList<>();
+
+        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
+            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+
+            for (FerryTrip f : ferryTrip) {
+                if (f != null) {
+                    sortedTrips.add(f);
+                }
+            }
+        }
+
+        Collections.sort(sortedTrips, comparator);
+
+        System.out.println("Here are all the ferry trips:\n");
+        if (sortedTrips.isEmpty()) {
+            System.out.println("There are currently no active trips.");
+        }
+
+        int count = 1;
+        for (FerryTrip f : sortedTrips) {
+            System.out.println(count + ". " + f);
+            System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+            count++;
+        }
+
     }
 
     FerryTrip selectTripBasedOnIndex(int index) {

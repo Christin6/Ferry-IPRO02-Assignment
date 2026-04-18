@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class App {
     static FerryManagement ferryManagement = new FerryManagement();
@@ -96,13 +98,41 @@ public class App {
             } else if (choice == 1) { // create a ferry trip
                 addFerryTripMenu();
             } else if (choice == 2) { // view bookings of all ferries
-                ferryManagement.getFerryTripsData();
+                ferryDataMenu();
             } else if (choice == 3) { // applying discount
                 adminApplyDiscountMenu();
             } else {
                 System.out.println("Please choose 0, 1, 2, or 3");
             }
         }
+    }
+
+    void ferryDataMenu() {
+        while (true) {
+            System.out.println("How would you like to view the data?");
+            System.out.println("0. Back to main menu");
+            System.out.println("1. Based on current revenue (lowest to highest)");
+            System.out.println("2. Based on current revenue (highest to highest)");
+            System.out.println("3. Based on ferry ship, including non-active ferries");
+            int choice = In.nextInt();
+
+            if (choice == 0) {
+                System.out.println("Exiting to main menu...");
+                break;
+            }
+            else if (choice == 1) {
+                ferryManagement.getFerryTripsDataSorted(FerryManagement.compareByPriceAsc);
+            }
+            else if (choice == 2) {
+                ferryManagement.getFerryTripsDataSorted(FerryManagement.compareByPriceDesc);
+            }
+            else if (choice == 3) {
+                ferryManagement.getFerryTripsData();
+            }
+            else {
+                System.out.println("Please choose option 0, 1, 2, or 3");
+            }
+        }   
     }
 
     void checkCurrentBookingMenu() {
