@@ -49,7 +49,7 @@ class ChildCustomer extends Customer {
 
     @Override
     public String toString() {
-        return super.toString() + "; Guardian: " + this.guardian + " ||\n";
+        return super.toString() + "; Guardian: " + this.guardian.getName() + " ||\n";
     }
 }
 
