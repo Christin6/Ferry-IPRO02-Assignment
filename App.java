@@ -239,7 +239,7 @@ public class App {
                         "No ferry trip available.");
             }
             for (FerryTrip trip : availableTrips) {
-                System.out.println("\n" + trip);
+                System.out.println("\n-) " + trip.getDestination() + " to " + trip.getStartingPoint() + " (Price: $" + trip.getPrice() + ")");
             }
         } else {
             ArrayList<FerryTrip> availableTrips = ferryManagement.getAvailability(destination, startingPoint);
@@ -248,7 +248,7 @@ public class App {
                         "No ferry trip available.");
             }
             for (FerryTrip trip : availableTrips) {
-                System.out.println("\n" + trip);
+                System.out.println("\n-) " + trip.getDestination() + " to " + trip.getStartingPoint() + " (Price: $" + trip.getPrice() + ")");
             }
         }
     }
