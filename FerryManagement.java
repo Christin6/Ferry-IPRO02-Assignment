@@ -153,9 +153,9 @@ public class FerryManagement implements AssignDiscount {
                 if (trip == null) {
                     continue;
                 }
-                if (trip.getDestination().equals(destination) 
-                    && trip.getStartingPoint().equals(startingPoint) 
-                    && trip.getPrice() <= priceMaximum) {
+                if (trip.getDestination().equals(destination)
+                        && trip.getStartingPoint().equals(startingPoint)
+                        && trip.getPrice() <= priceMaximum) {
                     availableTrips.add(trip);
                 }
             }
@@ -210,6 +210,7 @@ public class FerryManagement implements AssignDiscount {
         return null; // Return null if no trip is found at the specified index
     }
 
+    @Override
     public void assignDiscount(double amount, FerryTrip tripTarget) {
         boolean executeSettingDiscount = true;
 
@@ -218,7 +219,7 @@ public class FerryManagement implements AssignDiscount {
             ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
             for (FerryTrip f : ferryTrip) {
-                //Making sure it is the targetted trip
+                // Making sure it is the targetted trip
                 if (!(f == tripTarget)) {
                     continue;
                 }
@@ -245,13 +246,13 @@ public class FerryManagement implements AssignDiscount {
             System.out.println("The applied discount is $" + amount + "\n");
             executeSettingDiscount = false;
         }
-        }
+    }
 
+    @Override
     public void assignDiscount(int percentage, FerryTrip tripTarget) {
         if (percentage > 100) {
             System.out.println("Invalid percentage amount, the discount cannot be over than 100%!\n");
-        }
-        else {
+        } else {
             for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
                 ArrayList<FerryTrip> ferryTrip = trip.getValue();
 
