@@ -76,6 +76,9 @@ public class AppView {
         });
 
         Button editTripBtn = new Button("Edit Trip");
+        editTripBtn.setOnAction(e -> {
+            createUpdateTripForm();
+        });
 
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
@@ -99,7 +102,7 @@ public class AppView {
             this.adminPane.close();
         });
         Label adminLabel = new Label();
-        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin);
+        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin, addTripBtn);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
@@ -147,6 +150,54 @@ public class AppView {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         Label text = new Label("Enter the starting point, the destination, and the price of the trip");
+        Label warning = new Label();
+
+        TextField startingPointTextField = new TextField();
+        startingPointTextField.setPromptText("Add starting point");
+        TextField destinationTextField = new TextField();
+        destinationTextField.setPromptText("Add destination");
+
+        TextField basePriceTextField = new TextField();
+        basePriceTextField.setPromptText("Add price");
+        configTextFieldForDoubles(basePriceTextField);
+
+        Button submitBtn = new Button("Submit Button");
+        submitBtn.setOnAction(e -> {
+            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty() && !basePriceTextField.getText().isEmpty()) {
+                System.out.println("it works");
+            }
+            else {
+                warning.setText("You have not filled out all the fields!");
+            }
+        });
+
+        Button cancelBtn = new Button("Cancel Button");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+        
+        HBox locationRow = new HBox(5, startingPointTextField, new Label ("to"), destinationTextField, new Label("$"), basePriceTextField);
+        locationRow.setAlignment(Pos.CENTER);
+
+        HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
+        BtnRow.setAlignment(Pos.CENTER);
+        
+        VBox root = new VBox(5, text, locationRow, BtnRow, warning);
+        root.setAlignment(Pos.CENTER);
+
+        Scene addTripScene = new Scene(root, 550, 200);
+        stage.setScene(addTripScene);
+        stage.show();
+    }
+
+    private void createUpdateTripForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Update Trip Form");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label text = new Label("Enter the new starting point, the destination, and the price of the trip");
+
 
         TextField startingPointTextField = new TextField();
         startingPointTextField.setPromptText("Add starting point");
@@ -178,18 +229,9 @@ public class AppView {
         VBox root = new VBox(5, text, locationRow, BtnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene addTripScene = new Scene(root, 550, 200);
-        stage.setScene(addTripScene);
+        Scene updateTripScene = new Scene(root, 550, 200);
+        stage.setScene(updateTripScene);
         stage.show();
-    }
-
-    private void createUpdateTripForm() {
-        Stage stage = new Stage();
-        stage.setTitle("Update Trip Form");
-        stage.initOwner(primaryStage);
-        stage.initModality(Modality.APPLICATION_MODAL);
-
-        Label text = new Label("Enter the starting point, the destination, and the price of the trip");
     }
 
     private void createAndConfigurePane() {
