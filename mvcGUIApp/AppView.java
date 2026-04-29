@@ -7,6 +7,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -60,6 +62,16 @@ public class AppView {
         this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
         this.tripsView.setItems(model.tripsProperty());
 
+        //For now, all the admin buttons are below here
+        Button viewDetailsBtn = new Button("View Details");
+        
+        Button addTripBtn = new Button("Add Trip");
+        addTripBtn.setOnAction(e -> {
+            createAddTripForm();
+        });
+
+        Button editTripBtn = new Button("Edit Trip");
+
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
             this.changeScene(customerView);
@@ -80,7 +92,8 @@ public class AppView {
             this.changeScene(loginView);
         });
         Label adminLabel = new Label();
-        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin);
+        //Added 'addTripBtn' just to test if the frame works
+        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin, addTripBtn); 
 
         // Customer view setup
         Button backToLoginBtnFromCust = new Button("Logout");
@@ -89,6 +102,59 @@ public class AppView {
         });
         Label customerLabel = new Label();
         customerView.getChildren().addAll(customerLabel, backToLoginBtnFromCust, tripsView);
+    }
+
+    //For now all the admin modal windows are here
+    private void createAddTripForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Add Trip Form");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label text = new Label("Enter the starting point, the destination, and the price of the trip");
+
+        TextField startingPointTextField = new TextField();
+        startingPointTextField.setPromptText("Add starting point");
+        TextField destinationTextField = new TextField();
+        destinationTextField.setPromptText("Add destination");
+
+        TextField basePriceTextField = new TextField();
+        basePriceTextField.setPromptText("Add price");
+        configTextFieldForDoubles(basePriceTextField);
+
+        Button submitBtn = new Button("Submit Button");
+        submitBtn.setOnAction(e -> {
+            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty() && !basePriceTextField.getText().isEmpty()) {
+                System.out.println("it works");
+            }
+        });
+
+        Button cancelBtn = new Button("Cancel Button");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+        
+        HBox locationRow = new HBox(5, startingPointTextField, new Label ("to"), destinationTextField, new Label("$"), basePriceTextField);
+        locationRow.setAlignment(Pos.CENTER);
+
+        HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
+        BtnRow.setAlignment(Pos.CENTER);
+        
+        VBox root = new VBox(5, text, locationRow, BtnRow);
+        root.setAlignment(Pos.CENTER);
+
+        Scene addTripScene = new Scene(root, 550, 200);
+        stage.setScene(addTripScene);
+        stage.show();
+    }
+
+    private void createUpdateTripForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Update Trip Form");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label text = new Label("Enter the starting point, the destination, and the price of the trip");
     }
 
     private void createAndConfigurePane() {
@@ -105,5 +171,14 @@ public class AppView {
     private void changeScene(Parent root) {
         Scene newScene = new Scene(root, 600, 300);
         primaryStage.setScene(newScene);
+    }
+
+    private void configTextFieldForDoubles(TextField field) {
+        field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
+            if (c.getControlNewText().matches("\\d+.?\\d*")) {
+                return c;
+            }
+            return null;
+        }));
     }
 }
