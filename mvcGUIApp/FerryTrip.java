@@ -1,16 +1,19 @@
 import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 public class FerryTrip {
-  private String destination, startingPoint;
-  private double basePrice;
+  private final SimpleStringProperty destination;
+  private final SimpleStringProperty startingPoint;
+  private final SimpleDoubleProperty basePrice;
   private double discount = 0;
   private ArrayList<Customer> customers;
   private Ferry assignedFerry;
 
   FerryTrip(String destination, String startingPoint, double basePrice, Ferry ferry) {
-    this.destination = destination;
-    this.startingPoint = startingPoint;
-    this.basePrice = basePrice;
+    this.destination = new SimpleStringProperty(destination);
+    this.startingPoint = new SimpleStringProperty(startingPoint);
+    this.basePrice = new SimpleDoubleProperty(basePrice);
     this.customers = new ArrayList<>();
     this.assignedFerry = ferry;
   }
@@ -19,12 +22,16 @@ public class FerryTrip {
     return this.assignedFerry;
   }
 
-  String getDestination() {
+  public SimpleStringProperty destinationProperty(){
     return this.destination;
   }
 
-  String getStartingPoint() {
+  public SimpleStringProperty startingPointProperty(){
     return this.startingPoint;
+  }
+
+  public SimpleDoubleProperty basePriceProperty(){
+    return this.basePrice;
   }
 
   double getCurrentRevenue() {
@@ -52,11 +59,7 @@ public class FerryTrip {
   }
 
   double getPrice() {
-    return basePrice - discount;
-  }
-
-  double getBasePrice() {
-    return this.basePrice;
+    return this.basePrice.get() - discount;
   }
 
   ArrayList<Customer> getCustomers() {

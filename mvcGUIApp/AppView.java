@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class AppView {
     private VBox view;
-    //private TableView<> ;
+    private TableView<FerryTrip> trips;
 
     private AppController controller;
     private AppModel model;
@@ -45,6 +45,19 @@ public class AppView {
     }
 
     private void createAndLayoutControls(){
+        this.trips = new TableView<>();
+        TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
+        destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+
+        TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
+        startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+
+        TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
+        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
+
+        this.trips.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
+        this.trips.setItems(model.tripsProperty());
+
         Label loginLabel = new Label("LOGIN PAGE");
 
         Button backToLoginBtn = new Button("Back to Login Page");
