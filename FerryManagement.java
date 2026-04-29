@@ -18,13 +18,6 @@ public class FerryManagement implements AssignDiscount {
         trips.get(ferry).add(trip);
     }
 
-    void addEmptyFerry(Ferry ferry) {
-        this.trips.put(ferry, new ArrayList<>());
-        for (int i = 0; i <= 1; i++) {
-            trips.get(ferry).add(null);
-        }
-    }
-
     void setFerryTripList(FerryTrip trip, int index) {
         int count = 1;
 
