@@ -3,21 +3,40 @@ import javafx.collections.FXCollections;
 
 public class AppModel {
     private final ObservableList<FerryTrip> trips;
+    private final ObservableList<Ferry> ferries;
 
     AppModel() {
         // dummy data
-        Ferry f1 = new Ferry("F1", 100);
-        Ferry f2 = new Ferry("F2", 100);
-        Ferry f3 = new Ferry("F3", 100);
-        Ferry f4 = new Ferry("F4", 100);
+        this.ferries = FXCollections.observableArrayList(
+            new Ferry("F1", 100),
+            new Ferry("F2", 100),
+            new Ferry("F3", 100),
+            new Ferry("F4", 100)
+        );
 
         this.trips = FXCollections.observableArrayList(
-            new FerryTrip("Sydney", "Jakarta", 80, f1),
-            new FerryTrip("Jakarta", "Sydney", 70, f1),
-            new FerryTrip("Kuala Lumpur", "Tokyo", 120, f2),
-            new FerryTrip("Tokyo", "Kuala Lumpur", 130, f3),
-            new FerryTrip("London", "Paris", 180, f4),
-            new FerryTrip("Paris", "London", 190, f4)
+            new FerryTrip("Sydney", "Jakarta", 80, this.ferries.get(0)),
+            new FerryTrip("Jakarta", "Sydney", 70, this.ferries.get(1)),
+            new FerryTrip("Kuala Lumpur", "Tokyo", 120, this.ferries.get(2)),
+            new FerryTrip("Tokyo", "Kuala Lumpur", 130, this.ferries.get(2)),
+            new FerryTrip("London", "Paris", 180, this.ferries.get(3)),
+            new FerryTrip("Paris", "London", 190, this.ferries.get(3))
         );
+    }
+
+    public ObservableList<FerryTrip> tripsProperty() {
+        return this.trips;
+    }
+
+    public ObservableList<Ferry> ferriesProperty() {
+        return this.ferries;
+    }
+
+    public void addTrip(FerryTrip trip) {
+        this.trips.add(trip);
+    }
+
+    public void addFerry(Ferry ferry) {
+        this.ferries.add(ferry);
     }
 }
