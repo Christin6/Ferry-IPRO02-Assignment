@@ -5,11 +5,11 @@ public class AppController {
         this.model = model;
     };
 
-    //Ferry Trips
+    // Ferry Trips
     public void addTrip(FerryTrip trip) {
         this.model.addTrip(trip);
     }
-    
+
     public void updateTrip(int index, FerryTrip trip) {
         this.model.updateTrip(index, trip);
     }
@@ -18,7 +18,7 @@ public class AppController {
         this.model.removeTrip(index);
     }
 
-    //Ferries
+    // Ferries
     public void addFerry(Ferry ferry) {
         this.model.addFerry(ferry);
     }

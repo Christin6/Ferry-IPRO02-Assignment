@@ -22,15 +22,15 @@ public class FerryTrip {
     return this.assignedFerry;
   }
 
-  public SimpleStringProperty destinationProperty(){
+  public SimpleStringProperty destinationProperty() {
     return this.destination;
   }
 
-  public SimpleStringProperty startingPointProperty(){
+  public SimpleStringProperty startingPointProperty() {
     return this.startingPoint;
   }
 
-  public SimpleDoubleProperty priceProperty(){
+  public SimpleDoubleProperty priceProperty() {
     return this.basePrice;
   }
 
@@ -39,11 +39,10 @@ public class FerryTrip {
 
     for (Customer customer : customers) {
       if (customer instanceof AdultCustomer) {
-        totalRevenue.add(getPrice());
-      }
-      else {
+        totalRevenue.add(priceProperty());
+      } else {
         ChildCustomer child = (ChildCustomer) customer;
-        totalRevenue.add(getPrice().multiply(child.getChildFareMultiplier()));
+        totalRevenue.add(priceProperty().multiply(child.getChildFareMultiplier()));
       }
     }
 
@@ -65,10 +64,8 @@ public class FerryTrip {
 
   public String toString() {
     return "FerryTrip\n" +
-        "destination: " + destination + '\n' +
-        "startingPoint: " + startingPoint + '\n' +
-        "basePrice: " + basePrice + '\n' +
-        "discount: " + discount + '\n' +
+        "destination: " + destinationProperty().get() + '\n' +
+        "startingPoint: " + startingPointProperty().get() + '\n' +
         "customers: " + customers + '\n';
   }
 }

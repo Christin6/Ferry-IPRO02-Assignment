@@ -1,44 +1,23 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
+
+import javafx.collections.ObservableList;
+
 import java.util.Collections;
 import java.util.Comparator;
 
 public class FerryManagement implements AssignDiscount {
-    private HashMap<Ferry, ArrayList<FerryTrip>> trips;
+    private final ObservableList<FerryTrip> trips;
+    private final ObservableList<Ferry> ferries;
 
-    FerryManagement() {
-        trips = new HashMap<>();
-    }
-    
-    void addFerryTrip(Ferry ferry, FerryTrip trip) {
-        if (!trips.containsKey(ferry)) {
-            trips.put(ferry, new ArrayList<>());
-        }
-        trips.get(ferry).add(trip);
-    }
-
-    void addEmptyFerry(Ferry ferry) {
-        this.trips.put(ferry, new ArrayList<>());
-        for (int i = 0; i <= 1; i++) {
-            trips.get(ferry).add(null);
-        }
+    FerryManagement(AppModel model){
+        this.trips = model.tripsProperty();
+        this.ferries = model.ferriesProperty();
     }
 
     void setFerryTripList(FerryTrip trip, int index) {
-        int count = 1;
-
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> ferry : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = ferry.getValue();
-
-            for (int i = 0; i < ferryTrip.size(); i++) {
-                if (count == index) {
-                    ferryTrip.set(i, trip);
-                    return;
-                }
-                count++;
-            }
-        }
+        this.trips.set(index, trip);
     }
 
     void bookTrip(Customer customer, FerryTrip trip) {
@@ -50,25 +29,22 @@ public class FerryManagement implements AssignDiscount {
 
         int count = 1;
 
-        for (ArrayList<FerryTrip> tripList : trips.values()) {
-            for (FerryTrip trip : tripList) {
+            for (FerryTrip trip : this.trips) {
                 if (trip == null) {
                     System.out.println(count + ". (No trip scheduled)");
                     count++;
                     continue;
                 }
                 System.out.println(count + ". " + "Trip from "
-                        + trip.getStartingPoint() + " to " +
-                        trip.getDestination() + " (Price: $" + trip.getPrice() + ")");
+                        + trip.startingPointProperty().get() + " to " +
+                        trip.destinationProperty().get() + " (Price: $" + trip.getPrice() + ")");
 
                 count++;
             }
         }
-    }
 
     Customer findCustomerByName(String name) {
-        for (ArrayList<FerryTrip> tripList : trips.values()) {
-            for (FerryTrip trip : tripList) {
+            for (FerryTrip trip : this.trips) {
                 if (trip == null)
                     continue;
                 for (Customer cust : trip.getCustomers()) {
@@ -77,15 +53,13 @@ public class FerryManagement implements AssignDiscount {
                     }
                 }
             }
-        }
         return null; // new customer
     }
 
     public ArrayList<FerryTrip> customerBookedTrip(String customerName) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
 
-        for (ArrayList<FerryTrip> tripList : trips.values()) {
-            for (FerryTrip trip : tripList) {
+            for (FerryTrip trip : this.trips) {
                 if (trip == null) {
                     continue;
                 }
@@ -95,14 +69,12 @@ public class FerryManagement implements AssignDiscount {
                     }
                 }
             }
-        }
 
         return bookingList;
     }
 
     boolean setGuardian(String parentName, ChildCustomer child) {
-        for (ArrayList<FerryTrip> bookingList : trips.values()) {
-            for (FerryTrip trip : bookingList) {
+            for (FerryTrip trip : this.trips) {
                 if (trip == null) {
                     continue;
                 }
@@ -113,7 +85,6 @@ public class FerryManagement implements AssignDiscount {
                     }
                 }
             }
-        }
         return false;
     }
 
@@ -138,17 +109,15 @@ public class FerryManagement implements AssignDiscount {
     ArrayList<FerryTrip> getAvailability(String destination, String startingPoint) {
         ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
-        for (Ferry ferry : trips.keySet()) {
-            for (FerryTrip trip : trips.get(ferry)) {
+        for (FerryTrip trip : this.trips) {
                 if (trip == null) {
                     continue;
                 }
-                if (trip.getDestination().equals(destination)
-                        && trip.getStartingPoint().equals(startingPoint)) {
+                if (trip.destinationProperty().get().equals(destination)
+                        && trip.startingPointProperty().get().equals(startingPoint)) {
                     availableTrips.add(trip);
                 }
             }
-        }
 
         return availableTrips;
     }
@@ -157,18 +126,16 @@ public class FerryManagement implements AssignDiscount {
             double priceMaximum) {
         ArrayList<FerryTrip> availableTrips = new ArrayList<>();
 
-        for (Ferry ferry : trips.keySet()) {
-            for (FerryTrip trip : trips.get(ferry)) {
+            for (FerryTrip trip : this.trips) {
                 if (trip == null) {
                     continue;
                 }
-                if (trip.getDestination().equals(destination)
-                        && trip.getStartingPoint().equals(startingPoint)
+                if (trip.destinationProperty().get().equals(destination)
+                        && trip.startingPointProperty().get().equals(startingPoint)
                         && trip.getPrice() <= priceMaximum) {
                     availableTrips.add(trip);
                 }
             }
-        }
 
         return availableTrips;
     }
@@ -179,12 +146,9 @@ public class FerryManagement implements AssignDiscount {
 
         int count = 1;
 
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = trip.getValue();
-            Ferry ferry = trip.getKey();
-            System.out.println("Ferry: " + ferry + "\n");
+            System.out.println("Ferry: " + this.ferries + "\n");
 
-            for (FerryTrip f : ferryTrip) {
+            for (FerryTrip f : this.trips) {
                 if (f == null) {
                     System.out.println(count + ". (No trip scheduled)");
                 } else {
@@ -196,13 +160,12 @@ public class FerryManagement implements AssignDiscount {
 
             System.out.println("-----------------------------\n");
 
-        }
-
         System.out.println("");
     }
 
     public static final Comparator<FerryTrip> compareByPriceAsc = Comparator.comparing(FerryTrip::getCurrentRevenue);
-    public static final Comparator<FerryTrip> compareByPriceDesc = Comparator.comparing(FerryTrip::getCurrentRevenue).reversed();
+    public static final Comparator<FerryTrip> compareByPriceDesc = Comparator.comparing(FerryTrip::getCurrentRevenue)
+            .reversed();
 
     void getFerryTripsDataSorted(Comparator<FerryTrip> comparator) {
         ArrayList<FerryTrip> sortedTrips = new ArrayList<>();
@@ -264,7 +227,7 @@ public class FerryManagement implements AssignDiscount {
                 if (!(f == tripTarget)) {
                     continue;
                 }
-                if (amount > f.getBasePrice()) {
+                if (amount > f.basePriceProperty().get()) {
                     System.out.println("Invalid amount, the discount cannot be over the base price!\n");
                     executeSettingDiscount = false;
                     break;
@@ -299,7 +262,7 @@ public class FerryManagement implements AssignDiscount {
 
                 for (FerryTrip f : ferryTrip) {
                     if (f == tripTarget) {
-                        double newAmount = (((double) percentage / 100) * (f.getBasePrice()));
+                        double newAmount = (((double) percentage / 100) * (f.basePriceProperty().get()));
 
                         f.setDiscount(newAmount);
                     }
