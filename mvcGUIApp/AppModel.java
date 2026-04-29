@@ -32,11 +32,29 @@ public class AppModel {
         return this.ferries;
     }
 
+    //Ferry Trips
     public void addTrip(FerryTrip trip) {
         this.trips.add(trip);
     }
 
+    public void updateTrip(int index, FerryTrip trip) {
+        this.trips.set(index, trip);
+    }
+
+    public void removeTrip(int index) {
+        this.trips.remove(index);
+    }
+
+    //Ferries
     public void addFerry(Ferry ferry) {
         this.ferries.add(ferry);
+    }
+    
+    public void updateFerry(int index, Ferry ferry) {
+        this.ferries.set(index, ferry);
+    }
+
+    public void removeFerry(int index) {
+        this.ferries.remove(index);
     }
 }
