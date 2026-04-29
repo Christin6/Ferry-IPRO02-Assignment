@@ -68,9 +68,9 @@ public class FerryTrip {
 
   public String toString() {
     return "FerryTrip\n" +
-        "destination: " + destination + '\n' +
-        "startingPoint: " + startingPoint + '\n' +
-        "basePrice: " + basePrice + '\n' +
+        "destination: " + destinationProperty().get() + '\n' +
+        "startingPoint: " + startingPointProperty().get() + '\n' +
+        "basePrice: " + basePriceProperty().get() + '\n' +
         "discount: " + discount + '\n' +
         "customers: " + customers + '\n';
   }

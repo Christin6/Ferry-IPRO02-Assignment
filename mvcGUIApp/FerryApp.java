@@ -7,7 +7,7 @@ public class FerryApp extends Application {
         primaryStage.setTitle("Ferry Management App");
 
         AppModel model = new AppModel();
-        AppController controller = new AppController(model);
+        AppController controller = new AppController(model, ferryManagementModel);
         AppView view = new AppView(controller, model, primaryStage);
 
         Scene scene = new Scene(view.asParent(), 600, 300);
