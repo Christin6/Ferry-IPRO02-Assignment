@@ -2,9 +2,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "BasicTest",
+            "name": "FerryApp",
             "request": "launch",
-            "mainClass": "BasicTest",
+            "mainClass": "FerryApp",
             "projectName": "Ferry-IPRO02-Assignment_2247d44",
             "vmArgs": "--module-path \"${env:PATH_TO_FX}\" --add-modules javafx.controls,javafx.fxml"
         }
