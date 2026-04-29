@@ -19,6 +19,8 @@ public class AppView {
     private VBox loginView;
     private VBox customerView;
     private VBox adminView;
+    private Stage adminPane;
+    private Stage customerPane;
     private TableView <FerryTrip> tripsView;
 
     private AppController controller;
@@ -30,6 +32,7 @@ public class AppView {
         this.model = model;
         this.primaryStage = primaryStage;
 
+        createTripsViewTable();
         createAndConfigurePane();
         createAndLayoutControls();
         updateControllerFromListeners();
@@ -48,7 +51,7 @@ public class AppView {
 
     }
 
-    private void createAndLayoutControls(){
+    private void createTripsViewTable() {
         this.tripsView = new TableView<>();
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
@@ -61,7 +64,9 @@ public class AppView {
 
         this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
         this.tripsView.setItems(model.tripsProperty());
+    }
 
+    private void createAndLayoutControls() {
         //For now, all the admin buttons are below here
         Button viewDetailsBtn = new Button("View Details");
         
@@ -74,34 +79,64 @@ public class AppView {
 
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
-            this.changeScene(customerView);
+            showCustomerPane();
         });
 
         Button adminBtn = new Button("Admin");
         adminBtn.setOnAction(e -> {
-            this.changeScene(adminView);
+            showAdminPane();
         });
 
         // login view setup
-        Label loginLabel = new Label("LOGIN PAGE");
+        Label loginLabel = new Label("LOGIN AS");
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
         // Admin view setup
+        this.adminPane = new Stage();
         Button backToLoginBtnFromAdmin = new Button("Logout");
         backToLoginBtnFromAdmin.setOnAction(e -> {
-            this.changeScene(loginView);
+            this.primaryStage.show();
+            this.adminPane.close();
         });
         Label adminLabel = new Label();
-        //Added 'addTripBtn' just to test if the frame works
-        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin, addTripBtn); 
+        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin);
+        Scene adminScene = new Scene(adminView, 800, 500);
+        this.adminPane.setScene(adminScene);
 
+        // Customer view setup
+        this.customerPane = new Stage();
         // Customer view setup
         Button backToLoginBtnFromCust = new Button("Logout");
         backToLoginBtnFromCust.setOnAction(e -> {
-            this.changeScene(loginView);
+            this.primaryStage.show();
+            this.customerPane.close();
         });
-        Label customerLabel = new Label();
-        customerView.getChildren().addAll(customerLabel, backToLoginBtnFromCust, tripsView);
+
+        Button bookTripBtn = new Button("Book");
+        bookTripBtn.setOnAction(null);
+
+        Button checkHistoryBtn = new Button("Booking History");
+        checkHistoryBtn.setOnAction(null);
+
+        Button filterBtn = new Button("Filter");
+        filterBtn.setOnAction(null);
+
+        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        customerView.getChildren().addAll(customerControlMenu, tripsView);
+        
+        Scene customerScene = new Scene(customerView, 800, 500);
+
+        this.customerPane.setScene(customerScene);
+    }
+
+    private void showAdminPane() {
+        this.adminPane.show();
+        this.primaryStage.close();
+    }
+
+    private void showCustomerPane() {
+        this.customerPane.show();
+        this.primaryStage.close();
     }
 
     //For now all the admin modal windows are here
@@ -166,11 +201,6 @@ public class AppView {
 
         adminView = new VBox(5);
         adminView.setAlignment(Pos.CENTER);
-    }
-
-    private void changeScene(Parent root) {
-        Scene newScene = new Scene(root, 600, 300);
-        primaryStage.setScene(newScene);
     }
 
     private void configTextFieldForDoubles(TextField field) {
