@@ -5,12 +5,18 @@ public class FerryTrip {
   private double basePrice;
   private double discount = 0;
   private ArrayList<Customer> customers;
+  private Ferry assignedFerry;
 
-  FerryTrip(String destination, String startingPoint, double basePrice) {
+  FerryTrip(String destination, String startingPoint, double basePrice, Ferry ferry) {
     this.destination = destination;
     this.startingPoint = startingPoint;
     this.basePrice = basePrice;
     this.customers = new ArrayList<>();
+    this.assignedFerry = ferry;
+  }
+
+  Ferry getAssignedFerry() {
+    return this.assignedFerry;
   }
 
   String getDestination() {
