@@ -17,6 +17,8 @@ public class AppView {
     private VBox loginView;
     private VBox customerView;
     private VBox adminView;
+    private Stage adminPane;
+    private Stage customerPane;
     private TableView <FerryTrip> tripsView;
 
     private AppController controller;
@@ -62,12 +64,12 @@ public class AppView {
 
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
-            this.changeScene(customerView);
+            showCustomerPane();
         });
 
         Button adminBtn = new Button("Admin");
         adminBtn.setOnAction(e -> {
-            this.changeScene(adminView);
+            showAdminPane();
         });
 
         // login view setup
@@ -75,20 +77,41 @@ public class AppView {
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
         // Admin view setup
+        this.adminPane = new Stage();
         Button backToLoginBtnFromAdmin = new Button("Logout");
         backToLoginBtnFromAdmin.setOnAction(e -> {
-            this.changeScene(loginView);
+            this.primaryStage.show();
+            this.adminPane.close();
         });
         Label adminLabel = new Label();
         adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin);
+        Scene adminScene = new Scene(adminView, 800, 500);
+        this.adminPane.setScene(adminScene);
 
+        // Customer view setup
+        this.customerPane = new Stage();
         // Customer view setup
         Button backToLoginBtnFromCust = new Button("Logout");
         backToLoginBtnFromCust.setOnAction(e -> {
-            this.changeScene(loginView);
+            this.primaryStage.show();
+            this.customerPane.close();
         });
         Label customerLabel = new Label();
         customerView.getChildren().addAll(customerLabel, backToLoginBtnFromCust, tripsView);
+        
+        Scene customerScene = new Scene(customerView, 800, 500);
+
+        this.customerPane.setScene(customerScene);
+    }
+
+    private void showAdminPane() {
+        this.adminPane.show();
+        this.primaryStage.close();
+    }
+
+    private void showCustomerPane() {
+        this.customerPane.show();
+        this.primaryStage.close();
     }
 
     private void createAndConfigurePane() {
@@ -100,10 +123,5 @@ public class AppView {
 
         adminView = new VBox(5);
         adminView.setAlignment(Pos.CENTER);
-    }
-
-    private void changeScene(Parent root) {
-        Scene newScene = new Scene(root, 600, 300);
-        primaryStage.setScene(newScene);
     }
 }
