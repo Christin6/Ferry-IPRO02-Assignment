@@ -17,7 +17,7 @@ public class AppView {
     private VBox loginView;
     private VBox customerView;
     private VBox adminView;
-    // private TableView<> ;
+    private TableView <FerryTrip> tripsView;
 
     private AppController controller;
     private AppModel model;
@@ -47,7 +47,7 @@ public class AppView {
     }
 
     private void createAndLayoutControls(){
-        this.trips = new TableView<>();
+        this.tripsView = new TableView<>();
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
 
@@ -57,8 +57,8 @@ public class AppView {
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
 
-        this.trips.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
-        this.trips.setItems(model.tripsProperty());
+        this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
+        this.tripsView.setItems(model.tripsProperty());
 
         Label loginLabel = new Label("LOGIN PAGE");
 
