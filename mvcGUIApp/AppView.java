@@ -59,10 +59,10 @@ public class AppView {
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
 
-        TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
-        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
+        TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
+        tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-        this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
+        this.tripsView.getColumns().addAll(destinationCol, startingPointCol, tripPriceCol);
         this.tripsView.setItems(model.tripsProperty());
     }
 

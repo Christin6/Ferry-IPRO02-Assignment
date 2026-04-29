@@ -6,7 +6,7 @@ public class FerryTrip {
   private final SimpleStringProperty destination;
   private final SimpleStringProperty startingPoint;
   private final SimpleDoubleProperty basePrice;
-  private double discount = 0;
+  private SimpleDoubleProperty discount = new SimpleDoubleProperty(0);
   private ArrayList<Customer> customers;
   private Ferry assignedFerry;
 
@@ -30,20 +30,20 @@ public class FerryTrip {
     return this.startingPoint;
   }
 
-  public SimpleDoubleProperty basePriceProperty(){
+  public SimpleDoubleProperty priceProperty(){
     return this.basePrice;
   }
 
-  double getCurrentRevenue() {
-    double totalRevenue = 0;
+  SimpleDoubleProperty getCurrentRevenue() {
+    SimpleDoubleProperty totalRevenue = new SimpleDoubleProperty(0);
 
     for (Customer customer : customers) {
       if (customer instanceof AdultCustomer) {
-        totalRevenue += getPrice();
+        totalRevenue.add(getPrice());
       }
       else {
         ChildCustomer child = (ChildCustomer) customer;
-        totalRevenue += getPrice()*child.getChildFareMultiplier();
+        totalRevenue.add(getPrice().multiply(child.getChildFareMultiplier()));
       }
     }
 
@@ -55,11 +55,8 @@ public class FerryTrip {
   }
 
   void setDiscount(double newValue) {
-    this.discount = newValue;
-  }
-
-  double getPrice() {
-    return this.basePrice.get() - discount;
+    this.discount.set(newValue);
+    this.basePrice.subtract(this.discount);
   }
 
   ArrayList<Customer> getCustomers() {
