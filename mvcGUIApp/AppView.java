@@ -60,13 +60,6 @@ public class AppView {
         this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
         this.tripsView.setItems(model.tripsProperty());
 
-        Label loginLabel = new Label("LOGIN PAGE");
-
-        Button backToLoginBtn = new Button("Back to Login Page");
-        backToLoginBtn.setOnAction(e -> {
-            
-        });
-
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
             this.changeScene(customerView);
