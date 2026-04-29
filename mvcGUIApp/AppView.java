@@ -30,6 +30,7 @@ public class AppView {
         this.model = model;
         this.primaryStage = primaryStage;
 
+        createTripsViewTable();
         createAndConfigurePane();
         createAndLayoutControls();
         updateControllerFromListeners();
@@ -48,7 +49,7 @@ public class AppView {
 
     }
 
-    private void createAndLayoutControls(){
+    private void createTripsViewTable() {
         this.tripsView = new TableView<>();
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
@@ -61,7 +62,9 @@ public class AppView {
 
         this.tripsView.getColumns().addAll(destinationCol, startingPointCol, basePriceCol);
         this.tripsView.setItems(model.tripsProperty());
+    }
 
+    private void createAndLayoutControls(){
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
             showCustomerPane();
@@ -73,7 +76,7 @@ public class AppView {
         });
 
         // login view setup
-        Label loginLabel = new Label("LOGIN PAGE");
+        Label loginLabel = new Label("LOGIN AS");
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
         // Admin view setup
@@ -96,8 +99,18 @@ public class AppView {
             this.primaryStage.show();
             this.customerPane.close();
         });
-        Label customerLabel = new Label();
-        customerView.getChildren().addAll(customerLabel, backToLoginBtnFromCust, tripsView);
+
+        Button bookTripBtn = new Button("Book");
+        bookTripBtn.setOnAction(null);
+
+        Button checkHistoryBtn = new Button("Booking History");
+        checkHistoryBtn.setOnAction(null);
+
+        Button filterBtn = new Button("Filter");
+        filterBtn.setOnAction(null);
+
+        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        customerView.getChildren().addAll(customerControlMenu, tripsView);
         
         Scene customerScene = new Scene(customerView, 800, 500);
 
