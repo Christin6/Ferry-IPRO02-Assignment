@@ -14,14 +14,16 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AppView {
-    private VBox view;
-    //private TableView<> ;
+    private VBox loginView;
+    private VBox customerView;
+    private VBox adminView;
+    // private TableView<> ;
 
     private AppController controller;
     private AppModel model;
     private Stage primaryStage;
-    
-    public AppView(AppController controller, AppModel model, Stage primaryStage){
+
+    public AppView(AppController controller, AppModel model, Stage primaryStage) {
         this.controller = controller;
         this.model = model;
         this.primaryStage = primaryStage;
@@ -33,7 +35,7 @@ public class AppView {
     }
 
     public Parent asParent() {
-        return view;
+        return loginView;
     }
 
     private void observeModelAndUpdateControls() {
@@ -44,48 +46,48 @@ public class AppView {
 
     }
 
-    private void createAndLayoutControls(){
-        Label loginLabel = new Label("LOGIN PAGE");
-
-        Button backToLoginBtn = new Button("Back to Login Page");
-        backToLoginBtn.setOnAction(e -> {
-            
-        });
-
+    private void createAndLayoutControls() {
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
-            //Scene needs to be adjusted later on
-            Label customerLabel = new Label();
-
-            VBox root = new VBox(5, customerLabel);
-            root.setAlignment(Pos.CENTER);
-
-            Scene customerScene = new Scene(root, 500, 300);
-
-            primaryStage.setScene(customerScene);
+            this.changeScene(customerView);
         });
 
         Button adminBtn = new Button("Admin");
         adminBtn.setOnAction(e -> {
-            Label adminLabel = new Label();
-
-            VBox root = new VBox(5, adminLabel);
-            root.setAlignment(Pos.CENTER);
-
-            Scene adminScene = new Scene(root, 500, 300);
-
-            primaryStage.setScene(adminScene);
+            this.changeScene(adminView);
         });
 
-        VBox root = new VBox(loginLabel, customerBtn, adminBtn);
-        root.setAlignment(Pos.CENTER);
+        // login view setup
+        Label loginLabel = new Label("LOGIN PAGE");
+        loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
-        view.getChildren().addAll(loginLabel, customerBtn, adminBtn);
+        Button backToLoginBtn = new Button("Back to Login Page");
+        backToLoginBtn.setOnAction(e -> {
+            this.changeScene(loginView);
+        });
+
+        // Admin view setup
+        Label adminLabel = new Label();
+        adminView.getChildren().addAll(adminLabel, backToLoginBtn);
+
+        // Customer view setup
+        Label customerLabel = new Label();
+        customerView.getChildren().addAll(customerLabel, backToLoginBtn);
     }
 
     private void createAndConfigurePane() {
-        view = new VBox(5);
-        view.setAlignment(Pos.CENTER);
+        loginView = new VBox(5);
+        loginView.setAlignment(Pos.CENTER);
+
+        customerView = new VBox(5);
+        customerView.setAlignment(Pos.CENTER);
+
+        adminView = new VBox(5);
+        adminView.setAlignment(Pos.CENTER);
+    }
+
+    private void changeScene(Parent root) {
+        Scene newScene = new Scene(root, 600, 300);
+        primaryStage.setScene(newScene);
     }
 }
-
