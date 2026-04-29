@@ -74,18 +74,21 @@ public class AppView {
         Label loginLabel = new Label("LOGIN PAGE");
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
-        Button backToLoginBtn = new Button("Back to Login Page");
-        backToLoginBtn.setOnAction(e -> {
+        // Admin view setup
+        Button backToLoginBtnFromAdmin = new Button("Logout");
+        backToLoginBtnFromAdmin.setOnAction(e -> {
             this.changeScene(loginView);
         });
-
-        // Admin view setup
         Label adminLabel = new Label();
-        adminView.getChildren().addAll(adminLabel, backToLoginBtn);
+        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin);
 
         // Customer view setup
+        Button backToLoginBtnFromCust = new Button("Logout");
+        backToLoginBtnFromCust.setOnAction(e -> {
+            this.changeScene(loginView);
+        });
         Label customerLabel = new Label();
-        customerView.getChildren().addAll(customerLabel, backToLoginBtn);
+        customerView.getChildren().addAll(customerLabel, backToLoginBtnFromCust, tripsView);
     }
 
     private void createAndConfigurePane() {
