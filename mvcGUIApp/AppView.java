@@ -59,12 +59,15 @@ public class AppView {
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -78,12 +81,15 @@ public class AppView {
         
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
@@ -96,7 +102,7 @@ public class AppView {
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
 
-        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
         customerNumCol.setCellValueFactory(cellData ->
             new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
         );
@@ -142,9 +148,9 @@ public class AppView {
             this.adminPane.close();
         });
         
-        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
+        HBox adminControlMenu = new HBox(5, addTripBtn, backToLoginBtnFromAdmin);
         adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
-        Scene adminScene = new Scene(adminView, 800, 500);
+        Scene adminScene = new Scene(adminView, 1200, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
@@ -165,10 +171,10 @@ public class AppView {
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(null);
 
-        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
         
-        Scene customerScene = new Scene(customerView, 800, 500);
+        Scene customerScene = new Scene(customerView, 1200, 500);
 
         this.customerPane.setScene(customerScene);
     }
