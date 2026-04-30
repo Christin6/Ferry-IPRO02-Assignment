@@ -1,10 +1,5 @@
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-
 import javafx.collections.FXCollections;
 
 public class AppModel {
