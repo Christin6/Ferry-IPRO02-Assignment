@@ -1,4 +1,8 @@
 import javafx.beans.property.SimpleIntegerProperty;
+<<<<<<< HEAD
+=======
+import javafx.collections.FXCollections;
+>>>>>>> a897bdde569ef89c827d3c11564edf0ad06befee
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -24,8 +28,14 @@ public class AppView {
     private VBox adminView;
     private Stage adminPane;
     private Stage customerPane;
-    private TableView <FerryTrip> customerTripsView;
-    private TableView <FerryTrip> adminTripsView;
+    private TableView<FerryTrip> customerTripsView;
+    private TableView<FerryTrip> adminTripsView;
+    private ObservableList<FerryTrip> filteredTrips;
+
+    // for filtering in customer view
+    private String selectedStart;
+    private String selectedDestination;
+    private Double inputtedMaxPrice;
 
     private AppController controller;
     private AppModel model;
@@ -34,6 +44,8 @@ public class AppView {
     public AppView(AppController controller, AppModel model, Stage primaryStage) {
         this.controller = controller;
         this.model = model;
+        this.filteredTrips = FXCollections.observableArrayList(
+                this.model.tripsProperty());
         this.primaryStage = primaryStage;
 
         createCustViewTable();
@@ -61,21 +73,18 @@ public class AppView {
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
-        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
-        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
-        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         this.customerTripsView.getColumns().addAll(ferryNameCol, destinationCol, startingPointCol, tripPriceCol);
-        this.customerTripsView.setItems(model.tripsProperty());
+        this.customerTripsView.setItems(this.filteredTrips);
     }
 
     private void createAdminViewTable() {
@@ -83,15 +92,12 @@ public class AppView {
         
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
-        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
-        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
-        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -104,7 +110,7 @@ public class AppView {
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
 
-        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
         customerNumCol.setCellValueFactory(cellData ->
             new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
         );
@@ -150,9 +156,9 @@ public class AppView {
             this.adminPane.close();
         });
         
-        HBox adminControlMenu = new HBox(5, addTripBtn, backToLoginBtnFromAdmin);
+        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
         adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
-        Scene adminScene = new Scene(adminView, 1200, 500);
+        Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
@@ -178,12 +184,12 @@ public class AppView {
         });
 
         Button filterBtn = new Button("Filter");
-        filterBtn.setOnAction(null);
+        filterBtn.setOnAction(e -> createFilterForm());
 
-        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
         
-        Scene customerScene = new Scene(customerView, 1200, 500);
+        Scene customerScene = new Scene(customerView, 800, 500);
 
         this.customerPane.setScene(customerScene);
     }
@@ -213,6 +219,7 @@ public class AppView {
         lName.setPromptText("Enter last name");
         TextField age = new TextField();
         age.setPromptText("Enter your age");
+        configTextFieldForInts(age);
 
         //Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
@@ -224,21 +231,60 @@ public class AppView {
         RadioButton noBtn = new RadioButton("No");
         noBtn.setToggleGroup(toggleGroup);
 
-        //Check box for medical conditions
-        CheckBox seasickCBox = new CheckBox("Sea sick");
-        CheckBox pregnantCBox = new CheckBox("Pregnant");
-        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
-        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
-        medConditionRow.setAlignment(Pos.CENTER);
-
-        if (yesBtn.isSelected()) {
-            
-        }
-        else if (noBtn.isSelected()) {
-            
-        }
-
         Button submitBtn = new Button("Submit");
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox ageRow = new HBox(5, new Label("Age:"), age);
+        ageRow.setAlignment(Pos.CENTER);
+
+        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        medQuestionRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, warning, btnRow);
+        root.setAlignment(Pos.CENTER);
+        Scene bookingScene = new Scene(root, 500, 300);
+        stage.setScene(bookingScene);
+        stage.show();
+
+        yesBtn.setOnAction(e -> {
+            CheckBox seasickCBox = new CheckBox("Sea sick");
+            CheckBox pregnantCBox = new CheckBox("Pregnant");
+            CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+            HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+            medConditionRow.setAlignment(Pos.CENTER);
+
+            //Basically, we have to remove the warning and the btnRow
+            //Before adding the medConditionRow
+
+            for (int i = 0; i < root.getChildren().size(); i++) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    root.getChildren().remove(i); //Remove the btnRow
+                    root.getChildren().remove(i-1); //Remove the warning
+                }
+            }
+            root.getChildren().addAll(medConditionRow, warning, btnRow);
+        });
+
+        noBtn.setOnAction(e -> {
+            for (int i = root.getChildren().size() - 1; i > 0; i--) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    //Remove only the medConditionRow
+                    root.getChildren().remove(i-2);
+                    break;
+                }
+            }
+        });
+
         submitBtn.setOnAction(e -> {
             String fNameText = fName.getText().trim();
             String lNameText = lName.getText().trim();
@@ -250,29 +296,111 @@ public class AppView {
             }
             //Need code here to put data
         });
+    }
 
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> {
-            stage.close();
+    private void applyFilters() {
+        this.filteredTrips.clear();
+        for (FerryTrip t : this.model.tripsProperty()) {
+            // checking starting point
+            boolean matchesStart = false;
+            if (this.selectedStart == null || t.startingPointProperty().get().equals(this.selectedStart)) {
+                matchesStart = true;
+            }
+
+            // checking destination
+            boolean matchesDestination = false;
+            if (selectedDestination == null || t.destinationProperty().get().equals(this.selectedDestination)) {
+                matchesDestination = true;
+            }
+
+            // checking maximum price
+            boolean matchesPrice = false;
+            if (this.inputtedMaxPrice == null || t.priceProperty().get() <= this.inputtedMaxPrice) {
+                matchesPrice = true;
+            }
+
+            // if everything matches, put trip to customer's table view
+            if (matchesStart && matchesDestination && matchesPrice) {
+                this.filteredTrips.add(t);
+            }
+        }
+    }
+
+    private void createFilterForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Filter by");
+        stage.initOwner(this.primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // first row for destination and starting point filters
+        Label filterByStartLabel = new Label("Filter by starting point: ");
+        ToggleGroup filterByStartToggleGroup = new ToggleGroup();
+
+        Label filterByDestinationLabel = new Label("Filter by destination: ");
+        ToggleGroup filterByDestinationToggleGroup = new ToggleGroup();
+
+        VBox filterByStartCol = new VBox(5, filterByStartLabel);
+        VBox filterByDestinationCol = new VBox(5, filterByDestinationLabel);
+
+        for (FerryTrip trip : this.model.tripsProperty()) {
+            RadioButton startRadioBtn = new RadioButton(trip.startingPointProperty().get());
+            startRadioBtn.setToggleGroup(filterByStartToggleGroup);
+            startRadioBtn.setOnAction(e -> {
+                this.selectedStart = trip.startingPointProperty().get();
+                applyFilters();
+            });
+            filterByStartCol.getChildren().addAll(startRadioBtn);
+
+            RadioButton destinationRadioBtn = new RadioButton(trip.destinationProperty().get());
+            destinationRadioBtn.setToggleGroup(filterByDestinationToggleGroup);
+            destinationRadioBtn.setOnAction(e -> {
+                this.selectedDestination = trip.destinationProperty().get();
+                applyFilters();
+            });
+            filterByDestinationCol.getChildren().addAll(destinationRadioBtn);
+        }
+
+        HBox firstRow = new HBox(5, filterByStartCol, filterByDestinationCol);
+        firstRow.setAlignment(Pos.CENTER);
+
+        // second row for maximum price
+        Label maxPriceLabel = new Label("Maximum price: ");
+        TextField maxPriceInput = new TextField("10000.0");
+        configTextFieldForDoubles(maxPriceInput);
+        maxPriceInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.isEmpty()) {
+                this.inputtedMaxPrice = null;
+            } else {
+                this.inputtedMaxPrice = Double.parseDouble(newVal);
+            }
+            applyFilters();
         });
 
-        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
-        medQuestionRow.setAlignment(Pos.CENTER);
+        HBox secondRow = new HBox(2, maxPriceLabel, maxPriceInput);
+        secondRow.setAlignment(Pos.CENTER);
 
-        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
-        nameRow.setAlignment(Pos.CENTER);
+        // third row for modality options
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(e -> {
+            stage.close();
+        });
+        Button resetFilter = new Button("Reset");
+        resetFilter.setOnAction(e -> {
+            this.selectedStart = null;
+            this.selectedDestination = null;
+            this.inputtedMaxPrice = null;
+            maxPriceInput.setText("10000.0");
+            applyFilters();
+        });
 
-        HBox ageRow = new HBox(5, new Label("Age:"), age);
-        ageRow.setAlignment(Pos.CENTER);
+        HBox thirdRow = new HBox(2, closeBtn, resetFilter);
+        thirdRow.setAlignment(Pos.CENTER);
 
-        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
-        btnRow.setAlignment(Pos.CENTER);
+        // set everything together
+        VBox root = new VBox(5, firstRow, secondRow, thirdRow);
 
-        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, medConditionRow, btnRow, warning);
-        root.setAlignment(Pos.CENTER);
-
-        Scene bookingScene = new Scene(root, 500, 300);
-        stage.setScene(bookingScene);
+        Scene filterScene = new Scene(root, 500, 300);
+        stage.setScene(filterScene);
         stage.show();
     }
 
@@ -305,16 +433,16 @@ public class AppView {
             String customerName = firstNameText + lastNameText;
 
         model.customerBookedTrip(customerName);
-        
-
         });
 
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(e -> {
             stage.close();
         });
+        
+        HBox buttonRow = new HBox(submitBtn, cancelBtn);
 
-        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, submitBtn, cancelBtn);
+        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, buttonRow);
         root.setAlignment(Pos.CENTER);
 
         Scene listScene = new Scene(root, 500, 300);
@@ -428,6 +556,17 @@ public class AppView {
     private void configTextFieldForDoubles(TextField field) {
         field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
             if (c.getControlNewText().matches("\\d+.?\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+    }
+
+    //From Week 8 "Model-View-Controller" page 
+    //but adjusted so there are no minus signs allowed
+    private void configTextFieldForInts(TextField field) {
+        field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
+            if (c.getControlNewText().matches("\\d*")) {
                 return c;
             }
             return null;
