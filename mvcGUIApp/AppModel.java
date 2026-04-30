@@ -1,10 +1,5 @@
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-
 import javafx.collections.FXCollections;
 
 public class AppModel {
@@ -67,6 +62,7 @@ public class AppModel {
     }
 
     void bookTrip(Customer customer, FerryTrip trip) {
+<<<<<<< HEAD
         trip.addCustomer(customer);
     }
 
@@ -97,10 +93,15 @@ public class AppModel {
                 if (cust.getName().equals(name)) {
                     return cust;
                 }
+=======
+        for (FerryTrip t : this.trips) {
+            if (t.equals(trip)) {
+                trip.addCustomer(customer);
+>>>>>>> 5e9ea3e94a74a006c06f64dfd86a3f6d77325ea6
             }
         }
-        return null; // new customer
     }
+<<<<<<< HEAD
 
     public ArrayList<FerryTrip> customerBookedTrip(String customerName) {
         ArrayList<FerryTrip> bookingList = new ArrayList<>();
@@ -311,3 +312,6 @@ public class AppModel {
 // }
 
 }
+=======
+}
+>>>>>>> 5e9ea3e94a74a006c06f64dfd86a3f6d77325ea6

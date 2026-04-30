@@ -1,25 +1,40 @@
-import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleDoubleProperty;
 
 public class FerryTrip {
   private final SimpleStringProperty destination;
   private final SimpleStringProperty startingPoint;
-  private final SimpleDoubleProperty basePrice;
+  private SimpleDoubleProperty basePrice;
+  private SimpleDoubleProperty finalPrice;
   private SimpleDoubleProperty discount = new SimpleDoubleProperty(0);
-  private ArrayList<Customer> customers;
+  private ObservableList<Customer> customers;
   private Ferry assignedFerry;
 
   FerryTrip(String destination, String startingPoint, double basePrice, Ferry ferry) {
     this.destination = new SimpleStringProperty(destination);
     this.startingPoint = new SimpleStringProperty(startingPoint);
     this.basePrice = new SimpleDoubleProperty(basePrice);
-    this.customers = new ArrayList<>();
+    this.finalPrice = new SimpleDoubleProperty(basePrice);
+    this.customers = FXCollections.observableArrayList();
     this.assignedFerry = ferry;
+
+    // to make sure final price changes when discount or base price is changed
+    this.basePrice.addListener((obs, oldVal, newVal) -> {
+        this.finalPrice.set(newVal.doubleValue() - this.discount.get());
+    });
+    this.discount.addListener((obs, oldVal, newVal) -> {
+        this.finalPrice.set(this.basePrice.get() - newVal.doubleValue());
+    });
   }
 
   Ferry getAssignedFerry() {
     return this.assignedFerry;
+  }
+
+  public ObservableList<Customer> customersProperty() {
+    return this.customers;
   }
 
   public SimpleStringProperty destinationProperty() {
@@ -30,8 +45,16 @@ public class FerryTrip {
     return this.startingPoint;
   }
 
-  public SimpleDoubleProperty priceProperty() {
+  public SimpleDoubleProperty discountProperty() {
+    return this.discount;
+  }
+
+  public SimpleDoubleProperty basePriceProperty() {
     return this.basePrice;
+  }
+
+  public SimpleDoubleProperty priceProperty() {
+    return this.finalPrice;
   }
 
   SimpleDoubleProperty getCurrentRevenue() {
@@ -55,11 +78,6 @@ public class FerryTrip {
 
   void setDiscount(double newValue) {
     this.discount.set(newValue);
-    this.basePrice.subtract(this.discount);
-  }
-
-  ArrayList<Customer> getCustomers() {
-    return this.customers;
   }
 
   public String toString() {
