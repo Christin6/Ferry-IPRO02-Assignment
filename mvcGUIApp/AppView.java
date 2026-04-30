@@ -160,7 +160,7 @@ public class AppView {
         //Customer View
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
-            int index = this.tripsView.getSelectionModel().getSelectedIndex();
+            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
             //Need a method to make booking
             createBookingForm();
         });
