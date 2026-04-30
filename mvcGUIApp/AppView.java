@@ -204,6 +204,7 @@ public class AppView {
         lName.setPromptText("Enter last name");
         TextField age = new TextField();
         age.setPromptText("Enter your age");
+        configTextFieldForInts(age);
 
         //Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
@@ -215,21 +216,60 @@ public class AppView {
         RadioButton noBtn = new RadioButton("No");
         noBtn.setToggleGroup(toggleGroup);
 
-        //Check box for medical conditions
-        CheckBox seasickCBox = new CheckBox("Sea sick");
-        CheckBox pregnantCBox = new CheckBox("Pregnant");
-        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
-        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
-        medConditionRow.setAlignment(Pos.CENTER);
-
-        if (yesBtn.isSelected()) {
-            
-        }
-        else if (noBtn.isSelected()) {
-            
-        }
-
         Button submitBtn = new Button("Submit");
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox ageRow = new HBox(5, new Label("Age:"), age);
+        ageRow.setAlignment(Pos.CENTER);
+
+        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        medQuestionRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, warning, btnRow);
+        root.setAlignment(Pos.CENTER);
+        Scene bookingScene = new Scene(root, 500, 300);
+        stage.setScene(bookingScene);
+        stage.show();
+
+        yesBtn.setOnAction(e -> {
+            CheckBox seasickCBox = new CheckBox("Sea sick");
+            CheckBox pregnantCBox = new CheckBox("Pregnant");
+            CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+            HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+            medConditionRow.setAlignment(Pos.CENTER);
+
+            //Basically, we have to remove the warning and the btnRow
+            //Before adding the medConditionRow
+
+            for (int i = 0; i < root.getChildren().size(); i++) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    root.getChildren().remove(i); //Remove the btnRow
+                    root.getChildren().remove(i-1); //Remove the warning
+                }
+            }
+            root.getChildren().addAll(medConditionRow, warning, btnRow);
+        });
+
+        noBtn.setOnAction(e -> {
+            for (int i = root.getChildren().size() - 1; i > 0; i--) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    //Remove only the medConditionRow
+                    root.getChildren().remove(i-2);
+                    break;
+                }
+            }
+        });
+
         submitBtn.setOnAction(e -> {
             String fNameText = fName.getText().trim();
             String lNameText = lName.getText().trim();
@@ -241,30 +281,6 @@ public class AppView {
             }
             //Need code here to put data
         });
-
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> {
-            stage.close();
-        });
-
-        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
-        medQuestionRow.setAlignment(Pos.CENTER);
-
-        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
-        nameRow.setAlignment(Pos.CENTER);
-
-        HBox ageRow = new HBox(5, new Label("Age:"), age);
-        ageRow.setAlignment(Pos.CENTER);
-
-        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
-        btnRow.setAlignment(Pos.CENTER);
-
-        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, medConditionRow, btnRow, warning);
-        root.setAlignment(Pos.CENTER);
-
-        Scene bookingScene = new Scene(root, 500, 300);
-        stage.setScene(bookingScene);
-        stage.show();
     }
 
     //Admin Windows
@@ -373,6 +389,17 @@ public class AppView {
     private void configTextFieldForDoubles(TextField field) {
         field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
             if (c.getControlNewText().matches("\\d+.?\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+    }
+
+    //From Week 8 "Model-View-Controller" page 
+    //but adjusted so there are no minus signs allowed
+    private void configTextFieldForInts(TextField field) {
+        field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
+            if (c.getControlNewText().matches("\\d*")) {
                 return c;
             }
             return null;
