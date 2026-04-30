@@ -86,7 +86,7 @@ public class AppView {
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
-        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
+        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         TableColumn<FerryTrip, Double> discountCol = new TableColumn<>("Discount");
         discountCol.setCellValueFactory(cellData -> cellData.getValue().discountProperty().asObject());
@@ -157,7 +157,9 @@ public class AppView {
         });
 
         Button bookTripBtn = new Button("Book");
-        bookTripBtn.setOnAction(null);
+        bookTripBtn.setOnAction( e -> {
+            createBookTripForm()
+        });
 
         Button checkHistoryBtn = new Button("Booking History");
         checkHistoryBtn.setOnAction(null);
