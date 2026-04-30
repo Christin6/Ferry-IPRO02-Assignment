@@ -283,7 +283,62 @@ public class AppView {
         });
     }
 
-    //Admin Windows
+    private void createFilterForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Filter by");
+        stage.initOwner(this.primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // first row for destination and starting point filters
+        Label filterByStartLabel = new Label("Filter by starting point: ");
+        ToggleGroup filterByStartToggleGroup = new ToggleGroup();
+
+        Label filterByDestinationLabel = new Label("Filter by destination: ");
+        ToggleGroup filterByDestinationToggleGroup = new ToggleGroup();
+
+        VBox filterByStartCol = new VBox(5, filterByStartLabel);
+        VBox filterByDestinationCol = new VBox(5, filterByDestinationLabel);
+
+        for (FerryTrip trip : this.model.tripsProperty()) {
+            RadioButton startRadioBtn = new RadioButton(trip.startingPointProperty().get());
+            startRadioBtn.setToggleGroup(filterByStartToggleGroup);
+            filterByStartCol.getChildren().addAll(startRadioBtn);
+
+            RadioButton destinationRadioBtn = new RadioButton(trip.destinationProperty().get());
+            destinationRadioBtn.setToggleGroup(filterByDestinationToggleGroup);
+            filterByDestinationCol.getChildren().addAll(destinationRadioBtn);
+        }
+
+        HBox firstRow = new HBox(5, filterByStartCol, filterByDestinationCol);
+        firstRow.setAlignment(Pos.CENTER);
+
+        // second row for maximum price
+        Label maxPriceLabel = new Label("Maximum price: ");
+        TextField maxPriceInput = new TextField("100.0");
+
+        HBox secondRow = new HBox(2, maxPriceLabel, maxPriceInput);
+        secondRow.setAlignment(Pos.CENTER);
+
+        // third row for modality options
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+        Button submitBtn = new Button("Filter");
+        submitBtn.setOnAction(null /* finish this later */);
+
+        HBox thirdRow = new HBox(2, cancelBtn, submitBtn);
+        thirdRow.setAlignment(Pos.CENTER);
+
+        // set everything together
+        VBox root = new VBox(5, firstRow, secondRow, thirdRow);
+
+        Scene filterScene = new Scene(root, 500, 300);
+        stage.setScene(filterScene);
+        stage.show();
+    }
+
+    // Admin Windows
     private void createAddTripForm() {
         Stage stage = new Stage();
         stage.setTitle("Add Trip Form");
