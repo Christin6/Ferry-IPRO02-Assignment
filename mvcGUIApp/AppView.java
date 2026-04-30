@@ -3,6 +3,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
@@ -162,8 +163,13 @@ public class AppView {
             this.customerPane.close();
         });
 
+        //Customer View
         Button bookTripBtn = new Button("Book");
-        bookTripBtn.setOnAction(null);
+        bookTripBtn.setOnAction(e -> {
+            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
+            //Need a method to make booking
+            createBookingForm();
+        });
 
         Button checkHistoryBtn = new Button("Booking History");
         checkHistoryBtn.setOnAction(null);
@@ -189,7 +195,85 @@ public class AppView {
         this.primaryStage.close();
     }
 
-    //For now all the admin modal windows are here
+    //Customer Window
+    private void createBookingForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Booking Form");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label warning = new Label();
+
+        TextField fName = new TextField();
+        fName.setPromptText("Enter first name");
+        TextField lName = new TextField();
+        lName.setPromptText("Enter last name");
+        TextField age = new TextField();
+        age.setPromptText("Enter your age");
+
+        //Toggle group for medical conditions
+        Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
+        ToggleGroup toggleGroup = new ToggleGroup();
+        //Might need to change names for better clarity
+        RadioButton yesBtn = new RadioButton("Yes");
+        yesBtn.setToggleGroup(toggleGroup);
+
+        RadioButton noBtn = new RadioButton("No");
+        noBtn.setToggleGroup(toggleGroup);
+
+        //Check box for medical conditions
+        CheckBox seasickCBox = new CheckBox("Sea sick");
+        CheckBox pregnantCBox = new CheckBox("Pregnant");
+        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+        medConditionRow.setAlignment(Pos.CENTER);
+
+        if (yesBtn.isSelected()) {
+            
+        }
+        else if (noBtn.isSelected()) {
+            
+        }
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(e -> {
+            String fNameText = fName.getText().trim();
+            String lNameText = lName.getText().trim();
+
+            if (!fNameText.isEmpty() && !lNameText.isEmpty()) {
+                System.out.println("It is working");
+            } else {
+                warning.setText("You have not filled out all the fields!");
+            }
+            //Need code here to put data
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        medQuestionRow.setAlignment(Pos.CENTER);
+
+        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox ageRow = new HBox(5, new Label("Age:"), age);
+        ageRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, medConditionRow, btnRow, warning);
+        root.setAlignment(Pos.CENTER);
+
+        Scene bookingScene = new Scene(root, 500, 300);
+        stage.setScene(bookingScene);
+        stage.show();
+    }
+
+    //Admin Windows
     private void createAddTripForm() {
         Stage stage = new Stage();
         stage.setTitle("Add Trip Form");
