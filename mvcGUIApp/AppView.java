@@ -1,4 +1,6 @@
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +28,12 @@ public class AppView {
     private Stage customerPane;
     private TableView<FerryTrip> customerTripsView;
     private TableView<FerryTrip> adminTripsView;
+    private ObservableList<FerryTrip> filteredTrips;
+
+    // for filtering in customer view
+    private String selectedStart;
+    private String selectedDestination;
+    private Double inputtedMaxPrice;
 
     private AppController controller;
     private AppModel model;
@@ -34,6 +42,8 @@ public class AppView {
     public AppView(AppController controller, AppModel model, Stage primaryStage) {
         this.controller = controller;
         this.model = model;
+        this.filteredTrips = FXCollections.observableArrayList(
+                this.model.tripsProperty());
         this.primaryStage = primaryStage;
 
         createCustViewTable();
@@ -75,7 +85,7 @@ public class AppView {
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         this.customerTripsView.getColumns().addAll(ferryNameCol, destinationCol, startingPointCol, tripPriceCol);
-        this.customerTripsView.setItems(model.tripsProperty());
+        this.customerTripsView.setItems(this.filteredTrips);
     }
 
     private void createAdminViewTable() {
@@ -274,6 +284,34 @@ public class AppView {
         stage.show();
     }
 
+    private void applyFilters() {
+        this.filteredTrips.clear();
+        for (FerryTrip t : this.model.tripsProperty()) {
+            // checking starting point
+            boolean matchesStart = false;
+            if (this.selectedStart == null || t.startingPointProperty().get().equals(this.selectedStart)) {
+                matchesStart = true;
+            }
+
+            // checking destination
+            boolean matchesDestination = false;
+            if (selectedDestination == null || t.destinationProperty().get().equals(this.selectedDestination)) {
+                matchesDestination = true;
+            }
+
+            // checking maximum price
+            boolean matchesPrice = false;
+            if (this.inputtedMaxPrice == null || t.priceProperty().get() <= this.inputtedMaxPrice) {
+                matchesPrice = true;
+            }
+
+            // if everything matches, put trip to customer's table view
+            if (matchesStart && matchesDestination && matchesPrice) {
+                this.filteredTrips.add(t);
+            }
+        }
+    }
+
     private void createFilterForm() {
         Stage stage = new Stage();
         stage.setTitle("Filter by");
@@ -293,10 +331,18 @@ public class AppView {
         for (FerryTrip trip : this.model.tripsProperty()) {
             RadioButton startRadioBtn = new RadioButton(trip.startingPointProperty().get());
             startRadioBtn.setToggleGroup(filterByStartToggleGroup);
+            startRadioBtn.setOnAction(e -> {
+                this.selectedStart = trip.startingPointProperty().get();
+                applyFilters();
+            });
             filterByStartCol.getChildren().addAll(startRadioBtn);
 
             RadioButton destinationRadioBtn = new RadioButton(trip.destinationProperty().get());
             destinationRadioBtn.setToggleGroup(filterByDestinationToggleGroup);
+            destinationRadioBtn.setOnAction(e -> {
+                this.selectedDestination = trip.destinationProperty().get();
+                applyFilters();
+            });
             filterByDestinationCol.getChildren().addAll(destinationRadioBtn);
         }
 
@@ -305,20 +351,35 @@ public class AppView {
 
         // second row for maximum price
         Label maxPriceLabel = new Label("Maximum price: ");
-        TextField maxPriceInput = new TextField("100.0");
+        TextField maxPriceInput = new TextField("10000.0");
+        configTextFieldForDoubles(maxPriceInput);
+        maxPriceInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.isEmpty()) {
+                this.inputtedMaxPrice = null;
+            } else {
+                this.inputtedMaxPrice = Double.parseDouble(newVal);
+            }
+            applyFilters();
+        });
 
         HBox secondRow = new HBox(2, maxPriceLabel, maxPriceInput);
         secondRow.setAlignment(Pos.CENTER);
 
         // third row for modality options
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> {
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(e -> {
             stage.close();
         });
-        Button submitBtn = new Button("Filter");
-        submitBtn.setOnAction(null /* finish this later */);
+        Button resetFilter = new Button("Reset");
+        resetFilter.setOnAction(e -> {
+            this.selectedStart = null;
+            this.selectedDestination = null;
+            this.inputtedMaxPrice = null;
+            maxPriceInput.setText("");
+            applyFilters();
+        });
 
-        HBox thirdRow = new HBox(2, cancelBtn, submitBtn);
+        HBox thirdRow = new HBox(2, closeBtn, resetFilter);
         thirdRow.setAlignment(Pos.CENTER);
 
         // set everything together
