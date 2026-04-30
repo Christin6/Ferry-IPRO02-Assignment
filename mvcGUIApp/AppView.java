@@ -16,7 +16,6 @@ import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -34,6 +33,8 @@ public class AppView {
     private String selectedStart;
     private String selectedDestination;
     private Double inputtedMaxPrice;
+    private TableView <FerryTrip> customerTripsView;
+    private TableView <FerryTrip> adminTripsView;
 
     private AppController controller;
     private AppModel model;
@@ -71,15 +72,12 @@ public class AppView {
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
-        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
-        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
-        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -90,18 +88,15 @@ public class AppView {
 
     private void createAdminViewTable() {
         this.adminTripsView = new TableView<>();
-
+        
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
-        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
-        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
-        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
@@ -114,18 +109,29 @@ public class AppView {
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
 
-        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
-        customerNumCol.setCellValueFactory(
-                cellData -> new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject());
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
+        customerNumCol.setCellValueFactory(cellData ->
+            new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
+        );
 
         this.adminTripsView.getColumns().addAll(ferryNameCol, destinationCol, startingPointCol,
-                basePriceCol, discountCol, tripPriceCol, customerNumCol, revenueCol);
+            basePriceCol, discountCol, tripPriceCol, customerNumCol, revenueCol);
         this.adminTripsView.setItems(model.tripsProperty());
     }
 
     private void createAndLayoutControls() {
-        // For now, all the admin buttons are below here
+        //For now, all the admin buttons are below here
         Button viewDetailsBtn = new Button("View Details");
+        
+        Button addTripBtn = new Button("Add Trip");
+        addTripBtn.setOnAction(e -> {
+            createAddTripForm();
+        });
+
+        Button editTripBtn = new Button("Edit Trip");
+        editTripBtn.setOnAction(e -> {
+            createUpdateTripForm();
+        });
 
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
@@ -140,7 +146,6 @@ public class AppView {
         // login view setup
         Label loginLabel = new Label("LOGIN AS");
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
-        loginLabel.setFont(new Font(24));
 
         // Admin view setup
         this.adminPane = new Stage();
@@ -149,35 +154,26 @@ public class AppView {
             this.primaryStage.show();
             this.adminPane.close();
         });
-
-        Button addTripBtn = new Button("Add Trip");
-        addTripBtn.setOnAction(e -> {
-            createAddTripForm();
-        });
-
-        Button editTripBtn = new Button("Edit Trip");
-        editTripBtn.setOnAction(e -> {
-            createUpdateTripForm();
-        });
-
-        HBox adminControlMenu = new HBox(5, addTripBtn, editTripBtn, backToLoginBtnFromAdmin);
+        
+        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
         adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
-        Scene adminScene = new Scene(adminView, 1200, 500);
+        Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
         this.customerPane = new Stage();
-
+        // Customer view setup
         Button backToLoginBtnFromCust = new Button("Logout");
         backToLoginBtnFromCust.setOnAction(e -> {
             this.primaryStage.show();
             this.customerPane.close();
         });
 
+        //Customer View
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
             int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
-            // Need a method to make booking
+            //Need a method to make booking
             createBookingForm();
         });
 
@@ -185,14 +181,12 @@ public class AppView {
         checkHistoryBtn.setOnAction(null);
 
         Button filterBtn = new Button("Filter");
-        filterBtn.setOnAction(e -> {
-            createFilterForm();
-        });
+        filterBtn.setOnAction(null);
 
-        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
-
-        Scene customerScene = new Scene(customerView, 1200, 500);
+        
+        Scene customerScene = new Scene(customerView, 800, 500);
 
         this.customerPane.setScene(customerScene);
     }
@@ -207,7 +201,7 @@ public class AppView {
         this.primaryStage.close();
     }
 
-    // Customer Window
+    //Customer Window
     private void createBookingForm() {
         Stage stage = new Stage();
         stage.setTitle("Booking Form");
@@ -222,31 +216,72 @@ public class AppView {
         lName.setPromptText("Enter last name");
         TextField age = new TextField();
         age.setPromptText("Enter your age");
+        configTextFieldForInts(age);
 
-        // Toggle group for medical conditions
+        //Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
         ToggleGroup toggleGroup = new ToggleGroup();
-        // Might need to change names for better clarity
+        //Might need to change names for better clarity
         RadioButton yesBtn = new RadioButton("Yes");
         yesBtn.setToggleGroup(toggleGroup);
 
         RadioButton noBtn = new RadioButton("No");
         noBtn.setToggleGroup(toggleGroup);
 
-        // Check box for medical conditions
-        CheckBox seasickCBox = new CheckBox("Sea sick");
-        CheckBox pregnantCBox = new CheckBox("Pregnant");
-        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
-        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
-        medConditionRow.setAlignment(Pos.CENTER);
-
-        if (yesBtn.isSelected()) {
-
-        } else if (noBtn.isSelected()) {
-
-        }
-
         Button submitBtn = new Button("Submit");
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox ageRow = new HBox(5, new Label("Age:"), age);
+        ageRow.setAlignment(Pos.CENTER);
+
+        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        medQuestionRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, warning, btnRow);
+        root.setAlignment(Pos.CENTER);
+        Scene bookingScene = new Scene(root, 500, 300);
+        stage.setScene(bookingScene);
+        stage.show();
+
+        yesBtn.setOnAction(e -> {
+            CheckBox seasickCBox = new CheckBox("Sea sick");
+            CheckBox pregnantCBox = new CheckBox("Pregnant");
+            CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+            HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+            medConditionRow.setAlignment(Pos.CENTER);
+
+            //Basically, we have to remove the warning and the btnRow
+            //Before adding the medConditionRow
+
+            for (int i = 0; i < root.getChildren().size(); i++) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    root.getChildren().remove(i); //Remove the btnRow
+                    root.getChildren().remove(i-1); //Remove the warning
+                }
+            }
+            root.getChildren().addAll(medConditionRow, warning, btnRow);
+        });
+
+        noBtn.setOnAction(e -> {
+            for (int i = root.getChildren().size() - 1; i > 0; i--) {
+                if (root.getChildren().get(i).equals(btnRow)) {
+                    //Remove only the medConditionRow
+                    root.getChildren().remove(i-2);
+                    break;
+                }
+            }
+        });
+
         submitBtn.setOnAction(e -> {
             String fNameText = fName.getText().trim();
             String lNameText = lName.getText().trim();
@@ -256,32 +291,8 @@ public class AppView {
             } else {
                 warning.setText("You have not filled out all the fields!");
             }
-            // Need code here to put data
+            //Need code here to put data
         });
-
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> {
-            stage.close();
-        });
-
-        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
-        medQuestionRow.setAlignment(Pos.CENTER);
-
-        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
-        nameRow.setAlignment(Pos.CENTER);
-
-        HBox ageRow = new HBox(5, new Label("Age:"), age);
-        ageRow.setAlignment(Pos.CENTER);
-
-        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
-        btnRow.setAlignment(Pos.CENTER);
-
-        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, medConditionRow, btnRow, warning);
-        root.setAlignment(Pos.CENTER);
-
-        Scene bookingScene = new Scene(root, 500, 300);
-        stage.setScene(bookingScene);
-        stage.show();
     }
 
     private void applyFilters() {
@@ -411,10 +422,10 @@ public class AppView {
 
         Button submitBtn = new Button("Submit Button");
         submitBtn.setOnAction(e -> {
-            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty()
-                    && !basePriceTextField.getText().isEmpty()) {
+            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty() && !basePriceTextField.getText().isEmpty()) {
                 System.out.println("it works");
-            } else {
+            }
+            else {
                 warning.setText("You have not filled out all the fields!");
             }
         });
@@ -423,14 +434,13 @@ public class AppView {
         cancelBtn.setOnAction(e -> {
             stage.close();
         });
-
-        HBox locationRow = new HBox(5, startingPointTextField, new Label("to"), destinationTextField, new Label("$"),
-                basePriceTextField);
+        
+        HBox locationRow = new HBox(5, startingPointTextField, new Label ("to"), destinationTextField, new Label("$"), basePriceTextField);
         locationRow.setAlignment(Pos.CENTER);
 
         HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
         BtnRow.setAlignment(Pos.CENTER);
-
+        
         VBox root = new VBox(5, text, locationRow, BtnRow, warning);
         root.setAlignment(Pos.CENTER);
 
@@ -447,6 +457,7 @@ public class AppView {
 
         Label text = new Label("Enter the new starting point, the destination, and the price of the trip");
 
+
         TextField startingPointTextField = new TextField();
         startingPointTextField.setPromptText("Add starting point");
         TextField destinationTextField = new TextField();
@@ -458,8 +469,7 @@ public class AppView {
 
         Button submitBtn = new Button("Submit Button");
         submitBtn.setOnAction(e -> {
-            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty()
-                    && !basePriceTextField.getText().isEmpty()) {
+            if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty() && !basePriceTextField.getText().isEmpty()) {
                 System.out.println("it works");
             }
         });
@@ -468,14 +478,13 @@ public class AppView {
         cancelBtn.setOnAction(e -> {
             stage.close();
         });
-
-        HBox locationRow = new HBox(5, startingPointTextField, new Label("to"), destinationTextField, new Label("$"),
-                basePriceTextField);
+        
+        HBox locationRow = new HBox(5, startingPointTextField, new Label ("to"), destinationTextField, new Label("$"), basePriceTextField);
         locationRow.setAlignment(Pos.CENTER);
 
         HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
         BtnRow.setAlignment(Pos.CENTER);
-
+        
         VBox root = new VBox(5, text, locationRow, BtnRow);
         root.setAlignment(Pos.CENTER);
 
@@ -498,6 +507,17 @@ public class AppView {
     private void configTextFieldForDoubles(TextField field) {
         field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
             if (c.getControlNewText().matches("\\d+.?\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+    }
+
+    //From Week 8 "Model-View-Controller" page 
+    //but adjusted so there are no minus signs allowed
+    private void configTextFieldForInts(TextField field) {
+        field.setTextFormatter(new TextFormatter<Integer>((Change c) -> {
+            if (c.getControlNewText().matches("\\d*")) {
                 return c;
             }
             return null;
