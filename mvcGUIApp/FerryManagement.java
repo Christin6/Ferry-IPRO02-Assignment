@@ -37,7 +37,7 @@ public class FerryManagement implements AssignDiscount {
                 }
                 System.out.println(count + ". " + "Trip from "
                         + trip.startingPointProperty().get() + " to " +
-                        trip.destinationProperty().get() + " (Price: $" + trip.getPrice() + ")");
+                        trip.destinationProperty().get() + " (Price: $" + trip.priceProperty().get() + ")");
 
                 count++;
             }
@@ -97,7 +97,7 @@ public class FerryManagement implements AssignDiscount {
     }
 
     public boolean seatAvailable(FerryTrip trip) {
-        for (Ferry ferry : trips.keySet()) {
+        for (Ferry ferry : this.ferries) {
             ArrayList<FerryTrip> tripList = trips.get(ferry);
             if (tripList.contains(trip)) {
                 return seatAvailability(trip, ferry);
@@ -227,7 +227,7 @@ public class FerryManagement implements AssignDiscount {
                 if (!(f == tripTarget)) {
                     continue;
                 }
-                if (amount > f.basePriceProperty().get()) {
+                if (amount > f.priceProperty().get()) {
                     System.out.println("Invalid amount, the discount cannot be over the base price!\n");
                     executeSettingDiscount = false;
                     break;
@@ -262,7 +262,7 @@ public class FerryManagement implements AssignDiscount {
 
                 for (FerryTrip f : ferryTrip) {
                     if (f == tripTarget) {
-                        double newAmount = (((double) percentage / 100) * (f.basePriceProperty().get()));
+                        double newAmount = (((double) percentage / 100) * (f.priceProperty().get()));
 
                         f.setDiscount(newAmount);
                     }

@@ -83,7 +83,7 @@ public class AppModel {
             }
             System.out.println(count + ". " + "Trip from "
                     + trip.startingPointProperty().get() + " to " +
-                    trip.destinationProperty().get() + " (Price: $" + trip.getPrice() + ")");
+                    trip.destinationProperty().get() + " (Price: $" + trip.priceProperty().get() + ")");
 
             count++;
         }
@@ -143,9 +143,8 @@ public class AppModel {
     }
 
     public boolean seatAvailable(FerryTrip trip) {
-        for (Ferry ferry : trips.keySet()) {
-            ArrayList<FerryTrip> tripList = trips.get(ferry);
-            if (tripList.contains(trip)) {
+        for (Ferry ferry : this.ferries) {
+            if (trip.getAssignedFerry().contains(trip)) {
                 return seatAvailability(trip, ferry);
             }
         }
@@ -178,7 +177,7 @@ public class AppModel {
                 }
                 if (trip.destinationProperty().get().equals(destination)
                         && trip.startingPointProperty().get().equals(startingPoint)
-                        && trip.getPrice() <= priceMaximum) {
+                        && trip.priceProperty().get() <= priceMaximum) {
                     availableTrips.add(trip);
                 }
             }
@@ -209,125 +208,106 @@ public class AppModel {
         System.out.println("");
     }
 
-    public static final Comparator<FerryTrip> compareByPriceAsc = Comparator.comparing(FerryTrip::getCurrentRevenue);
-    public static final Comparator<FerryTrip> compareByPriceDesc = Comparator.comparing(FerryTrip::getCurrentRevenue)
-            .reversed();
+//     public static final Comparator<FerryTrip> compareByPriceAsc = Comparator.comparing(FerryTrip::getCurrentRevenue);
+//     public static final Comparator<FerryTrip> compareByPriceDesc = Comparator.comparing(FerryTrip::getCurrentRevenue)
+//             .reversed();
 
-    void getFerryTripsDataSorted(Comparator<FerryTrip> comparator) {
-        ArrayList<FerryTrip> sortedTrips = new ArrayList<>();
+//     void getFerryTripsDataSorted(Comparator<FerryTrip> comparator) {
+//         ArrayList<FerryTrip> sortedTrips = new ArrayList<>();
 
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+//             for (FerryTrip f : this.trips) {
+//                 if (f != null) {
+//                     sortedTrips.add(f);
+//                 }
+//             }
 
-            for (FerryTrip f : ferryTrip) {
-                if (f != null) {
-                    sortedTrips.add(f);
-                }
-            }
-        }
+//         Collections.sort(sortedTrips, comparator);
 
-        Collections.sort(sortedTrips, comparator);
+//         System.out.println("Here are all the ferry trips:\n");
+//         if (sortedTrips.isEmpty()) {
+//             System.out.println("There are currently no active trips.");
+//         }
 
-        System.out.println("Here are all the ferry trips:\n");
-        if (sortedTrips.isEmpty()) {
-            System.out.println("There are currently no active trips.");
-        }
+//         int count = 1;
+//         for (FerryTrip f : sortedTrips) {
+//             System.out.println(count + ". " + f);
+//             System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
+//             count++;
+//         }
 
-        int count = 1;
-        for (FerryTrip f : sortedTrips) {
-            System.out.println(count + ". " + f);
-            System.out.println("Total revenue: $" + f.getCurrentRevenue() + "\n");
-            count++;
-        }
+//     }
 
-    }
+//     FerryTrip selectTripBasedOnIndex(int index) {
+//         int count = 1;
 
-    FerryTrip selectTripBasedOnIndex(int index) {
-        int count = 1;
+//             for (FerryTrip f : this.trips) {
+//                 if (count == index) {
+//                     return f;
+//                 }
+//                 count++;
+//             }
 
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+//         return null; // Return null if no trip is found at the specified index
+//     }
 
-            for (FerryTrip f : ferryTrip) {
-                if (count == index) {
-                    return f;
-                }
-                count++;
-            }
+//     @Override
+//     public void assignDiscount(double amount, FerryTrip tripTarget) {
+//         boolean executeSettingDiscount = true;
 
-        }
+//         // Making sure that the fixed price is not over the base price of the ticket
+//             for (FerryTrip f : this.trips) {
+//                 // Making sure it is the targetted trip
+//                 if (!(f == tripTarget)) {
+//                     continue;
+//                 }
+//                 if (amount > f.priceProperty().get()) {
+//                     System.out.println("Invalid amount, the discount cannot be over the base price!\n");
+//                     executeSettingDiscount = false;
+//                     break;
+//                 }
+//             }
 
-        return null; // Return null if no trip is found at the specified index
-    }
+//         while (executeSettingDiscount) {
+//                 for (FerryTrip f : this.trips) {
+//                     if (f == tripTarget) {
+//                         f.setDiscount(amount);
+//                     }
+//                 }
 
-    @Override
-    public void assignDiscount(double amount, FerryTrip tripTarget) {
-        boolean executeSettingDiscount = true;
+//             System.out.println("Successfully applied discount!");
+//             System.out.println("The applied discount is $" + amount + "\n");
+//             executeSettingDiscount = false;
+//         }
+//     }
 
-        // Making sure that the fixed price is not over the base price of the ticket
-        for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-            ArrayList<FerryTrip> ferryTrip = trip.getValue();
+//     @Override
+//     public void assignDiscount(int percentage, FerryTrip tripTarget) {
+//         if (percentage > 100) {
+//             System.out.println("Invalid percentage amount, the discount cannot be over than 100%!\n");
+//         } else {
+//                 for (FerryTrip f : ferryTrip) {
+//                     if (f == tripTarget) {
+//                         double newAmount = (((double) percentage / 100) * (f.priceProperty().get()));
 
-            for (FerryTrip f : ferryTrip) {
-                // Making sure it is the targetted trip
-                if (!(f == tripTarget)) {
-                    continue;
-                }
-                if (amount > f.basePriceProperty().get()) {
-                    System.out.println("Invalid amount, the discount cannot be over the base price!\n");
-                    executeSettingDiscount = false;
-                    break;
-                }
-            }
-        }
+//                         f.setDiscount(newAmount);
+//                     }
+//                 }
 
-        while (executeSettingDiscount) {
-            for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-                ArrayList<FerryTrip> ferryTrip = trip.getValue();
+//             System.out.println("Successfully applied discount!");
+//             System.out.println("The applied discount is " + percentage + "%\n");
 
-                for (FerryTrip f : ferryTrip) {
-                    if (f == tripTarget) {
-                        f.setDiscount(amount);
-                    }
-                }
-            }
+//         }
+//     };
 
-            System.out.println("Successfully applied discount!");
-            System.out.println("The applied discount is $" + amount + "\n");
-            executeSettingDiscount = false;
-        }
-    }
+//     public String toString() {
+//         return trips.toString();
+//     }
+// }
 
-    @Override
-    public void assignDiscount(int percentage, FerryTrip tripTarget) {
-        if (percentage > 100) {
-            System.out.println("Invalid percentage amount, the discount cannot be over than 100%!\n");
-        } else {
-            for (Map.Entry<Ferry, ArrayList<FerryTrip>> trip : trips.entrySet()) {
-                ArrayList<FerryTrip> ferryTrip = trip.getValue();
+// interface AssignDiscount {
+//     void assignDiscount(double amount, FerryTrip tripTarget);
 
-                for (FerryTrip f : ferryTrip) {
-                    if (f == tripTarget) {
-                        double newAmount = (((double) percentage / 100) * (f.basePriceProperty().get()));
+//     void assignDiscount(int percentage, FerryTrip tripTarget);
+// }
 
-                        f.setDiscount(newAmount);
-                    }
-                }
-            }
-
-            System.out.println("Successfully applied discount!");
-            System.out.println("The applied discount is " + percentage + "%\n");
-
-        }
-    };
-
-    public String toString() {
-        return trips.toString();
-    }
-}
-
-interface AssignDiscount {
-    void assignDiscount(double amount, FerryTrip tripTarget);
-
-    void assignDiscount(int percentage, FerryTrip tripTarget);
 }

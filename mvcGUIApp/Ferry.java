@@ -14,4 +14,9 @@ public class Ferry {
   public String toString() {
     return name + " | maxSeats: " + maxSeats;
   }
+
+  public boolean contains(FerryTrip trip) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'contains'");
+  }
 }
