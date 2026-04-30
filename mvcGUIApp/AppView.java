@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +23,8 @@ public class AppView {
     private VBox adminView;
     private Stage adminPane;
     private Stage customerPane;
-    private TableView <FerryTrip> tripsView;
+    private TableView <FerryTrip> customerTripsView;
+    private TableView <FerryTrip> adminTripsView;
 
     private AppController controller;
     private AppModel model;
@@ -33,7 +35,8 @@ public class AppView {
         this.model = model;
         this.primaryStage = primaryStage;
 
-        createTripsViewTable();
+        createCustViewTable();
+        createAdminViewTable();
         createAndConfigurePane();
         createAndLayoutControls();
         updateControllerFromListeners();
@@ -52,8 +55,12 @@ public class AppView {
 
     }
 
-    private void createTripsViewTable() {
-        this.tripsView = new TableView<>();
+    private void createCustViewTable() {
+        this.customerTripsView = new TableView<>();
+
+        TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
+        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
 
@@ -63,8 +70,41 @@ public class AppView {
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-        this.tripsView.getColumns().addAll(destinationCol, startingPointCol, tripPriceCol);
-        this.tripsView.setItems(model.tripsProperty());
+        this.customerTripsView.getColumns().addAll(ferryNameCol, destinationCol, startingPointCol, tripPriceCol);
+        this.customerTripsView.setItems(model.tripsProperty());
+    }
+
+    private void createAdminViewTable() {
+        this.adminTripsView = new TableView<>();
+        
+        TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
+        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+
+        TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
+        destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+
+        TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
+        startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+
+        TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
+        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
+
+        TableColumn<FerryTrip, Double> discountCol = new TableColumn<>("Discount");
+        discountCol.setCellValueFactory(cellData -> cellData.getValue().discountProperty().asObject());
+
+        TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Final Price");
+        tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+
+        TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
+
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
+        customerNumCol.setCellValueFactory(cellData ->
+            new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
+        );
+
+        this.adminTripsView.getColumns().addAll(ferryNameCol, destinationCol, startingPointCol,
+            basePriceCol, discountCol, tripPriceCol, customerNumCol, revenueCol);
+        this.adminTripsView.setItems(model.tripsProperty());
     }
 
     private void createAndLayoutControls() {
@@ -102,8 +142,9 @@ public class AppView {
             this.primaryStage.show();
             this.adminPane.close();
         });
-        Label adminLabel = new Label();
-        adminView.getChildren().addAll(adminLabel, backToLoginBtnFromAdmin, addTripBtn);
+        
+        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
+        adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
@@ -131,7 +172,7 @@ public class AppView {
         filterBtn.setOnAction(null);
 
         HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
-        customerView.getChildren().addAll(customerControlMenu, tripsView);
+        customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
         
         Scene customerScene = new Scene(customerView, 800, 500);
 

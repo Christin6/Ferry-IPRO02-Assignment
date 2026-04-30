@@ -30,4 +30,9 @@ public class AppController {
     public void removeFerry(int index) {
         this.model.removeFerry(index);
     }
+
+    // Customer bookings
+    public void createBooking(Customer customer, FerryTrip trip) {
+        this.model.bookTrip(customer, trip);
+    }
 }

@@ -1,9 +1,11 @@
+import javafx.beans.property.SimpleStringProperty;
+
 public class Ferry {
-  private String name;
+  private SimpleStringProperty name;
   private int maxSeats;
 
   Ferry(String name, int maxSeats) {
-    this.name = name;
+    this.name = new SimpleStringProperty(name);
     this.maxSeats = maxSeats;
   }
 
@@ -11,7 +13,16 @@ public class Ferry {
       return maxSeats;
   }
 
+  SimpleStringProperty nameProperty() {
+    return this.name;
+  }
+
   public String toString() {
     return name + " | maxSeats: " + maxSeats;
+  }
+
+  public boolean contains(FerryTrip trip) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'contains'");
   }
 }

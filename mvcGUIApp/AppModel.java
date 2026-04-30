@@ -1,4 +1,5 @@
 import javafx.collections.ObservableList;
+
 import javafx.collections.FXCollections;
 
 public class AppModel {
@@ -8,20 +9,18 @@ public class AppModel {
     AppModel() {
         // dummy data
         this.ferries = FXCollections.observableArrayList(
-            new Ferry("F1", 100),
-            new Ferry("F2", 100),
-            new Ferry("F3", 100),
-            new Ferry("F4", 100)
-        );
+                new Ferry("F1", 100),
+                new Ferry("F2", 100),
+                new Ferry("F3", 100),
+                new Ferry("F4", 100));
 
         this.trips = FXCollections.observableArrayList(
-            new FerryTrip("Sydney", "Jakarta", 80, this.ferries.get(0)),
-            new FerryTrip("Jakarta", "Sydney", 70, this.ferries.get(1)),
-            new FerryTrip("Kuala Lumpur", "Tokyo", 120, this.ferries.get(2)),
-            new FerryTrip("Tokyo", "Kuala Lumpur", 130, this.ferries.get(2)),
-            new FerryTrip("London", "Paris", 180, this.ferries.get(3)),
-            new FerryTrip("Paris", "London", 190, this.ferries.get(3))
-        );
+                new FerryTrip("Sydney", "Jakarta", 80, this.ferries.get(0)),
+                new FerryTrip("Jakarta", "Sydney", 70, this.ferries.get(1)),
+                new FerryTrip("Kuala Lumpur", "Tokyo", 120, this.ferries.get(2)),
+                new FerryTrip("Tokyo", "Kuala Lumpur", 130, this.ferries.get(2)),
+                new FerryTrip("London", "Paris", 180, this.ferries.get(3)),
+                new FerryTrip("Paris", "London", 190, this.ferries.get(3)));
     }
 
     public ObservableList<FerryTrip> tripsProperty() {
@@ -32,7 +31,7 @@ public class AppModel {
         return this.ferries;
     }
 
-    //Ferry Trips
+    // Ferry Trips
     public void addTrip(FerryTrip trip) {
         this.trips.add(trip);
     }
@@ -45,16 +44,28 @@ public class AppModel {
         this.trips.remove(index);
     }
 
-    //Ferries
+    // Ferries
     public void addFerry(Ferry ferry) {
         this.ferries.add(ferry);
     }
-    
+
     public void updateFerry(int index, Ferry ferry) {
         this.ferries.set(index, ferry);
     }
 
     public void removeFerry(int index) {
         this.ferries.remove(index);
+    }
+
+    void setFerryTripList(FerryTrip trip, int index) {
+        this.trips.set(index, trip);
+    }
+
+    void bookTrip(Customer customer, FerryTrip trip) {
+        for (FerryTrip t : this.trips) {
+            if (t.equals(trip)) {
+                trip.addCustomer(customer);
+            }
+        }
     }
 }
