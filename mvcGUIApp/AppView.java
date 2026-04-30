@@ -1,8 +1,10 @@
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
@@ -59,12 +61,15 @@ public class AppView {
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -78,12 +83,15 @@ public class AppView {
         
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(150.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -96,7 +104,7 @@ public class AppView {
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
 
-        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
         customerNumCol.setCellValueFactory(cellData ->
             new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
         );
@@ -142,9 +150,9 @@ public class AppView {
             this.adminPane.close();
         });
         
-        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
+        HBox adminControlMenu = new HBox(5, addTripBtn, backToLoginBtnFromAdmin);
         adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
-        Scene adminScene = new Scene(adminView, 800, 500);
+        Scene adminScene = new Scene(adminView, 1200, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
@@ -156,21 +164,26 @@ public class AppView {
             this.customerPane.close();
         });
 
+        //Customer View
         Button bookTripBtn = new Button("Book");
-        bookTripBtn.setOnAction( e -> {
-            createBookTripForm()
+        bookTripBtn.setOnAction(e -> {
+            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
+            //Need a method to make booking
+            createBookingForm();
         });
 
         Button checkHistoryBtn = new Button("Booking History");
-        checkHistoryBtn.setOnAction(null);
+        checkHistoryBtn.setOnAction(e -> {
+            createCustomerBookingList();
+        });
 
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(null);
 
-        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
         
-        Scene customerScene = new Scene(customerView, 800, 500);
+        Scene customerScene = new Scene(customerView, 1200, 500);
 
         this.customerPane.setScene(customerScene);
     }
@@ -185,7 +198,131 @@ public class AppView {
         this.primaryStage.close();
     }
 
-    //For now all the admin modal windows are here
+    //Customer Window
+    private void createBookingForm() {
+        Stage stage = new Stage();
+        stage.setTitle("Booking Form");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label warning = new Label();
+
+        TextField fName = new TextField();
+        fName.setPromptText("Enter first name");
+        TextField lName = new TextField();
+        lName.setPromptText("Enter last name");
+        TextField age = new TextField();
+        age.setPromptText("Enter your age");
+
+        //Toggle group for medical conditions
+        Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
+        ToggleGroup toggleGroup = new ToggleGroup();
+        //Might need to change names for better clarity
+        RadioButton yesBtn = new RadioButton("Yes");
+        yesBtn.setToggleGroup(toggleGroup);
+
+        RadioButton noBtn = new RadioButton("No");
+        noBtn.setToggleGroup(toggleGroup);
+
+        //Check box for medical conditions
+        CheckBox seasickCBox = new CheckBox("Sea sick");
+        CheckBox pregnantCBox = new CheckBox("Pregnant");
+        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+        medConditionRow.setAlignment(Pos.CENTER);
+
+        if (yesBtn.isSelected()) {
+            
+        }
+        else if (noBtn.isSelected()) {
+            
+        }
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(e -> {
+            String fNameText = fName.getText().trim();
+            String lNameText = lName.getText().trim();
+
+            if (!fNameText.isEmpty() && !lNameText.isEmpty()) {
+                System.out.println("It is working");
+            } else {
+                warning.setText("You have not filled out all the fields!");
+            }
+            //Need code here to put data
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        medQuestionRow.setAlignment(Pos.CENTER);
+
+        HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox ageRow = new HBox(5, new Label("Age:"), age);
+        ageRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(5, submitBtn, cancelBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, medConditionRow, btnRow, warning);
+        root.setAlignment(Pos.CENTER);
+
+        Scene bookingScene = new Scene(root, 500, 300);
+        stage.setScene(bookingScene);
+        stage.show();
+    }
+
+    //show customer booking list
+    private void createCustomerBookingList(){
+        Stage stage = new Stage();
+        stage.setTitle("Identity Verification");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label text = new Label("Enter your name listed inside the booking:");
+        text.setAlignment(Pos.CENTER);
+
+        TextField firstNameField = new TextField();
+        firstNameField.setPromptText("First Name");
+
+        TextField lastNameField = new TextField();
+        lastNameField.setPromptText("Last Name");        
+
+        HBox firstNameFieldRow = new HBox(5, new Label("Enter first name: ") ,firstNameField);
+        firstNameFieldRow.setAlignment(Pos.CENTER);
+
+        HBox lastNameFieldRow = new HBox(5, new Label("Enter last name: ") ,lastNameField);
+        lastNameFieldRow.setAlignment(Pos.CENTER);
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(e -> {
+            String firstNameText = firstNameField.getText().trim();
+            String lastNameText = lastNameField.getText().trim();
+            String customerName = firstNameText + lastNameText;
+
+        model.customerBookedTrip(customerName);
+        
+
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, submitBtn, cancelBtn);
+        root.setAlignment(Pos.CENTER);
+
+        Scene listScene = new Scene(root, 500, 300);
+        stage.setScene(listScene);
+        stage.show();
+    }
+
+    //Admin Windows
     private void createAddTripForm() {
         Stage stage = new Stage();
         stage.setTitle("Add Trip Form");
