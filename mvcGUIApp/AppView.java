@@ -33,8 +33,6 @@ public class AppView {
     private String selectedStart;
     private String selectedDestination;
     private Double inputtedMaxPrice;
-    private TableView <FerryTrip> customerTripsView;
-    private TableView <FerryTrip> adminTripsView;
 
     private AppController controller;
     private AppModel model;
@@ -181,7 +179,7 @@ public class AppView {
         checkHistoryBtn.setOnAction(null);
 
         Button filterBtn = new Button("Filter");
-        filterBtn.setOnAction(null);
+        filterBtn.setOnAction(e -> createFilterForm());
 
         HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
@@ -386,7 +384,7 @@ public class AppView {
             this.selectedStart = null;
             this.selectedDestination = null;
             this.inputtedMaxPrice = null;
-            maxPriceInput.setText("");
+            maxPriceInput.setText("10000.0");
             applyFilters();
         });
 
