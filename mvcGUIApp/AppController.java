@@ -32,7 +32,7 @@ public class AppController {
     }
 
     // Customer bookings
-    public void addBooking() {
-        
+    public void createBooking(Customer customer, FerryTrip trip) {
+        this.model.bookTrip(customer, trip);
     }
 }

@@ -62,6 +62,10 @@ public class AppModel {
     }
 
     void bookTrip(Customer customer, FerryTrip trip) {
-        trip.addCustomer(customer);
+        for (FerryTrip t : this.trips) {
+            if (t.equals(trip)) {
+                trip.addCustomer(customer);
+            }
+        }
     }
 }
