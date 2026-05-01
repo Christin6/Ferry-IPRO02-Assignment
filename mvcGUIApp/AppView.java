@@ -1,8 +1,5 @@
 import javafx.beans.property.SimpleIntegerProperty;
-<<<<<<< HEAD
-=======
 import javafx.collections.FXCollections;
->>>>>>> a897bdde569ef89c827d3c11564edf0ad06befee
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -19,6 +16,7 @@ import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -73,12 +71,15 @@ public class AppView {
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, Double> tripPriceCol = new TableColumn<>("Price");
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -92,12 +93,15 @@ public class AppView {
         
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
         destinationCol.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
+        destinationCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> startingPointCol = new TableColumn<>("Starting Point");
         startingPointCol.setCellValueFactory(cellData -> cellData.getValue().startingPointProperty());
+        startingPointCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
         basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
@@ -110,7 +114,7 @@ public class AppView {
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
 
-        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Number of Customers");
+        TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
         customerNumCol.setCellValueFactory(cellData ->
             new SimpleIntegerProperty(cellData.getValue().customersProperty().size()).asObject()
         );
@@ -121,19 +125,6 @@ public class AppView {
     }
 
     private void createAndLayoutControls() {
-        //For now, all the admin buttons are below here
-        Button viewDetailsBtn = new Button("View Details");
-        
-        Button addTripBtn = new Button("Add Trip");
-        addTripBtn.setOnAction(e -> {
-            createAddTripForm();
-        });
-
-        Button editTripBtn = new Button("Edit Trip");
-        editTripBtn.setOnAction(e -> {
-            createUpdateTripForm();
-        });
-
         Button customerBtn = new Button("Customer");
         customerBtn.setOnAction(e -> {
             showCustomerPane();
@@ -146,6 +137,7 @@ public class AppView {
 
         // login view setup
         Label loginLabel = new Label("LOGIN AS");
+        loginLabel.setFont(new Font(24));
         loginView.getChildren().addAll(loginLabel, customerBtn, adminBtn);
 
         // Admin view setup
@@ -155,8 +147,32 @@ public class AppView {
             this.primaryStage.show();
             this.adminPane.close();
         });
+
+        Button viewDetailsBtn = new Button("View Details");
         
-        HBox adminControlMenu = new HBox(addTripBtn, backToLoginBtnFromAdmin);
+        Button addTripBtn = new Button("Add Trip");
+        addTripBtn.setOnAction(e -> {
+            createAddTripForm();
+        });
+
+        Button editTripBtn = new Button("Edit Trip");
+        editTripBtn.setOnAction(e -> {
+            createUpdateTripForm();
+        });
+
+        Button removeTripBtn = new Button("Remove Trip");
+        removeTripBtn.setOnAction(e -> {
+            int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
+            this.controller.removeTrip(index);
+            applyFilters();
+        });
+
+        Button editFerryBtn = new Button("Edit Ferry List");
+        editFerryBtn.setOnAction(e -> {
+            createEditFerryListModal();
+        });
+        
+        HBox adminControlMenu = new HBox(3, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
         adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
@@ -186,7 +202,7 @@ public class AppView {
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(e -> createFilterForm());
 
-        HBox customerControlMenu = new HBox(bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
+        HBox customerControlMenu = new HBox(3, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
         
         Scene customerScene = new Scene(customerView, 800, 500);
@@ -542,6 +558,17 @@ public class AppView {
         stage.show();
     }
 
+    private void createEditFerryListModal() {
+        Stage stage = new Stage();
+
+        VBox root = new VBox();
+
+        Scene scene = new Scene(root, 550, 200);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // other configurations
     private void createAndConfigurePane() {
         loginView = new VBox(5);
         loginView.setAlignment(Pos.CENTER);
