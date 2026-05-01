@@ -226,6 +226,11 @@ public class AppView {
         RadioButton noBtn = new RadioButton("No");
         noBtn.setToggleGroup(toggleGroup);
 
+        //CheckBox for medical condisionts
+        CheckBox seasickCBox = new CheckBox("Sea sick");
+        CheckBox pregnantCBox = new CheckBox("Pregnant");
+        CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
+
         Button submitBtn = new Button("Submit");
 
         Button cancelBtn = new Button("Cancel");
@@ -245,6 +250,9 @@ public class AppView {
         HBox btnRow = new HBox(5, submitBtn, cancelBtn);
         btnRow.setAlignment(Pos.CENTER);
 
+        HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
+        medConditionRow.setAlignment(Pos.CENTER);
+
         VBox root = new VBox(5, nameRow, ageRow, medQuestion, medQuestionRow, warning, btnRow);
         root.setAlignment(Pos.CENTER);
         Scene bookingScene = new Scene(root, 500, 300);
@@ -252,15 +260,8 @@ public class AppView {
         stage.show();
 
         yesBtn.setOnAction(e -> {
-            CheckBox seasickCBox = new CheckBox("Sea sick");
-            CheckBox pregnantCBox = new CheckBox("Pregnant");
-            CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
-            HBox medConditionRow = new HBox(5, seasickCBox, pregnantCBox, prmCBox);
-            medConditionRow.setAlignment(Pos.CENTER);
-
             //Basically, we have to remove the warning and the btnRow
             //Before adding the medConditionRow
-
             for (int i = 0; i < root.getChildren().size(); i++) {
                 if (root.getChildren().get(i).equals(btnRow)) {
                     root.getChildren().remove(i); //Remove the btnRow
@@ -272,9 +273,9 @@ public class AppView {
 
         noBtn.setOnAction(e -> {
             for (int i = root.getChildren().size() - 1; i > 0; i--) {
-                if (root.getChildren().get(i).equals(btnRow)) {
+                if (root.getChildren().get(i).equals(medConditionRow)) {
                     //Remove only the medConditionRow
-                    root.getChildren().remove(i-2);
+                    root.getChildren().remove(i);
                     break;
                 }
             }
