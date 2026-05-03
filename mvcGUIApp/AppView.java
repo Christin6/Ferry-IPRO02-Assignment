@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -462,13 +465,19 @@ public class AppView {
         HBox lastNameFieldRow = new HBox(5, new Label("Enter last name: "), lastNameField);
         lastNameFieldRow.setAlignment(Pos.CENTER);
 
+        ListView<FerryTrip> tripList = new ListView();
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
             String firstNameText = firstNameField.getText().trim();
             String lastNameText = lastNameField.getText().trim();
             String customerName = firstNameText + lastNameText;
 
-            model.customerBookedTrip(customerName);
+            ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
+            bookedTrip = this.model.customerBookedTrip(customerName);
+
+            ObservableList<FerryTrip> bookedTripView = FXCollections.observableArrayList(bookedTrip);
+            tripList.setItems(bookedTripView);
         });
 
         Button cancelBtn = new Button("Cancel");
@@ -476,9 +485,10 @@ public class AppView {
             stage.close();
         });
 
-        HBox buttonRow = new HBox(submitBtn, cancelBtn);
+        HBox buttonRow = new HBox(10, submitBtn, cancelBtn);
+        buttonRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, buttonRow);
+        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, buttonRow, tripList);
         root.setAlignment(Pos.CENTER);
 
         Scene listScene = new Scene(root, 500, 300);
@@ -658,29 +668,27 @@ public class AppView {
         Label confirmationLabel = new Label("IMPORTANT NOTE: by editing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
                 + " you will be editing ferry data of:");
-        
+
         VBox tripsContainer = new VBox(confirmationLabel);
         tripsContainer.setAlignment(Pos.CENTER);
 
         for (FerryTrip trip : this.model.searchTripsInFerry(index)) {
             Label tripLabel = new Label("-) Ferry trip from " + trip.startingPointProperty().get()
-                + " to " + trip.destinationProperty().get());
+                    + " to " + trip.destinationProperty().get());
 
             tripsContainer.getChildren().addAll(tripLabel);
         }
 
         Label nameInputLabel = new Label("Ferry Name: ");
         TextField nameInput = new TextField(
-            this.model.ferriesProperty().get(index).nameProperty().get()
-        );
+                this.model.ferriesProperty().get(index).nameProperty().get());
 
         HBox nameRow = new HBox(3, nameInputLabel, nameInput);
         nameRow.setAlignment(Pos.CENTER);
 
         Label maxSeatsInputLabel = new Label("Maximum Seats: ");
         TextField maxSeatsInput = new TextField("" + // "" added to convert int to string
-            this.model.ferriesProperty().get(index).maxSeatsProperty().get()
-        );
+                this.model.ferriesProperty().get(index).maxSeatsProperty().get());
         configTextFieldForInts(maxSeatsInput);
 
         HBox maxSeatsRow = new HBox(3, maxSeatsInputLabel, maxSeatsInput);
@@ -719,15 +727,15 @@ public class AppView {
         Label confirmationLabel = new Label("By removing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
                 + " you will be removing data of:");
-        
+
         VBox tripsContainer = new VBox(confirmationLabel);
         tripsContainer.setAlignment(Pos.CENTER);
 
         for (FerryTrip trip : this.model.searchTripsInFerry(index)) {
             Label tripLabel = new Label("-) Ferry trip from " + trip.startingPointProperty().get()
-                + " to " + trip.destinationProperty().get() + ", with revenue of "
-                + trip.getCurrentRevenue().get() + ", and filled with " +  trip.customersProperty().size()
-                + " customers " );
+                    + " to " + trip.destinationProperty().get() + ", with revenue of "
+                    + trip.getCurrentRevenue().get() + ", and filled with " + trip.customersProperty().size()
+                    + " customers ");
 
             tripsContainer.getChildren().addAll(tripLabel);
         }
@@ -736,8 +744,9 @@ public class AppView {
         okayBtn.setOnAction(e -> {
             this.controller.removeTripInFerry(index); // remove the trips first
             this.controller.removeFerry(index); // then remove the ferry
-            // trips is removed first because if the ferry is removed before trips, 
-            // the indexing will remove the trips with the next ferry after the removed ferry
+            // trips is removed first because if the ferry is removed before trips,
+            // the indexing will remove the trips with the next ferry after the removed
+            // ferry
             applyFilters(); // update customer's view
             stage.close();
         });
