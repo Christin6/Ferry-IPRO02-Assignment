@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -462,13 +465,19 @@ public class AppView {
         HBox lastNameFieldRow = new HBox(5, new Label("Enter last name: "), lastNameField);
         lastNameFieldRow.setAlignment(Pos.CENTER);
 
+        ListView<FerryTrip> tripList = new ListView();
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
             String firstNameText = firstNameField.getText().trim();
             String lastNameText = lastNameField.getText().trim();
             String customerName = firstNameText + lastNameText;
 
-            model.customerBookedTrip(customerName);
+            ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
+            bookedTrip = this.model.customerBookedTrip(customerName);
+
+            ObservableList<FerryTrip> bookedTripView = FXCollections.observableArrayList(bookedTrip);
+            tripList.setItems(bookedTripView);
         });
 
         Button cancelBtn = new Button("Cancel");
@@ -476,9 +485,10 @@ public class AppView {
             stage.close();
         });
 
-        HBox buttonRow = new HBox(submitBtn, cancelBtn);
+        HBox buttonRow = new HBox(10, submitBtn, cancelBtn);
+        buttonRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, buttonRow);
+        VBox root = new VBox(10, text, firstNameFieldRow, lastNameFieldRow, buttonRow, tripList);
         root.setAlignment(Pos.CENTER);
 
         Scene listScene = new Scene(root, 500, 300);
