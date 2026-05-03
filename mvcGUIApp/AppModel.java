@@ -87,7 +87,7 @@ public class AppModel {
         this.trips.set(index, trip);
     }
 
-    void bookTrip(Customer customer, FerryTrip trip) {
+    public void bookTrip(Customer customer, FerryTrip trip) {
         for (FerryTrip t : this.trips) {
             if (t.equals(trip)) {
                 trip.addCustomer(customer);

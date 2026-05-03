@@ -493,44 +493,80 @@ public class AppView {
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        Label text = new Label("Enter the starting point, the destination, and the price of the trip");
+        final Ferry[] selectedFerry = { null }; // store selected ferry from radio buttons
+        // using array because lambda only accepts final local variable
+        // the array reference is final, but the inside is changeable
         Label warning = new Label();
 
+        Label startingPointLabel = new Label("Starting point: ");
         TextField startingPointTextField = new TextField();
         startingPointTextField.setPromptText("Add starting point");
+
+        HBox startingPointInputRow = new HBox(3, startingPointLabel, startingPointTextField);
+        startingPointInputRow.setAlignment(Pos.CENTER);
+
+        Label destinationLabel = new Label("Destination: ");
         TextField destinationTextField = new TextField();
         destinationTextField.setPromptText("Add destination");
 
+        HBox destinationInputRow = new HBox(3, destinationLabel, destinationTextField);
+        destinationInputRow.setAlignment(Pos.CENTER);
+
+        Label basePriceLabel = new Label("Price: $");
         TextField basePriceTextField = new TextField();
         basePriceTextField.setPromptText("Add price");
         configTextFieldForDoubles(basePriceTextField);
 
-        Button submitBtn = new Button("Submit Button");
+        HBox priceInputRow = new HBox(3, basePriceLabel, basePriceTextField);
+        priceInputRow.setAlignment(Pos.CENTER);
+
+        Label ferryInputRow = new Label("Choose the ferry to assign the trip to: ");
+
+        ToggleGroup assignFerryToggleGroup = new ToggleGroup();
+
+        VBox assignFerryCol = new VBox(5, ferryInputRow);
+        assignFerryCol.setAlignment(Pos.CENTER);
+
+        for (Ferry ferry : this.model.ferriesProperty()) {
+            RadioButton ferryRadioBtn = new RadioButton(ferry.nameProperty().get());
+            ferryRadioBtn.setToggleGroup(assignFerryToggleGroup);
+            ferryRadioBtn.setOnAction(e -> {
+                selectedFerry[0] = ferry;
+            });
+            assignFerryCol.getChildren().addAll(ferryRadioBtn);
+        }
+
+        Button submitBtn = new Button("Add");
         submitBtn.setOnAction(e -> {
             if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty()
-                    && !basePriceTextField.getText().isEmpty()) {
-                System.out.println("it works");
+                    && !basePriceTextField.getText().isEmpty() && selectedFerry[0] != null) {
+                String destination = destinationTextField.getText();
+                String startingPoint = startingPointTextField.getText();
+                double basePrice = Double.parseDouble(basePriceTextField.getText());
+
+                FerryTrip ferryTrip = new FerryTrip(destination, startingPoint, basePrice, selectedFerry[0]);
+
+                this.controller.addTrip(ferryTrip);
+                applyFilters(); // update customer's view
+                stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
             }
         });
 
-        Button cancelBtn = new Button("Cancel Button");
+        Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(e -> {
             stage.close();
         });
 
-        HBox locationRow = new HBox(5, startingPointTextField, new Label("to"), destinationTextField, new Label("$"),
-                basePriceTextField);
-        locationRow.setAlignment(Pos.CENTER);
-
         HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
         BtnRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(5, text, locationRow, BtnRow, warning);
+        VBox root = new VBox(5, startingPointInputRow, destinationInputRow, priceInputRow, assignFerryCol, warning,
+                BtnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene addTripScene = new Scene(root, 550, 200);
+        Scene addTripScene = new Scene(root, 550, 450);
         stage.setScene(addTripScene);
         stage.show();
     }
@@ -624,13 +660,19 @@ public class AppView {
         HBox maxSeatsRow = new HBox(3, maxSeatsInputLabel, maxSeatsInput);
         maxSeatsRow.setAlignment(Pos.CENTER);
 
+        Label warning = new Label();
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
-            String ferryName = nameInput.getText();
-            int ferryMaxSeats = Integer.parseInt(maxSeatsInput.getText());
-            Ferry newFerry = new Ferry(ferryName, ferryMaxSeats);
-            this.controller.addFerry(newFerry);
-            stage.close();
+            if (!nameInput.getText().isEmpty() && !maxSeatsInput.getText().isEmpty()) {
+                String ferryName = nameInput.getText();
+                int ferryMaxSeats = Integer.parseInt(maxSeatsInput.getText());
+                Ferry newFerry = new Ferry(ferryName, ferryMaxSeats);
+                this.controller.addFerry(newFerry);
+                stage.close();
+            } else {
+                warning.setText("You have not filled out all the fields!");
+            }
         });
 
         Button cancelBtn = new Button("Cancel");
@@ -639,7 +681,7 @@ public class AppView {
         HBox windowControlRow = new HBox(3, submitBtn, cancelBtn);
         windowControlRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(nameRow, maxSeatsRow, windowControlRow);
+        VBox root = new VBox(5, nameRow, maxSeatsRow, warning, windowControlRow);
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 350, 250);
@@ -658,40 +700,44 @@ public class AppView {
         Label confirmationLabel = new Label("IMPORTANT NOTE: by editing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
                 + " you will be editing ferry data of:");
-        
+
         VBox tripsContainer = new VBox(confirmationLabel);
         tripsContainer.setAlignment(Pos.CENTER);
 
         for (FerryTrip trip : this.model.searchTripsInFerry(index)) {
             Label tripLabel = new Label("-) Ferry trip from " + trip.startingPointProperty().get()
-                + " to " + trip.destinationProperty().get());
+                    + " to " + trip.destinationProperty().get());
 
             tripsContainer.getChildren().addAll(tripLabel);
         }
 
         Label nameInputLabel = new Label("Ferry Name: ");
         TextField nameInput = new TextField(
-            this.model.ferriesProperty().get(index).nameProperty().get()
-        );
+                this.model.ferriesProperty().get(index).nameProperty().get());
 
         HBox nameRow = new HBox(3, nameInputLabel, nameInput);
         nameRow.setAlignment(Pos.CENTER);
 
         Label maxSeatsInputLabel = new Label("Maximum Seats: ");
         TextField maxSeatsInput = new TextField("" + // "" added to convert int to string
-            this.model.ferriesProperty().get(index).maxSeatsProperty().get()
-        );
+                this.model.ferriesProperty().get(index).maxSeatsProperty().get());
         configTextFieldForInts(maxSeatsInput);
 
         HBox maxSeatsRow = new HBox(3, maxSeatsInputLabel, maxSeatsInput);
         maxSeatsRow.setAlignment(Pos.CENTER);
 
+        Label warning = new Label();
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
-            String newName = nameInput.getText();
-            int newMaxSeat = Integer.parseInt(maxSeatsInput.getText());
-            this.controller.updateFerry(index, newName, newMaxSeat);
-            stage.close();
+            if (!nameInput.getText().isEmpty() && !maxSeatsInput.getText().isEmpty()) {
+                String newName = nameInput.getText();
+                int newMaxSeat = Integer.parseInt(maxSeatsInput.getText());
+                this.controller.updateFerry(index, newName, newMaxSeat);
+                stage.close();
+            } else {
+                warning.setText("You have not filled out all the fields!");
+            }
         });
 
         Button cancelBtn = new Button("Cancel");
@@ -700,7 +746,7 @@ public class AppView {
         HBox windowControlRow = new HBox(3, submitBtn, cancelBtn);
         windowControlRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(5, tripsContainer, nameRow, maxSeatsRow, windowControlRow);
+        VBox root = new VBox(5, tripsContainer, nameRow, maxSeatsRow, warning, windowControlRow);
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 550, 250);
@@ -719,15 +765,15 @@ public class AppView {
         Label confirmationLabel = new Label("By removing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
                 + " you will be removing data of:");
-        
+
         VBox tripsContainer = new VBox(confirmationLabel);
         tripsContainer.setAlignment(Pos.CENTER);
 
         for (FerryTrip trip : this.model.searchTripsInFerry(index)) {
             Label tripLabel = new Label("-) Ferry trip from " + trip.startingPointProperty().get()
-                + " to " + trip.destinationProperty().get() + ", with revenue of "
-                + trip.getCurrentRevenue().get() + ", and filled with " +  trip.customersProperty().size()
-                + " customers " );
+                    + " to " + trip.destinationProperty().get() + ", with revenue of "
+                    + trip.getCurrentRevenue().get() + ", and filled with " + trip.customersProperty().size()
+                    + " customers ");
 
             tripsContainer.getChildren().addAll(tripLabel);
         }
@@ -736,8 +782,9 @@ public class AppView {
         okayBtn.setOnAction(e -> {
             this.controller.removeTripInFerry(index); // remove the trips first
             this.controller.removeFerry(index); // then remove the ferry
-            // trips is removed first because if the ferry is removed before trips, 
-            // the indexing will remove the trips with the next ferry after the removed ferry
+            // trips is removed first because if the ferry is removed before trips,
+            // the indexing will remove the trips with the next ferry after the removed
+            // ferry
             applyFilters(); // update customer's view
             stage.close();
         });
