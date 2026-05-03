@@ -57,13 +57,26 @@ public class AppModel {
         this.trips.remove(index);
     }
 
+    public void removeTripInFerry(int ferryIndex) {
+        ArrayList<FerryTrip> toDeleteTrips = searchTripsInFerry(ferryIndex);
+        for (FerryTrip trip : toDeleteTrips) {
+            for (int i = 0; i < this.trips.size(); i++) {
+                if (this.trips.get(i).equals(trip)) {
+                    removeTrip(i);
+                }
+            }
+        }
+    }
+
     // Ferries
     public void addFerry(Ferry ferry) {
         this.ferries.add(ferry);
     }
 
-    public void updateFerry(int index, Ferry ferry) {
-        this.ferries.set(index, ferry);
+    public void updateFerry(int index, String newName, int newSeats) {
+        Ferry existingFerry = this.ferries.get(index);
+        existingFerry.setName(newName);
+        existingFerry.setMaxSeats(newSeats);
     }
 
     public void removeFerry(int index) {
@@ -80,6 +93,20 @@ public class AppModel {
                 trip.addCustomer(customer);
             }
         }
+    }
+
+    public ArrayList<FerryTrip> searchTripsInFerry(int ferryIndex) {
+        ArrayList<FerryTrip> trips = new ArrayList<>();
+
+        Ferry searchedFerry = ferriesProperty().get(ferryIndex);
+
+        for (FerryTrip trip : this.trips) {
+            if (trip.getAssignedFerry().equals(searchedFerry)) {
+                trips.add(trip);
+            }
+        }
+
+        return trips;
     }
 
     public ArrayList<FerryTrip> customerBookedTrip(String customerName) {

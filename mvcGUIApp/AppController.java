@@ -18,13 +18,17 @@ public class AppController {
         this.model.removeTrip(index);
     }
 
+    public void removeTripInFerry(int FerryIndex) {
+        this.model.removeTripInFerry(FerryIndex);
+    }
+
     // Ferries
     public void addFerry(Ferry ferry) {
         this.model.addFerry(ferry);
     }
 
-    public void updateFerry(int index, Ferry ferry) {
-        this.model.updateFerry(index, ferry);
+    public void updateFerry(int index, String newName, int newMaxSeats) {
+        this.model.updateFerry(index, newName, newMaxSeats);
     }
 
     public void removeFerry(int index) {
