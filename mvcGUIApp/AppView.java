@@ -93,7 +93,7 @@ public class AppView {
         this.customerTripsView = new TableView<>();
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
-        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().assignedFerryProperty().get().nameProperty());
         ferryNameCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
@@ -115,7 +115,7 @@ public class AppView {
         this.adminTripsView = new TableView<>();
 
         TableColumn<FerryTrip, String> ferryNameCol = new TableColumn<>("Ferry");
-        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().getAssignedFerry().nameProperty());
+        ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().assignedFerryProperty().get().nameProperty());
         ferryNameCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, String> destinationCol = new TableColumn<>("Destination");
@@ -194,9 +194,10 @@ public class AppView {
             createEditFerryListModal();
         });
 
-        HBox adminControlMenu = new HBox(3, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn,
-                backToLoginBtnFromAdmin);
-        adminView.getChildren().addAll(adminControlMenu, this.adminTripsView);
+        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn);
+        adminControlMenu.setAlignment(Pos.CENTER);
+
+        adminView.getChildren().addAll(backToLoginBtnFromAdmin, this.adminTripsView, adminControlMenu);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
@@ -223,8 +224,10 @@ public class AppView {
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(e -> createFilterForm());
 
-        HBox customerControlMenu = new HBox(3, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
-        customerView.getChildren().addAll(customerControlMenu, this.customerTripsView);
+        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn);
+        customerControlMenu.setAlignment(Pos.CENTER);
+        
+        customerView.getChildren().addAll(backToLoginBtnFromCust, this.customerTripsView, customerControlMenu);
 
         Scene customerScene = new Scene(customerView, 800, 500);
 
@@ -599,14 +602,14 @@ public class AppView {
         TextField startingPointTextField = new TextField();
         startingPointTextField.setPromptText("Add starting point");
 
-        HBox startingPointInputRow = new HBox(3, startingPointLabel, startingPointTextField);
+        HBox startingPointInputRow = new HBox(5, startingPointLabel, startingPointTextField);
         startingPointInputRow.setAlignment(Pos.CENTER);
 
         Label destinationLabel = new Label("Destination: ");
         TextField destinationTextField = new TextField();
         destinationTextField.setPromptText("Add destination");
 
-        HBox destinationInputRow = new HBox(3, destinationLabel, destinationTextField);
+        HBox destinationInputRow = new HBox(5, destinationLabel, destinationTextField);
         destinationInputRow.setAlignment(Pos.CENTER);
 
         Label basePriceLabel = new Label("Price: $");
@@ -614,7 +617,7 @@ public class AppView {
         basePriceTextField.setPromptText("Add price");
         configTextFieldForDoubles(basePriceTextField);
 
-        HBox priceInputRow = new HBox(3, basePriceLabel, basePriceTextField);
+        HBox priceInputRow = new HBox(5, basePriceLabel, basePriceTextField);
         priceInputRow.setAlignment(Pos.CENTER);
 
         Label ferryInputRow = new Label("Choose the ferry to assign the trip to: ");
@@ -674,41 +677,79 @@ public class AppView {
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        Label text = new Label("Enter the new starting point, the destination, and the price of the trip");
+        int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
+        FerryTrip selectedTrip = this.model.tripsProperty().get(index);
 
-        TextField startingPointTextField = new TextField();
-        startingPointTextField.setPromptText("Add starting point");
-        TextField destinationTextField = new TextField();
-        destinationTextField.setPromptText("Add destination");
+        final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from radioButtons
+        Label warning = new Label();
 
-        TextField basePriceTextField = new TextField();
-        basePriceTextField.setPromptText("Add price");
+        Label startingPointLabel = new Label("Starting point: ");
+        TextField startingPointTextField = new TextField(selectedTrip.startingPointProperty().get());
+
+        HBox startingPointInputRow = new HBox(5, startingPointLabel, startingPointTextField);
+        startingPointInputRow.setAlignment(Pos.CENTER);
+
+        Label destinationLabel = new Label("Destination: ");
+        TextField destinationTextField = new TextField(selectedTrip.destinationProperty().get());
+
+        HBox destinationInputRow = new HBox(5, destinationLabel, destinationTextField);
+        destinationInputRow.setAlignment(Pos.CENTER);
+
+        Label basePriceLabel = new Label("Price: $");
+        TextField basePriceTextField = new TextField("" + selectedTrip.basePriceProperty().get());
         configTextFieldForDoubles(basePriceTextField);
 
-        Button submitBtn = new Button("Submit Button");
+        HBox priceInputRow = new HBox(5, basePriceLabel, basePriceTextField);
+        priceInputRow.setAlignment(Pos.CENTER);
+
+        Label ferryInputRow = new Label("Choose the ferry to assign the trip to: ");
+
+        ToggleGroup assignFerryToggleGroup = new ToggleGroup();
+
+        VBox assignFerryCol = new VBox(5, ferryInputRow);
+        assignFerryCol.setAlignment(Pos.CENTER);
+
+        for (Ferry ferry : this.model.ferriesProperty()) {
+            RadioButton ferryRadioBtn = new RadioButton(ferry.nameProperty().get());
+            ferryRadioBtn.setToggleGroup(assignFerryToggleGroup);
+            ferryRadioBtn.setOnAction(e -> {
+                selectedFerry[0] = ferry;
+            });
+            assignFerryCol.getChildren().addAll(ferryRadioBtn);
+        }
+
+        Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
             if (!startingPointTextField.getText().isEmpty() && !destinationTextField.getText().isEmpty()
-                    && !basePriceTextField.getText().isEmpty()) {
-                System.out.println("it works");
+                    && !basePriceTextField.getText().isEmpty() && selectedFerry[0] != null) {
+                String destination = destinationTextField.getText();
+                String startingPoint = startingPointTextField.getText();
+                double basePrice = Double.parseDouble(basePriceTextField.getText());
+
+                this.controller.updateTrip(index, destination, startingPoint, basePrice, selectedFerry[0]);
+                applyFilters(); // update customer's view
+                // force update admin's view to make sure its ferry column is updated
+                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
+                
+                stage.close();
+            } else {
+                warning.setText("You have not filled out all the fields!");
             }
         });
 
-        Button cancelBtn = new Button("Cancel Button");
+        Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(e -> {
             stage.close();
         });
 
-        HBox locationRow = new HBox(5, startingPointTextField, new Label("to"), destinationTextField, new Label("$"),
-                basePriceTextField);
-        locationRow.setAlignment(Pos.CENTER);
-
         HBox BtnRow = new HBox(5, submitBtn, cancelBtn);
         BtnRow.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(5, text, locationRow, BtnRow);
+        VBox root = new VBox(5, startingPointInputRow, destinationInputRow, priceInputRow, assignFerryCol, warning,
+                BtnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene updateTripScene = new Scene(root, 550, 200);
+        Scene updateTripScene = new Scene(root, 550, 350);
         stage.setScene(updateTripScene);
         stage.show();
     }
@@ -729,7 +770,7 @@ public class AppView {
         Button removeFerryBtn = new Button("Remove Ferry");
         removeFerryBtn.setOnAction(e -> createFerryRemovalConfirmationModal());
 
-        HBox controlMenu = new HBox(3, addFerryBtn, editFerryBtn, removeFerryBtn);
+        HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
 
         VBox root = new VBox(controlMenu, this.ferriesView);
 
@@ -747,14 +788,14 @@ public class AppView {
         Label nameInputLabel = new Label("Ferry Name: ");
         TextField nameInput = new TextField("Ferry" + this.model.ferriesProperty().size());
 
-        HBox nameRow = new HBox(3, nameInputLabel, nameInput);
+        HBox nameRow = new HBox(5, nameInputLabel, nameInput);
         nameRow.setAlignment(Pos.CENTER);
 
         Label maxSeatsInputLabel = new Label("Maximum Seats: ");
         TextField maxSeatsInput = new TextField("1");
         configTextFieldForInts(maxSeatsInput);
 
-        HBox maxSeatsRow = new HBox(3, maxSeatsInputLabel, maxSeatsInput);
+        HBox maxSeatsRow = new HBox(5, maxSeatsInputLabel, maxSeatsInput);
         maxSeatsRow.setAlignment(Pos.CENTER);
 
         Label warning = new Label();
@@ -775,7 +816,7 @@ public class AppView {
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(e -> stage.close());
 
-        HBox windowControlRow = new HBox(3, submitBtn, cancelBtn);
+        HBox windowControlRow = new HBox(5, submitBtn, cancelBtn);
         windowControlRow.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(5, nameRow, maxSeatsRow, warning, windowControlRow);
@@ -812,7 +853,7 @@ public class AppView {
         TextField nameInput = new TextField(
                 this.model.ferriesProperty().get(index).nameProperty().get());
 
-        HBox nameRow = new HBox(3, nameInputLabel, nameInput);
+        HBox nameRow = new HBox(5, nameInputLabel, nameInput);
         nameRow.setAlignment(Pos.CENTER);
 
         Label maxSeatsInputLabel = new Label("Maximum Seats: ");
@@ -820,7 +861,7 @@ public class AppView {
                 this.model.ferriesProperty().get(index).maxSeatsProperty().get());
         configTextFieldForInts(maxSeatsInput);
 
-        HBox maxSeatsRow = new HBox(3, maxSeatsInputLabel, maxSeatsInput);
+        HBox maxSeatsRow = new HBox(5, maxSeatsInputLabel, maxSeatsInput);
         maxSeatsRow.setAlignment(Pos.CENTER);
 
         Label warning = new Label();
@@ -840,7 +881,7 @@ public class AppView {
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(e -> stage.close());
 
-        HBox windowControlRow = new HBox(3, submitBtn, cancelBtn);
+        HBox windowControlRow = new HBox(5, submitBtn, cancelBtn);
         windowControlRow.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(5, tripsContainer, nameRow, maxSeatsRow, warning, windowControlRow);
@@ -889,7 +930,7 @@ public class AppView {
         Button noBtn = new Button("No");
         noBtn.setOnAction(e -> stage.close());
 
-        HBox confirmationBtnsRow = new HBox(3, okayBtn, noBtn);
+        HBox confirmationBtnsRow = new HBox(5, okayBtn, noBtn);
         confirmationBtnsRow.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(5, tripsContainer, confirmationBtnsRow);

@@ -7,12 +7,9 @@ import javafx.collections.FXCollections;
 public class AppModel {
     private final ObservableList<FerryTrip> trips;
     private final ObservableList<Ferry> ferries;
-    private final ObservableList<Customer> customers;
 
     AppModel() {
         // dummy data
-        this.customers = FXCollections.observableArrayList();
-
         this.ferries = FXCollections.observableArrayList(
                 new Ferry("F1", 100),
                 new Ferry("F2", 100),
@@ -35,22 +32,18 @@ public class AppModel {
     public ObservableList<Ferry> ferriesProperty() {
         return this.ferries;
     }
-
-    public ObservableList<Customer> customerProperty() {
-        return this.customers;
-    }
-
-    public void addCustomerDetails(Customer customer) {
-        this.customers.add(customer);
-    }
-
+    
     // Ferry Trips
     public void addTrip(FerryTrip trip) {
         this.trips.add(trip);
     }
 
-    public void updateTrip(int index, FerryTrip trip) {
-        this.trips.set(index, trip);
+    public void updateTrip(int index, String newDestination, String newStarting, double newBasePrice, Ferry newFerry) {
+        FerryTrip existingTrip = this.trips.get(index);
+        existingTrip.setDestination(newDestination);
+        existingTrip.setStartingPoint(newStarting);
+        existingTrip.setBasePrice(newBasePrice);
+        existingTrip.setFerry(newFerry);
     }
 
     public void removeTrip(int index) {
@@ -101,7 +94,7 @@ public class AppModel {
         Ferry searchedFerry = ferriesProperty().get(ferryIndex);
 
         for (FerryTrip trip : this.trips) {
-            if (trip.getAssignedFerry().equals(searchedFerry)) {
+            if (trip.assignedFerryProperty().get().equals(searchedFerry)) {
                 trips.add(trip);
             }
         }
