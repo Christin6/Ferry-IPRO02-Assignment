@@ -49,8 +49,12 @@ public class AppModel {
         this.trips.add(trip);
     }
 
-    public void updateTrip(int index, FerryTrip trip) {
-        this.trips.set(index, trip);
+    public void updateTrip(int index, String newDestination, String newStarting, double newBasePrice, Ferry newFerry) {
+        FerryTrip existingTrip = this.trips.get(index);
+        existingTrip.setDestination(newDestination);
+        existingTrip.setStartingPoint(newStarting);
+        existingTrip.setBasePrice(newBasePrice);
+        existingTrip.setFerry(newFerry);
     }
 
     public void removeTrip(int index) {
@@ -101,7 +105,7 @@ public class AppModel {
         Ferry searchedFerry = ferriesProperty().get(ferryIndex);
 
         for (FerryTrip trip : this.trips) {
-            if (trip.getAssignedFerry().equals(searchedFerry)) {
+            if (trip.assignedFerryProperty().get().equals(searchedFerry)) {
                 trips.add(trip);
             }
         }
