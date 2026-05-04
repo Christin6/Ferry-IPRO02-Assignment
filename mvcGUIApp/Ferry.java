@@ -25,8 +25,4 @@ public class Ferry {
   public void setMaxSeats(int newMaxSeats) {
     this.maxSeats.set(newMaxSeats);
   }
-
-  public String toString() {
-    return name + " | maxSeats: " + maxSeats;
-  }
 }

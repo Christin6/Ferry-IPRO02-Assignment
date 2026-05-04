@@ -127,7 +127,7 @@ public class AppView {
         startingPointCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
-        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
 
         TableColumn<FerryTrip, Double> discountCol = new TableColumn<>("Discount");
         discountCol.setCellValueFactory(cellData -> cellData.getValue().discountProperty().asObject());
@@ -607,7 +607,7 @@ public class AppView {
         HBox lastNameFieldRow = new HBox(5, new Label("Enter last name: "), lastNameField);
         lastNameFieldRow.setAlignment(Pos.CENTER);
 
-        ListView<FerryTrip> tripList = new ListView();
+        ListView<String> tripList = new ListView<>();
 
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
@@ -618,7 +618,14 @@ public class AppView {
             ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
             bookedTrip = this.model.customerBookedTrip(customerName);
 
-            ObservableList<FerryTrip> bookedTripView = FXCollections.observableArrayList(bookedTrip);
+            ObservableList<String> bookedTripView = FXCollections.observableArrayList();
+
+            for (FerryTrip trip : bookedTrip) {
+                String listSentence = "-) " + trip.startingPointProperty().get()
+                    + " to " + trip.destinationProperty().get() + " | $" + trip.priceProperty().get();
+                bookedTripView.add(listSentence);
+            }
+
             tripList.setItems(bookedTripView);
         });
 
@@ -1026,6 +1033,8 @@ public class AppView {
             if (assignDiscount) {
                 FerryTrip trip = this.model.tripsProperty().get(index);
                 this.controller.setDiscount(Double.parseDouble(adminInput), trip);
+                // force update admin's view to make sure its ferry column is updated
+                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
                 stage.close();
             }
         });

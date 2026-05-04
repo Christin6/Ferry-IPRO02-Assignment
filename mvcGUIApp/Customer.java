@@ -27,11 +27,6 @@ public abstract class Customer {
     ArrayList<MedicalCondition> getMedicalCondition(){
         return this.medicalCondition;
     }
-    
-
-    public String toString() {
-        return "|| Name: " + this.firstName + " " + this.lastName + "; Age: " + this.age + "; Medical Condition: " + this.medicalCondition;
-    }
 }
 
 class ChildCustomer extends Customer {
@@ -50,11 +45,6 @@ class ChildCustomer extends Customer {
     double getChildFareMultiplier() {
         return CHILD_FARE_MULTIPLIER;
     }
-
-    @Override
-    public String toString() {
-        return super.toString() + "; Guardian: " + this.guardian.getName() + " ||\n";
-    }
 }
 
 class AdultCustomer extends Customer {
@@ -63,10 +53,5 @@ class AdultCustomer extends Customer {
     AdultCustomer(String firstName, String lastName, int age, String passportID, ArrayList<MedicalCondition> medicalCondition) {
         super(firstName, lastName, age, medicalCondition);
         this.passportID = passportID;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "; Passport Number: " + this.passportID + " ||\n";
     }
 }
