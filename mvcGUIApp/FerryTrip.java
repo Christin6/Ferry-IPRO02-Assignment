@@ -102,11 +102,4 @@ public class FerryTrip {
   void setDiscount(double newValue) {
     this.discount.set(newValue);
   }
-
-  public String toString() {
-    return "FerryTrip\n" +
-        "destination: " + destinationProperty().get() + '\n' +
-        "startingPoint: " + startingPointProperty().get() + '\n' +
-        "customers: " + customers + '\n';
-  }
 }
