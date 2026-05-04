@@ -320,6 +320,7 @@ public class AppView {
             stage.close();
         });
 
+        //HBoxes and VBoxes
         HBox nameRow = new HBox(5, new Label("Name: "), fName, lName);
         nameRow.setAlignment(Pos.CENTER);
 
@@ -419,6 +420,7 @@ public class AppView {
 
             boolean filledInMedicalCondition = false;
 
+            // This entire process is to make sure each field is filled in
             // 1. Check if the initial field (fName, lName, and age) are filled
             // 2. Check if the medical conditions are filled
             // 3. Check whether the customer is adult or child
