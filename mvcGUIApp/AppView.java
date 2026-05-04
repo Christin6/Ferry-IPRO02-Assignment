@@ -211,7 +211,8 @@ public class AppView {
 
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
-            createBookingForm();
+            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
+            createBookingForm(index);
         });
 
         Button checkHistoryBtn = new Button("Booking History");
@@ -241,7 +242,7 @@ public class AppView {
     }
 
     // Customer Window
-    private void createBookingForm() {
+    private void createBookingForm(int index) {
         Stage stage = new Stage();
         stage.setTitle("Booking Form");
         stage.initOwner(primaryStage);
@@ -392,11 +393,8 @@ public class AppView {
 
             int ageNum = convertStringToInt(age.getText().trim());
 
-            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
-
             //FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
-            if (!fNameText.isEmpty() && !lNameText.isEmpty() && ageText.isEmpty()) {
-                //seasickCBox, pregnantCBox, prmCBox
+            if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected() ||!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
                 //Medical Condition checkbox
                 if (yesMedBtn.isSelected()) {
                     if (seasickCBox.isSelected()) {
@@ -408,17 +406,16 @@ public class AppView {
                     else if (prmCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
                     }
-                }
-                else {
+                } else {
                     medicalCondition.add(MedicalCondition.HEALTHY);
                 }
 
                 if (ageNum >= 18) {
                     AdultCustomer adultCustomer = new AdultCustomer(lNameText, ageText, ageNum, passportIDText, medicalCondition);
 
-                    this.controller.createBooking(adultCustomer, null);
-                }
-                else { // Work on child class later
+                    FerryTrip ferryTrip = model.tripsProperty().get(index);
+                    this.controller.createBooking(adultCustomer, ferryTrip);
+                } else { // Work on child class later
                     ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
                 }
             } else {
