@@ -98,9 +98,12 @@ public class AppModel {
                     AdultCustomer adultCustomer = (AdultCustomer) cust;
                     return adultCustomer;
                 }
+
+                else {
+                    return null;
+                }
             }
         }
-
         return null;
     }
 

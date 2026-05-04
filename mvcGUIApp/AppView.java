@@ -400,10 +400,11 @@ public class AppView {
 
             int ageNum = convertStringToInt(age.getText().trim());
 
-            //FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
+            // 1. Check if the initial field (fName, lName, and age) is empty
+            // 2. Check if the medical conditions are filled
+            // 3. Check whether the customer is adult or child
             if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected() ||!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
                 //Medical Condition checkbox
-                //I need to make more adjustments so the medical condition is not empty
                 if (yesMedBtn.isSelected()) {
                     if (seasickCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SEA_SICK);
@@ -418,11 +419,21 @@ public class AppView {
 
                 if (ageNum >= 18) {
                     AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText, medicalCondition);
+                    System.out.println(adultCustomer);
 
                     FerryTrip ferryTrip = model.tripsProperty().get(index);
                     this.controller.createBooking(adultCustomer, ferryTrip);
                 } else { // Work on child class later
-                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
+                    String guardianName = guardianFNameText + " " + guardianLNameText;
+                    AdultCustomer guardian = this.model.searchGuardian(guardianName);
+                    System.out.println(guardian);
+
+                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, guardian, medicalCondition);
+
+                    System.out.println(childCustomer);
+
+                    FerryTrip ferryTrip = model.tripsProperty().get(index);
+                    this.controller.createBooking(childCustomer, ferryTrip);
                 }
 
                 // force update admin's view to make sure its ferry column is updated

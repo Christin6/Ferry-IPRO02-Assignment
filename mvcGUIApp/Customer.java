@@ -30,7 +30,7 @@ public abstract class Customer {
     
 
     public String toString() {
-        return "|| Name: " + this.name + "; Age: " + this.age + "; Medical Condition: " + this.medicalCondition;
+        return "|| Name: " + this.firstName + " " + this.lastName + "; Age: " + this.age + "; Medical Condition: " + this.medicalCondition;
     }
 }
 
