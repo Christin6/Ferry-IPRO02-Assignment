@@ -211,8 +211,6 @@ public class AppView {
 
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
-            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
-            // Need a method to make booking
             createBookingForm();
         });
 
@@ -259,17 +257,27 @@ public class AppView {
         age.setPromptText("Enter your age");
         configTextFieldForInts(age);
 
+        //Adult information
+        TextField passportID = new TextField();
+        passportID.setPromptText("Enter your passport number");
+
+        //Children information
+        TextField guardianFName = new TextField();
+        guardianFName.setPromptText("Enter guardian first name");
+        TextField guardianLName = new TextField();
+        guardianLName.setPromptText("Enter guardian last name");
+        
+
         // Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
-        ToggleGroup toggleGroup = new ToggleGroup();
-        // Might need to change names for better clarity
-        RadioButton yesBtn = new RadioButton("Yes");
-        yesBtn.setToggleGroup(toggleGroup);
+        ToggleGroup toggleGroupMed = new ToggleGroup();
+        RadioButton yesMedBtn = new RadioButton("Yes");
+        yesMedBtn.setToggleGroup(toggleGroupMed);
 
-        RadioButton noBtn = new RadioButton("No");
-        noBtn.setToggleGroup(toggleGroup);
+        RadioButton noMedBtn = new RadioButton("No");
+        noMedBtn.setToggleGroup(toggleGroupMed);
 
-        // CheckBox for medical condisionts
+        // CheckBox for medical conditions
         CheckBox seasickCBox = new CheckBox("Sea sick");
         CheckBox pregnantCBox = new CheckBox("Pregnant");
         CheckBox prmCBox = new CheckBox("Person with Reduced Mobility(PRM)");
@@ -287,7 +295,13 @@ public class AppView {
         HBox ageRow = new HBox(5, new Label("Age:"), age);
         ageRow.setAlignment(Pos.CENTER);
 
-        HBox medQuestionRow = new HBox(5, yesBtn, noBtn);
+        HBox ageAdultRow = new HBox(5, new Label("Passport Number:"), passportID);
+        ageAdultRow.setAlignment(Pos.CENTER);
+
+        HBox ageChildRow = new HBox(5, new Label("Guardian Name:"), guardianFName, guardianLName);
+        ageChildRow.setAlignment(Pos.CENTER);
+
+        HBox medQuestionRow = new HBox(5, yesMedBtn, noMedBtn);
         medQuestionRow.setAlignment(Pos.CENTER);
 
         HBox btnRow = new HBox(5, submitBtn, cancelBtn);
@@ -302,7 +316,52 @@ public class AppView {
         stage.setScene(bookingScene);
         stage.show();
 
-        yesBtn.setOnAction(e -> {
+        age.setOnAction(e -> {
+            //We need to remove some rows to add new rows
+            for (int i = root.getChildren().size() - 1; i > 0; i--) {
+                if (root.getChildren().get(i).equals(ageAdultRow) || root.getChildren().get(i).equals(ageChildRow)) {
+                    root.getChildren().remove(i);
+                }
+                else if (root.getChildren().get(i).equals(btnRow)) {
+                    root.getChildren().remove(i);
+                }
+                else if (root.getChildren().get(i).equals(warning)) {
+                    root.getChildren().remove(i);
+                }
+                else if (root.getChildren().get(i).equals(medQuestion)) {
+                    root.getChildren().remove(i);
+                }
+                else if (root.getChildren().get(i).equals(medQuestionRow)) {
+                    root.getChildren().remove(i);
+                }
+                else if (root.getChildren().get(i).equals(medConditionRow)) {
+                    root.getChildren().remove(i);
+                }
+            }
+
+            if (convertStringToInt(age.getText().trim()) >= 18) {
+                root.getChildren().addAll(ageAdultRow, medQuestion, medQuestionRow);
+                if (yesMedBtn.isSelected()) {
+                    root.getChildren().addAll(medConditionRow, warning, btnRow);
+                }
+                else {
+                    root.getChildren().addAll(warning, btnRow);
+                }
+                
+            }
+            else {
+                root.getChildren().addAll(ageChildRow, medQuestion, medQuestionRow);
+                if (yesMedBtn.isSelected()) {
+                    root.getChildren().addAll(medConditionRow, warning, btnRow);
+                }
+                else {
+                    root.getChildren().addAll(warning, btnRow);
+                }
+            }
+        });
+
+        //Medical Button Events
+        yesMedBtn.setOnAction(e -> {
             // Basically, we have to remove the warning and the btnRow
             // Before adding the medConditionRow
             for (int i = 0; i < root.getChildren().size(); i++) {
@@ -314,7 +373,7 @@ public class AppView {
             root.getChildren().addAll(medConditionRow, warning, btnRow);
         });
 
-        noBtn.setOnAction(e -> {
+        noMedBtn.setOnAction(e -> {
             for (int i = root.getChildren().size() - 1; i > 0; i--) {
                 if (root.getChildren().get(i).equals(medConditionRow)) {
                     // Remove only the medConditionRow
@@ -327,13 +386,44 @@ public class AppView {
         submitBtn.setOnAction(e -> {
             String fNameText = fName.getText().trim();
             String lNameText = lName.getText().trim();
+            String ageText = age.getText().trim();
+            String passportIDText = passportID.getText().trim();
+            ArrayList<MedicalCondition> medicalCondition = new ArrayList<>();
 
-            if (!fNameText.isEmpty() && !lNameText.isEmpty()) {
-                System.out.println("It is working");
+            int ageNum = convertStringToInt(age.getText().trim());
+
+            int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
+
+            //FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
+            if (!fNameText.isEmpty() && !lNameText.isEmpty() && ageText.isEmpty()) {
+                //seasickCBox, pregnantCBox, prmCBox
+                //Medical Condition checkbox
+                if (yesMedBtn.isSelected()) {
+                    if (seasickCBox.isSelected()) {
+                        medicalCondition.add(MedicalCondition.SEA_SICK);
+                    }
+                    else if (pregnantCBox.isSelected()) {
+                        medicalCondition.add(MedicalCondition.PREGNANT);
+                    }
+                    else if (prmCBox.isSelected()) {
+                        medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
+                    }
+                }
+                else {
+                    medicalCondition.add(MedicalCondition.HEALTHY);
+                }
+
+                if (ageNum >= 18) {
+                    AdultCustomer adultCustomer = new AdultCustomer(lNameText, ageText, ageNum, passportIDText, medicalCondition);
+
+                    this.controller.createBooking(adultCustomer, null);
+                }
+                else { // Work on child class later
+                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
+                }
             } else {
                 warning.setText("You have not filled out all the fields!");
             }
-            // Need code here to put data
         });
     }
 
@@ -843,5 +933,16 @@ public class AppView {
             }
             return null;
         }));
+    }
+
+    //Temporary
+    public int convertStringToInt(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0;
+        }
+        if ("-".equals(s)) {
+            return 0;
+        }
+        return Integer.parseInt(s); // Convert string into integer
     }
 }
