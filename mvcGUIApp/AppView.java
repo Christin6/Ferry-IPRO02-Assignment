@@ -175,6 +175,12 @@ public class AppView {
         });
 
         Button assignDiscBtn = new Button("Assign Discount");
+        assignDiscBtn.setOnAction(e -> {
+            int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                createDiscountForm(index);
+            }
+        });
 
         Button addTripBtn = new Button("Add Trip");
         addTripBtn.setOnAction(e -> {
@@ -242,7 +248,9 @@ public class AppView {
         });
 
         Button filterBtn = new Button("Filter");
-        filterBtn.setOnAction(e -> createFilterForm());
+        filterBtn.setOnAction(e ->
+
+        createFilterForm());
 
         HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
@@ -815,8 +823,10 @@ public class AppView {
         });
 
         HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
+        controlMenu.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(this.ferriesView, controlMenu, warning);
+        root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 550, 350);
         stage.setScene(scene);
@@ -977,6 +987,48 @@ public class AppView {
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 550, 250);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void createDiscountForm(int index) {
+        Stage stage = new Stage();
+        stage.setTitle("Edit Discount");
+
+        Label label = new Label("Input discount amount: ");
+        
+        TextField discountInput = new TextField();
+        discountInput.setPromptText("Discount amount");
+        configTextFieldForDoubles(discountInput);
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(e -> {
+            String adminInput = discountInput.getText().trim();
+
+            boolean assignDiscount = !adminInput.isEmpty();
+
+            if (assignDiscount) {
+                FerryTrip trip = this.model.tripsProperty().get(index);
+                this.controller.setDiscount(Double.parseDouble(adminInput), trip);
+                stage.close();
+            }
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox firstRow = new HBox(10, label, discountInput);
+        firstRow.setAlignment(Pos.CENTER);
+
+        HBox buttonRow = new HBox(10, submitBtn, cancelBtn);
+        buttonRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(10, firstRow, buttonRow);
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 300, 150);
         stage.setScene(scene);
         stage.show();
     }

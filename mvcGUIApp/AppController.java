@@ -43,4 +43,8 @@ public class AppController {
     public void createBooking(Customer customer, FerryTrip trip) {
         this.model.bookTrip(customer, trip);
     }
+
+    public void setDiscount(double discount, FerryTrip trip){
+        this.model.assignDiscount(discount, trip);
+    }
 }

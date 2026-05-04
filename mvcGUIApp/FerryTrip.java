@@ -9,7 +9,7 @@ public class FerryTrip {
   private final SimpleStringProperty startingPoint;
   private SimpleDoubleProperty basePrice;
   private SimpleDoubleProperty finalPrice;
-  private SimpleDoubleProperty discount = new SimpleDoubleProperty(0);
+  private SimpleDoubleProperty discount; 
   private ObservableList<Customer> customers;
   private SimpleObjectProperty<Ferry> assignedFerry;
 
@@ -20,6 +20,8 @@ public class FerryTrip {
     this.finalPrice = new SimpleDoubleProperty(basePrice);
     this.customers = FXCollections.observableArrayList();
     this.assignedFerry = new SimpleObjectProperty<>(ferry);
+    this.discount = new SimpleDoubleProperty(0);
+    
 
     // to make sure final price changes when discount or base price is changed
     this.basePrice.addListener((obs, oldVal, newVal) -> {
@@ -62,7 +64,7 @@ public class FerryTrip {
     return this.startingPoint;
   }
 
-  public SimpleDoubleProperty discountProperty() {
+  public SimpleDoubleProperty Property() {
     return this.discount;
   }
 
@@ -72,6 +74,10 @@ public class FerryTrip {
 
   public SimpleDoubleProperty priceProperty() {
     return this.finalPrice;
+  }
+
+  public SimpleDoubleProperty discountProperty(){
+    return this.discount;
   }
 
   SimpleDoubleProperty getCurrentRevenue() {
