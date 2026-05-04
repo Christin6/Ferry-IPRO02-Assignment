@@ -136,6 +136,7 @@ public class AppView {
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
+        revenueCol.setCellValueFactory(cellData -> cellData.getValue().getCurrentRevenue().asObject());
 
         TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
         customerNumCol.setCellValueFactory(
@@ -194,10 +195,10 @@ public class AppView {
             createEditFerryListModal();
         });
 
-        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn);
+        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
         adminControlMenu.setAlignment(Pos.CENTER);
 
-        adminView.getChildren().addAll(backToLoginBtnFromAdmin, this.adminTripsView, adminControlMenu);
+        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
@@ -225,10 +226,10 @@ public class AppView {
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(e -> createFilterForm());
 
-        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn);
+        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
         
-        customerView.getChildren().addAll(backToLoginBtnFromCust, this.customerTripsView, customerControlMenu);
+        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu);
 
         Scene customerScene = new Scene(customerView, 800, 500);
 
@@ -423,6 +424,11 @@ public class AppView {
                 } else { // Work on child class later
                     ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
                 }
+
+                // force update admin's view to make sure its ferry column is updated
+                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
+                
+                stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
             }

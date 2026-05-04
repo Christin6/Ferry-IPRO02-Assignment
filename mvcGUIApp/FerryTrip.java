@@ -75,18 +75,18 @@ public class FerryTrip {
   }
 
   SimpleDoubleProperty getCurrentRevenue() {
-    SimpleDoubleProperty totalRevenue = new SimpleDoubleProperty(0);
+    double totalRevenue = 0;
 
     for (Customer customer : customers) {
       if (customer instanceof AdultCustomer) {
-        totalRevenue.add(priceProperty());
+        totalRevenue += priceProperty().get();
       } else {
         ChildCustomer child = (ChildCustomer) customer;
-        totalRevenue.add(priceProperty().multiply(child.getChildFareMultiplier()));
+        totalRevenue += priceProperty().get() * child.getChildFareMultiplier();
       }
     }
 
-    return totalRevenue;
+    return new SimpleDoubleProperty(totalRevenue);
   }
 
   void addCustomer(Customer customer) {
