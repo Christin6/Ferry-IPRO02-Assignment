@@ -7,12 +7,9 @@ import javafx.collections.FXCollections;
 public class AppModel {
     private final ObservableList<FerryTrip> trips;
     private final ObservableList<Ferry> ferries;
-    private final ObservableList<Customer> customers;
 
     AppModel() {
         // dummy data
-        this.customers = FXCollections.observableArrayList();
-
         this.ferries = FXCollections.observableArrayList(
                 new Ferry("F1", 100),
                 new Ferry("F2", 100),
@@ -35,15 +32,7 @@ public class AppModel {
     public ObservableList<Ferry> ferriesProperty() {
         return this.ferries;
     }
-
-    public ObservableList<Customer> customerProperty() {
-        return this.customers;
-    }
-
-    public void addCustomerDetails(Customer customer) {
-        this.customers.add(customer);
-    }
-
+    
     // Ferry Trips
     public void addTrip(FerryTrip trip) {
         this.trips.add(trip);
