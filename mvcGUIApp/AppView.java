@@ -72,7 +72,7 @@ public class AppView {
         ferryNameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         ferryNameCol.setMinWidth(120.0);
 
-        TableColumn<Ferry, Integer> maxSeatCol = new TableColumn<>("Destination");
+        TableColumn<Ferry, Integer> maxSeatCol = new TableColumn<>("Maximum Seat Capacity");
         maxSeatCol.setCellValueFactory(cellData -> cellData.getValue().maxSeatsProperty().asObject());
 
         this.ferriesView.getColumns().addAll(ferryNameCol, maxSeatCol);
@@ -837,7 +837,12 @@ public class AppView {
             }
         });
 
-        HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> {
+            stage.close();
+        });
+
+        HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn, cancelBtn);
         controlMenu.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(this.ferriesView, controlMenu, warning);
@@ -1082,7 +1087,6 @@ public class AppView {
         }));
     }
 
-    // Temporary
     public int convertStringToInt(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
