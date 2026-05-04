@@ -127,7 +127,7 @@ public class AppView {
         startingPointCol.setMinWidth(120.0);
 
         TableColumn<FerryTrip, Double> basePriceCol = new TableColumn<>("Base Price");
-        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+        basePriceCol.setCellValueFactory(cellData -> cellData.getValue().basePriceProperty().asObject());
 
         TableColumn<FerryTrip, Double> discountCol = new TableColumn<>("Discount");
         discountCol.setCellValueFactory(cellData -> cellData.getValue().discountProperty().asObject());
@@ -999,6 +999,8 @@ public class AppView {
             if (assignDiscount) {
                 FerryTrip trip = this.model.tripsProperty().get(index);
                 this.controller.setDiscount(Double.parseDouble(adminInput), trip);
+                // force update admin's view to make sure its ferry column is updated
+                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
                 stage.close();
             }
         });
