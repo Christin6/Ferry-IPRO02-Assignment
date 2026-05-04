@@ -1,7 +1,6 @@
 import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 
 public class AppModel {
