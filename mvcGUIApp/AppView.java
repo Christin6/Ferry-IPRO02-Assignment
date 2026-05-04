@@ -804,8 +804,10 @@ public class AppView {
         });
 
         HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
+        controlMenu.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(this.ferriesView, controlMenu, warning);
+        root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 550, 350);
         stage.setScene(scene);
