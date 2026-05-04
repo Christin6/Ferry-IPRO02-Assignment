@@ -1,7 +1,7 @@
 import javafx.collections.ObservableList;
-
 import java.util.ArrayList;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 
 public class AppModel {
@@ -124,4 +124,33 @@ public class AppModel {
         }
         return bookingList;
     }
-}
+
+    public void assignDiscount(double amount, FerryTrip tripTarget) {
+        boolean executeSettingDiscount = true;
+
+        // Making sure that the fixed price is not over the base price of the ticket
+            for (FerryTrip f : this.trips) {
+                // Making sure it is the targetted trip
+                if (!(f == tripTarget)) {
+                    continue;
+                }
+                if (amount > f.priceProperty().get()) {
+                    System.out.println("Invalid amount, the discount cannot be over the base price!\n");
+                    executeSettingDiscount = false;
+                    break;
+                }
+            }
+
+        if (executeSettingDiscount) {
+                for (FerryTrip f : this.trips) {
+                    if (f == tripTarget) {
+                        f.setDiscount(amount);
+                    }
+                }
+            }
+
+            System.out.println("Successfully applied discount!");
+            System.out.println("The applied discount is $" + amount + "\n");
+            executeSettingDiscount = false;
+        }
+    }
