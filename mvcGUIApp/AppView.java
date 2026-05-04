@@ -59,20 +59,10 @@ public class AppView {
         createFerryTable();
         createAndConfigurePane();
         createAndLayoutControls();
-        updateControllerFromListeners();
-        observeModelAndUpdateControls();
     }
 
     public Parent asParent() {
         return loginView;
-    }
-
-    private void observeModelAndUpdateControls() {
-
-    }
-
-    private void updateControllerFromListeners() {
-
     }
 
     private void createFerryTable() {
@@ -985,7 +975,7 @@ public class AppView {
         stage.setTitle("Edit Discount");
 
         Label label = new Label("Input discount amount: ");
-        
+
         TextField discountInput = new TextField();
         discountInput.setPromptText("Discount amount");
         configTextFieldForDoubles(discountInput);
