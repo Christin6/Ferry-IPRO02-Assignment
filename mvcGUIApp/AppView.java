@@ -165,6 +165,9 @@ public class AppView {
 
         // Admin view setup
         this.adminPane = new Stage();
+
+        Label adminWarning = new Label();
+
         Button backToLoginBtnFromAdmin = new Button("Logout");
         backToLoginBtnFromAdmin.setOnAction(e -> {
             this.primaryStage.show();
@@ -180,7 +183,12 @@ public class AppView {
 
         Button editTripBtn = new Button("Edit Trip");
         editTripBtn.setOnAction(e -> {
-            createUpdateTripForm();
+            int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                adminWarning.setText("You haven't selected any trip!");
+            } else {
+                createUpdateTripForm(index);
+            }
         });
 
         Button removeTripBtn = new Button("Remove Trip");
@@ -198,12 +206,14 @@ public class AppView {
         HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
         adminControlMenu.setAlignment(Pos.CENTER);
 
-        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu);
+        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu, adminWarning);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
         this.customerPane = new Stage();
+
+        Label custWarning = new Label();
 
         Button backToLoginBtnFromCust = new Button("Logout");
         backToLoginBtnFromCust.setOnAction(e -> {
@@ -213,9 +223,12 @@ public class AppView {
 
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
-            //Might need to fix some issues regarding the customer not selecting a row to book
             int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
-            createBookingForm(index);
+            if (index == -1) {
+                custWarning.setText("You haven't selected any trip!");
+            } else {
+                createBookingForm(index);
+            }
         });
 
         Button checkHistoryBtn = new Button("Booking History");
@@ -229,7 +242,7 @@ public class AppView {
         HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
         
-        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu);
+        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu, custWarning);
 
         Scene customerScene = new Scene(customerView, 800, 500);
 
@@ -568,7 +581,7 @@ public class AppView {
         submitBtn.setOnAction(e -> {
             String firstNameText = firstNameField.getText().trim();
             String lastNameText = lastNameField.getText().trim();
-            String customerName = firstNameText + lastNameText;
+            String customerName = firstNameText + " " + lastNameText;
 
             ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
             bookedTrip = this.model.customerBookedTrip(customerName);
@@ -678,13 +691,12 @@ public class AppView {
         stage.show();
     }
 
-    private void createUpdateTripForm() {
+    private void createUpdateTripForm(int index) {
         Stage stage = new Stage();
         stage.setTitle("Update Trip Form");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
         FerryTrip selectedTrip = this.model.tripsProperty().get(index);
 
         final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from radioButtons
@@ -768,18 +780,34 @@ public class AppView {
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
+        Label warning = new Label();
+
         Button addFerryBtn = new Button("Add Ferry");
         addFerryBtn.setOnAction(e -> createAddFerryModal());
 
         Button editFerryBtn = new Button("Edit Ferry");
-        editFerryBtn.setOnAction(e -> createEditFerryModal());
+        editFerryBtn.setOnAction(e -> {
+            int index = this.ferriesView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                warning.setText("You haven't selected any ferry!");
+            } else {
+                createEditFerryModal(index);
+            }
+        });
 
         Button removeFerryBtn = new Button("Remove Ferry");
-        removeFerryBtn.setOnAction(e -> createFerryRemovalConfirmationModal());
+        removeFerryBtn.setOnAction(e -> {
+            int index = this.ferriesView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                warning.setText("You haven't selected any ferry!");
+            } else {
+                createFerryRemovalConfirmationModal(index);
+            }
+        });
 
         HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
 
-        VBox root = new VBox(controlMenu, this.ferriesView);
+        VBox root = new VBox(this.ferriesView, controlMenu, warning);
 
         Scene scene = new Scene(root, 550, 350);
         stage.setScene(scene);
@@ -834,13 +862,11 @@ public class AppView {
         stage.show();
     }
 
-    private void createEditFerryModal() {
+    private void createEditFerryModal(int index) {
         Stage stage = new Stage();
         stage.setTitle("Edit Ferry");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        int index = this.ferriesView.getSelectionModel().getSelectedIndex();
 
         Label confirmationLabel = new Label("IMPORTANT NOTE: by editing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
@@ -899,13 +925,11 @@ public class AppView {
         stage.show();
     }
 
-    private void createFerryRemovalConfirmationModal() {
+    private void createFerryRemovalConfirmationModal(int index) {
         Stage stage = new Stage();
         stage.setTitle("Remove Ferry");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        int index = this.ferriesView.getSelectionModel().getSelectedIndex();
 
         Label confirmationLabel = new Label("By removing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
