@@ -570,7 +570,7 @@ public class AppView {
         HBox lastNameFieldRow = new HBox(5, new Label("Enter last name: "), lastNameField);
         lastNameFieldRow.setAlignment(Pos.CENTER);
 
-        ListView<FerryTrip> tripList = new ListView();
+        ListView<String> tripList = new ListView<>();
 
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(e -> {
@@ -581,7 +581,14 @@ public class AppView {
             ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
             bookedTrip = this.model.customerBookedTrip(customerName);
 
-            ObservableList<FerryTrip> bookedTripView = FXCollections.observableArrayList(bookedTrip);
+            ObservableList<String> bookedTripView = FXCollections.observableArrayList();
+
+            for (FerryTrip trip : bookedTrip) {
+                String listSentence = "-) " + trip.startingPointProperty().get()
+                    + " to " + trip.destinationProperty().get() + " | $" + trip.priceProperty().get();
+                bookedTripView.add(listSentence);
+            }
+
             tripList.setItems(bookedTripView);
         });
 
