@@ -88,6 +88,22 @@ public class AppModel {
         }
     }
 
+    public AdultCustomer searchGuardian(String customerName) {
+        for (FerryTrip trip : this.trips) {
+            if (trip == null) {
+                continue;
+            }
+            for (Customer cust : trip.customersProperty()) {
+                if (cust.getName().equals(customerName)) {
+                    AdultCustomer adultCustomer = (AdultCustomer) cust;
+                    return adultCustomer;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public ArrayList<FerryTrip> searchTripsInFerry(int ferryIndex) {
         ArrayList<FerryTrip> trips = new ArrayList<>();
 

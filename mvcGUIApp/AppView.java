@@ -393,6 +393,8 @@ public class AppView {
             String lNameText = lName.getText().trim();
             String ageText = age.getText().trim();
             String passportIDText = passportID.getText().trim();
+            String guardianFNameText = guardianFName.getText().trim();
+            String guardianLNameText = guardianLName.getText().trim();
             ArrayList<MedicalCondition> medicalCondition = new ArrayList<>();
 
             int ageNum = convertStringToInt(age.getText().trim());
@@ -400,14 +402,13 @@ public class AppView {
             //FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
             if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected() ||!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
                 //Medical Condition checkbox
+                //I need to make more adjustments so the medical condition is not empty
                 if (yesMedBtn.isSelected()) {
                     if (seasickCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SEA_SICK);
-                    }
-                    else if (pregnantCBox.isSelected()) {
+                    } else if (pregnantCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.PREGNANT);
-                    }
-                    else if (prmCBox.isSelected()) {
+                    } else if (prmCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
                     }
                 } else {
@@ -415,7 +416,7 @@ public class AppView {
                 }
 
                 if (ageNum >= 18) {
-                    AdultCustomer adultCustomer = new AdultCustomer(lNameText, ageText, ageNum, passportIDText, medicalCondition);
+                    AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText, medicalCondition);
 
                     FerryTrip ferryTrip = model.tripsProperty().get(index);
                     this.controller.createBooking(adultCustomer, ferryTrip);
