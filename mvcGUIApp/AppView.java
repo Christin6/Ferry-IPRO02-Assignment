@@ -417,48 +417,64 @@ public class AppView {
 
             int ageNum = convertStringToInt(age.getText().trim());
 
-            // 1. Check if the initial field (fName, lName, and age) is empty
+            boolean filledInMedicalCondition = false;
+
+            // 1. Check if the initial field (fName, lName, and age) are filled
             // 2. Check if the medical conditions are filled
             // 3. Check whether the customer is adult or child
-            if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected() ||!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
+            if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty()) {
                 //Medical Condition checkbox
                 if (yesMedBtn.isSelected()) {
-                    if (seasickCBox.isSelected()) {
-                        medicalCondition.add(MedicalCondition.SEA_SICK);
-                    } else if (pregnantCBox.isSelected()) {
-                        medicalCondition.add(MedicalCondition.PREGNANT);
-                    } else if (prmCBox.isSelected()) {
-                        medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
-                    }
-                } else {
+                        if (seasickCBox.isSelected()) {
+                            medicalCondition.add(MedicalCondition.SEA_SICK);
+                            filledInMedicalCondition = true;
+                        } else if (pregnantCBox.isSelected()) {
+                            medicalCondition.add(MedicalCondition.PREGNANT);
+                            filledInMedicalCondition = true;
+                        } else if (prmCBox.isSelected()) {
+                            medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
+                            filledInMedicalCondition = true;
+                        }
+                } else if (noMedBtn.isSelected()) {
                     medicalCondition.add(MedicalCondition.HEALTHY);
+                    filledInMedicalCondition = true;
+                } else if (filledInMedicalCondition == false) {
+                    warning.setText("You have not filled out all the fields (medical condition)!");
                 }
 
-                if (ageNum >= 18) {
+                if (!passportIDText.isEmpty() && filledInMedicalCondition) {
                     AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText, medicalCondition);
-                    System.out.println(adultCustomer);
 
                     FerryTrip ferryTrip = model.tripsProperty().get(index);
                     this.controller.createBooking(adultCustomer, ferryTrip);
-                } else { // Work on child class later
+
+                    // force update admin's view to make sure its ferry column is updated
+                    this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
+                    stage.close();
+                } else if (passportIDText.isEmpty() && filledInMedicalCondition && ageNum >= 18) {
+                    warning.setText("You have not filled out all the fields (passport ID)!");
+                } else if (!guardianFNameText.isEmpty() && !guardianLNameText.isEmpty() && filledInMedicalCondition) {
                     String guardianName = guardianFNameText + " " + guardianLNameText;
                     AdultCustomer guardian = this.model.searchGuardian(guardianName);
-                    System.out.println(guardian);
 
-                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, guardian, medicalCondition);
+                    if (guardian == null) {
+                        warning.setText(guardianName + " does not exist in the booking list!");
+                    } else {
+                        ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, guardian, medicalCondition);
 
-                    System.out.println(childCustomer);
+                        FerryTrip ferryTrip = model.tripsProperty().get(index);
+                        this.controller.createBooking(childCustomer, ferryTrip);
 
-                    FerryTrip ferryTrip = model.tripsProperty().get(index);
-                    this.controller.createBooking(childCustomer, ferryTrip);
+                        // force update admin's view to make sure its ferry column is updated
+                        this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
+                        stage.close();
+                    }
+                } else if ((guardianFNameText.isEmpty() && filledInMedicalCondition) && ageNum < 18|| (guardianLNameText.isEmpty() && filledInMedicalCondition && ageNum < 18)) {
+                    warning.setText("You have not filled out all the fields (guardian first name or guardian last name)!");
                 }
 
-                // force update admin's view to make sure its ferry column is updated
-                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
-
-                stage.close();
             } else {
-                warning.setText("You have not filled out all the fields!");
+                warning.setText("You have not filled out all the fields (first name, last name, or age)!");
             }
         });
     }
