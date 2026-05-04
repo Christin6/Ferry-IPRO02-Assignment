@@ -63,11 +63,7 @@ public class FerryTrip {
   public SimpleStringProperty startingPointProperty() {
     return this.startingPoint;
   }
-
-  public SimpleDoubleProperty Property() {
-    return this.discount;
-  }
-
+  
   public SimpleDoubleProperty basePriceProperty() {
     return this.basePrice;
   }
