@@ -195,10 +195,10 @@ public class AppView {
             createEditFerryListModal();
         });
 
-        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn);
+        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
         adminControlMenu.setAlignment(Pos.CENTER);
 
-        adminView.getChildren().addAll(backToLoginBtnFromAdmin, this.adminTripsView, adminControlMenu);
+        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
@@ -226,10 +226,10 @@ public class AppView {
         Button filterBtn = new Button("Filter");
         filterBtn.setOnAction(e -> createFilterForm());
 
-        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn);
+        HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
         
-        customerView.getChildren().addAll(backToLoginBtnFromCust, this.customerTripsView, customerControlMenu);
+        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu);
 
         Scene customerScene = new Scene(customerView, 800, 500);
 
