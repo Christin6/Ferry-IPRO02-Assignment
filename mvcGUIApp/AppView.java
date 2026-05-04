@@ -338,7 +338,7 @@ public class AppView {
         stage.setScene(bookingScene);
         stage.show();
 
-        age.setOnAction(e -> {
+        age.textProperty().addListener((obs, oldV, newV) -> {
             // We need to remove some rows to add new rows
             for (int i = root.getChildren().size() - 1; i > 0; i--) {
                 if (root.getChildren().get(i).equals(ageAdultRow) || root.getChildren().get(i).equals(ageChildRow)) {
@@ -356,7 +356,7 @@ public class AppView {
                 }
             }
 
-            if (convertStringToInt(age.getText().trim()) >= 18) {
+            if (convertStringToInt(newV) >= 18) {
                 root.getChildren().addAll(ageAdultRow, medQuestion, medQuestionRow);
                 if (yesMedBtn.isSelected()) {
                     root.getChildren().addAll(medConditionRow, warning, btnRow);
