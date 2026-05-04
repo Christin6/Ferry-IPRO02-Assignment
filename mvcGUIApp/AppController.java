@@ -10,8 +10,8 @@ public class AppController {
         this.model.addTrip(trip);
     }
 
-    public void updateTrip(int index, FerryTrip trip) {
-        this.model.updateTrip(index, trip);
+    public void updateTrip(int index, String newDestination, String newStarting, double newBasePrice, Ferry newFerry) {
+        this.model.updateTrip(index, newDestination, newStarting, newBasePrice, newFerry);
     }
 
     public void removeTrip(int index) {
@@ -20,6 +20,10 @@ public class AppController {
 
     public void removeTripInFerry(int FerryIndex) {
         this.model.removeTripInFerry(FerryIndex);
+    }
+
+    public void setFerryTripList(FerryTrip trip, int index) {
+        this.model.setFerryTripList(trip, index);
     }
 
     // Ferries

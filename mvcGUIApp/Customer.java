@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 enum MedicalCondition{
     HEALTHY,
     SEA_SICK,
@@ -9,9 +11,9 @@ public abstract class Customer {
     protected String firstName;
     protected String lastName;
     protected int age;
-    protected MedicalCondition medicalCondition;
+    protected ArrayList<MedicalCondition> medicalCondition;
 
-    Customer(String firstName, String lastName, int age, MedicalCondition medicalCondition) {
+    Customer(String firstName, String lastName, int age, ArrayList<MedicalCondition> medicalCondition) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -22,7 +24,7 @@ public abstract class Customer {
         return this.firstName + " " + this.lastName;
     }
 
-    MedicalCondition getMedicalCondition(){
+    ArrayList<MedicalCondition> getMedicalCondition(){
         return this.medicalCondition;
     }
     
@@ -36,7 +38,7 @@ class ChildCustomer extends Customer {
     private final double CHILD_FARE_MULTIPLIER = 0.7;
     private AdultCustomer guardian;
 
-    ChildCustomer(String firstName, String lastName, int age, AdultCustomer guardian, MedicalCondition medicalCondition) {
+    ChildCustomer(String firstName, String lastName, int age, AdultCustomer guardian, ArrayList<MedicalCondition> medicalCondition) {
         super(firstName, lastName, age, medicalCondition);
         this.guardian = guardian;
     }
@@ -58,7 +60,7 @@ class ChildCustomer extends Customer {
 class AdultCustomer extends Customer {
     private String passportID;
 
-    AdultCustomer(String firstName, String lastName, int age, String passportID, MedicalCondition medicalCondition) {
+    AdultCustomer(String firstName, String lastName, int age, String passportID, ArrayList<MedicalCondition> medicalCondition) {
         super(firstName, lastName, age, medicalCondition);
         this.passportID = passportID;
     }

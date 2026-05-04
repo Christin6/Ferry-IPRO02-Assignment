@@ -2,6 +2,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class FerryTrip {
   private final SimpleStringProperty destination;
@@ -10,7 +11,7 @@ public class FerryTrip {
   private SimpleDoubleProperty finalPrice;
   private SimpleDoubleProperty discount; 
   private ObservableList<Customer> customers;
-  private Ferry assignedFerry;
+  private SimpleObjectProperty<Ferry> assignedFerry;
 
   FerryTrip(String destination, String startingPoint, double basePrice, Ferry ferry) {
     this.destination = new SimpleStringProperty(destination);
@@ -18,7 +19,7 @@ public class FerryTrip {
     this.basePrice = new SimpleDoubleProperty(basePrice);
     this.finalPrice = new SimpleDoubleProperty(basePrice);
     this.customers = FXCollections.observableArrayList();
-    this.assignedFerry = ferry;
+    this.assignedFerry = new SimpleObjectProperty<>(ferry);
     this.discount = new SimpleDoubleProperty(0);
     
 
@@ -31,7 +32,23 @@ public class FerryTrip {
     });
   }
 
-  Ferry getAssignedFerry() {
+  public void setDestination(String destination) {
+    this.destination.set(destination);
+  }
+
+  public void setStartingPoint(String startingPoint) {
+    this.startingPoint.set(startingPoint);
+  }
+
+  public void setBasePrice(double basePrice) {
+    this.basePrice.set(basePrice);
+  }
+
+  public void setFerry(Ferry newFerry) {
+    this.assignedFerry.set(newFerry);
+  }
+
+  public SimpleObjectProperty<Ferry> assignedFerryProperty() {
     return this.assignedFerry;
   }
 
@@ -64,18 +81,18 @@ public class FerryTrip {
   }
 
   SimpleDoubleProperty getCurrentRevenue() {
-    SimpleDoubleProperty totalRevenue = new SimpleDoubleProperty(0);
+    double totalRevenue = 0;
 
     for (Customer customer : customers) {
       if (customer instanceof AdultCustomer) {
-        totalRevenue.add(priceProperty());
+        totalRevenue += priceProperty().get();
       } else {
         ChildCustomer child = (ChildCustomer) customer;
-        totalRevenue.add(priceProperty().multiply(child.getChildFareMultiplier()));
+        totalRevenue += priceProperty().get() * child.getChildFareMultiplier();
       }
     }
 
-    return totalRevenue;
+    return new SimpleDoubleProperty(totalRevenue);
   }
 
   void addCustomer(Customer customer) {
