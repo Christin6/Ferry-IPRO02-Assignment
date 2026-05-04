@@ -212,6 +212,7 @@ public class AppView {
 
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
+            //Might need to fix some issues regarding the customer not selecting a row to book
             int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
             createBookingForm(index);
         });
