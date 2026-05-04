@@ -136,6 +136,7 @@ public class AppView {
         tripPriceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         TableColumn<FerryTrip, Double> revenueCol = new TableColumn<>("Revenue");
+        revenueCol.setCellValueFactory(cellData -> cellData.getValue().getCurrentRevenue().asObject());
 
         TableColumn<FerryTrip, Integer> customerNumCol = new TableColumn<>("Customers");
         customerNumCol.setCellValueFactory(
@@ -415,13 +416,18 @@ public class AppView {
                 }
 
                 if (ageNum >= 18) {
-                    AdultCustomer adultCustomer = new AdultCustomer(lNameText, ageText, ageNum, passportIDText, medicalCondition);
+                    AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText, medicalCondition);
 
                     FerryTrip ferryTrip = model.tripsProperty().get(index);
                     this.controller.createBooking(adultCustomer, ferryTrip);
                 } else { // Work on child class later
                     ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
                 }
+
+                // force update admin's view to make sure its ferry column is updated
+                this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
+                
+                stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
             }
