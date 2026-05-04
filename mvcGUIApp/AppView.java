@@ -194,8 +194,12 @@ public class AppView {
         Button removeTripBtn = new Button("Remove Trip");
         removeTripBtn.setOnAction(e -> {
             int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
-            this.controller.removeTrip(index);
-            applyFilters();
+            if (index == -1) {
+                adminWarning.setText("You haven't selected any trip!");
+            } else {
+                this.controller.removeTrip(index);
+                applyFilters();
+            }
         });
 
         Button editFerryBtn = new Button("Edit Ferry List");
@@ -203,7 +207,8 @@ public class AppView {
             createEditFerryListModal();
         });
 
-        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
+        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn,
+                backToLoginBtnFromAdmin);
         adminControlMenu.setAlignment(Pos.CENTER);
 
         adminView.getChildren().addAll(this.adminTripsView, adminControlMenu, adminWarning);
@@ -241,7 +246,7 @@ public class AppView {
 
         HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
-        
+
         customerView.getChildren().addAll(this.customerTripsView, customerControlMenu, custWarning);
 
         Scene customerScene = new Scene(customerView, 800, 500);
@@ -276,16 +281,15 @@ public class AppView {
         age.setPromptText("Enter your age");
         configTextFieldForInts(age);
 
-        //Adult information
+        // Adult information
         TextField passportID = new TextField();
         passportID.setPromptText("Enter your passport number");
 
-        //Children information
+        // Children information
         TextField guardianFName = new TextField();
         guardianFName.setPromptText("Enter guardian first name");
         TextField guardianLName = new TextField();
         guardianLName.setPromptText("Enter guardian last name");
-        
 
         // Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
@@ -336,24 +340,19 @@ public class AppView {
         stage.show();
 
         age.setOnAction(e -> {
-            //We need to remove some rows to add new rows
+            // We need to remove some rows to add new rows
             for (int i = root.getChildren().size() - 1; i > 0; i--) {
                 if (root.getChildren().get(i).equals(ageAdultRow) || root.getChildren().get(i).equals(ageChildRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(btnRow)) {
+                } else if (root.getChildren().get(i).equals(btnRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(warning)) {
+                } else if (root.getChildren().get(i).equals(warning)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medQuestion)) {
+                } else if (root.getChildren().get(i).equals(medQuestion)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medQuestionRow)) {
+                } else if (root.getChildren().get(i).equals(medQuestionRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medConditionRow)) {
+                } else if (root.getChildren().get(i).equals(medConditionRow)) {
                     root.getChildren().remove(i);
                 }
             }
@@ -362,24 +361,21 @@ public class AppView {
                 root.getChildren().addAll(ageAdultRow, medQuestion, medQuestionRow);
                 if (yesMedBtn.isSelected()) {
                     root.getChildren().addAll(medConditionRow, warning, btnRow);
-                }
-                else {
+                } else {
                     root.getChildren().addAll(warning, btnRow);
                 }
-                
-            }
-            else {
+
+            } else {
                 root.getChildren().addAll(ageChildRow, medQuestion, medQuestionRow);
                 if (yesMedBtn.isSelected()) {
                     root.getChildren().addAll(medConditionRow, warning, btnRow);
-                }
-                else {
+                } else {
                     root.getChildren().addAll(warning, btnRow);
                 }
             }
         });
 
-        //Medical Button Events
+        // Medical Button Events
         yesMedBtn.setOnAction(e -> {
             // Basically, we have to remove the warning and the btnRow
             // Before adding the medConditionRow
@@ -411,17 +407,16 @@ public class AppView {
 
             int ageNum = convertStringToInt(age.getText().trim());
 
-            //FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
-            if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected() ||!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
-                //Medical Condition checkbox
+            // FIX CAUSE IT CANNOT DETECT SELECTING HEALTH YET!!!
+            if (!fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && noMedBtn.isSelected()
+                    || !fNameText.isEmpty() && !lNameText.isEmpty() && !ageText.isEmpty() && yesMedBtn.isSelected()) {
+                // Medical Condition checkbox
                 if (yesMedBtn.isSelected()) {
                     if (seasickCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SEA_SICK);
-                    }
-                    else if (pregnantCBox.isSelected()) {
+                    } else if (pregnantCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.PREGNANT);
-                    }
-                    else if (prmCBox.isSelected()) {
+                    } else if (prmCBox.isSelected()) {
                         medicalCondition.add(MedicalCondition.SPECIAL_DISABILITY);
                     }
                 } else {
@@ -429,17 +424,19 @@ public class AppView {
                 }
 
                 if (ageNum >= 18) {
-                    AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText, medicalCondition);
+                    AdultCustomer adultCustomer = new AdultCustomer(fNameText, lNameText, ageNum, passportIDText,
+                            medicalCondition);
 
                     FerryTrip ferryTrip = model.tripsProperty().get(index);
                     this.controller.createBooking(adultCustomer, ferryTrip);
                 } else { // Work on child class later
-                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null, medicalCondition);
+                    ChildCustomer childCustomer = new ChildCustomer(fNameText, lNameText, ageNum, null,
+                            medicalCondition);
                 }
 
                 // force update admin's view to make sure its ferry column is updated
                 this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
-                
+
                 stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
@@ -699,7 +696,8 @@ public class AppView {
 
         FerryTrip selectedTrip = this.model.tripsProperty().get(index);
 
-        final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from radioButtons
+        final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from
+                                                                                      // radioButtons
         Label warning = new Label();
 
         Label startingPointLabel = new Label("Starting point: ");
@@ -749,7 +747,7 @@ public class AppView {
                 applyFilters(); // update customer's view
                 // force update admin's view to make sure its ferry column is updated
                 this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
-                
+
                 stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
@@ -1004,7 +1002,7 @@ public class AppView {
         }));
     }
 
-    //Temporary
+    // Temporary
     public int convertStringToInt(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
