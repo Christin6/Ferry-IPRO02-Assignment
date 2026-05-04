@@ -165,6 +165,9 @@ public class AppView {
 
         // Admin view setup
         this.adminPane = new Stage();
+
+        Label adminWarning = new Label();
+
         Button backToLoginBtnFromAdmin = new Button("Logout");
         backToLoginBtnFromAdmin.setOnAction(e -> {
             this.primaryStage.show();
@@ -180,14 +183,23 @@ public class AppView {
 
         Button editTripBtn = new Button("Edit Trip");
         editTripBtn.setOnAction(e -> {
-            createUpdateTripForm();
+            int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                adminWarning.setText("You haven't selected any trip!");
+            } else {
+                createUpdateTripForm(index);
+            }
         });
 
         Button removeTripBtn = new Button("Remove Trip");
         removeTripBtn.setOnAction(e -> {
             int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
-            this.controller.removeTrip(index);
-            applyFilters();
+            if (index == -1) {
+                adminWarning.setText("You haven't selected any trip!");
+            } else {
+                this.controller.removeTrip(index);
+                applyFilters();
+            }
         });
 
         Button editFerryBtn = new Button("Edit Ferry List");
@@ -195,15 +207,18 @@ public class AppView {
             createEditFerryListModal();
         });
 
-        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn, backToLoginBtnFromAdmin);
+        HBox adminControlMenu = new HBox(5, assignDiscBtn, addTripBtn, editTripBtn, removeTripBtn, editFerryBtn,
+                backToLoginBtnFromAdmin);
         adminControlMenu.setAlignment(Pos.CENTER);
 
-        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu);
+        adminView.getChildren().addAll(this.adminTripsView, adminControlMenu, adminWarning);
         Scene adminScene = new Scene(adminView, 800, 500);
         this.adminPane.setScene(adminScene);
 
         // Customer view setup
         this.customerPane = new Stage();
+
+        Label custWarning = new Label();
 
         Button backToLoginBtnFromCust = new Button("Logout");
         backToLoginBtnFromCust.setOnAction(e -> {
@@ -213,9 +228,12 @@ public class AppView {
 
         Button bookTripBtn = new Button("Book");
         bookTripBtn.setOnAction(e -> {
-            //Might need to fix some issues regarding the customer not selecting a row to book
             int index = this.customerTripsView.getSelectionModel().getSelectedIndex();
-            createBookingForm(index);
+            if (index == -1) {
+                custWarning.setText("You haven't selected any trip!");
+            } else {
+                createBookingForm(index);
+            }
         });
 
         Button checkHistoryBtn = new Button("Booking History");
@@ -228,8 +246,8 @@ public class AppView {
 
         HBox customerControlMenu = new HBox(5, bookTripBtn, checkHistoryBtn, filterBtn, backToLoginBtnFromCust);
         customerControlMenu.setAlignment(Pos.CENTER);
-        
-        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu);
+
+        customerView.getChildren().addAll(this.customerTripsView, customerControlMenu, custWarning);
 
         Scene customerScene = new Scene(customerView, 800, 500);
 
@@ -263,16 +281,15 @@ public class AppView {
         age.setPromptText("Enter your age");
         configTextFieldForInts(age);
 
-        //Adult information
+        // Adult information
         TextField passportID = new TextField();
         passportID.setPromptText("Enter your passport number");
 
-        //Children information
+        // Children information
         TextField guardianFName = new TextField();
         guardianFName.setPromptText("Enter guardian first name");
         TextField guardianLName = new TextField();
         guardianLName.setPromptText("Enter guardian last name");
-        
 
         // Toggle group for medical conditions
         Label medQuestion = new Label("Do you have any medical conditions we should be aware of?");
@@ -323,24 +340,19 @@ public class AppView {
         stage.show();
 
         age.setOnAction(e -> {
-            //We need to remove some rows to add new rows
+            // We need to remove some rows to add new rows
             for (int i = root.getChildren().size() - 1; i > 0; i--) {
                 if (root.getChildren().get(i).equals(ageAdultRow) || root.getChildren().get(i).equals(ageChildRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(btnRow)) {
+                } else if (root.getChildren().get(i).equals(btnRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(warning)) {
+                } else if (root.getChildren().get(i).equals(warning)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medQuestion)) {
+                } else if (root.getChildren().get(i).equals(medQuestion)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medQuestionRow)) {
+                } else if (root.getChildren().get(i).equals(medQuestionRow)) {
                     root.getChildren().remove(i);
-                }
-                else if (root.getChildren().get(i).equals(medConditionRow)) {
+                } else if (root.getChildren().get(i).equals(medConditionRow)) {
                     root.getChildren().remove(i);
                 }
             }
@@ -349,24 +361,21 @@ public class AppView {
                 root.getChildren().addAll(ageAdultRow, medQuestion, medQuestionRow);
                 if (yesMedBtn.isSelected()) {
                     root.getChildren().addAll(medConditionRow, warning, btnRow);
-                }
-                else {
+                } else {
                     root.getChildren().addAll(warning, btnRow);
                 }
-                
-            }
-            else {
+
+            } else {
                 root.getChildren().addAll(ageChildRow, medQuestion, medQuestionRow);
                 if (yesMedBtn.isSelected()) {
                     root.getChildren().addAll(medConditionRow, warning, btnRow);
-                }
-                else {
+                } else {
                     root.getChildren().addAll(warning, btnRow);
                 }
             }
         });
 
-        //Medical Button Events
+        // Medical Button Events
         yesMedBtn.setOnAction(e -> {
             // Basically, we have to remove the warning and the btnRow
             // Before adding the medConditionRow
@@ -438,7 +447,7 @@ public class AppView {
 
                 // force update admin's view to make sure its ferry column is updated
                 this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
-                
+
                 stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
@@ -580,7 +589,7 @@ public class AppView {
         submitBtn.setOnAction(e -> {
             String firstNameText = firstNameField.getText().trim();
             String lastNameText = lastNameField.getText().trim();
-            String customerName = firstNameText + lastNameText;
+            String customerName = firstNameText + " " + lastNameText;
 
             ArrayList<FerryTrip> bookedTrip = new ArrayList<>();
             bookedTrip = this.model.customerBookedTrip(customerName);
@@ -690,16 +699,16 @@ public class AppView {
         stage.show();
     }
 
-    private void createUpdateTripForm() {
+    private void createUpdateTripForm(int index) {
         Stage stage = new Stage();
         stage.setTitle("Update Trip Form");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        int index = this.adminTripsView.getSelectionModel().getSelectedIndex();
         FerryTrip selectedTrip = this.model.tripsProperty().get(index);
 
-        final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from radioButtons
+        final Ferry[] selectedFerry = { selectedTrip.assignedFerryProperty().get() }; // store selected ferry from
+                                                                                      // radioButtons
         Label warning = new Label();
 
         Label startingPointLabel = new Label("Starting point: ");
@@ -749,7 +758,7 @@ public class AppView {
                 applyFilters(); // update customer's view
                 // force update admin's view to make sure its ferry column is updated
                 this.controller.setFerryTripList(this.model.tripsProperty().get(index), index);
-                
+
                 stage.close();
             } else {
                 warning.setText("You have not filled out all the fields!");
@@ -780,18 +789,34 @@ public class AppView {
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
 
+        Label warning = new Label();
+
         Button addFerryBtn = new Button("Add Ferry");
         addFerryBtn.setOnAction(e -> createAddFerryModal());
 
         Button editFerryBtn = new Button("Edit Ferry");
-        editFerryBtn.setOnAction(e -> createEditFerryModal());
+        editFerryBtn.setOnAction(e -> {
+            int index = this.ferriesView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                warning.setText("You haven't selected any ferry!");
+            } else {
+                createEditFerryModal(index);
+            }
+        });
 
         Button removeFerryBtn = new Button("Remove Ferry");
-        removeFerryBtn.setOnAction(e -> createFerryRemovalConfirmationModal());
+        removeFerryBtn.setOnAction(e -> {
+            int index = this.ferriesView.getSelectionModel().getSelectedIndex();
+            if (index == -1) {
+                warning.setText("You haven't selected any ferry!");
+            } else {
+                createFerryRemovalConfirmationModal(index);
+            }
+        });
 
         HBox controlMenu = new HBox(5, addFerryBtn, editFerryBtn, removeFerryBtn);
 
-        VBox root = new VBox(controlMenu, this.ferriesView);
+        VBox root = new VBox(this.ferriesView, controlMenu, warning);
 
         Scene scene = new Scene(root, 550, 350);
         stage.setScene(scene);
@@ -846,13 +871,11 @@ public class AppView {
         stage.show();
     }
 
-    private void createEditFerryModal() {
+    private void createEditFerryModal(int index) {
         Stage stage = new Stage();
         stage.setTitle("Edit Ferry");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        int index = this.ferriesView.getSelectionModel().getSelectedIndex();
 
         Label confirmationLabel = new Label("IMPORTANT NOTE: by editing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
@@ -911,13 +934,11 @@ public class AppView {
         stage.show();
     }
 
-    private void createFerryRemovalConfirmationModal() {
+    private void createFerryRemovalConfirmationModal(int index) {
         Stage stage = new Stage();
         stage.setTitle("Remove Ferry");
         stage.initOwner(primaryStage);
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        int index = this.ferriesView.getSelectionModel().getSelectedIndex();
 
         Label confirmationLabel = new Label("By removing "
                 + this.model.ferriesProperty().get(index).nameProperty().get()
@@ -992,7 +1013,7 @@ public class AppView {
         }));
     }
 
-    //Temporary
+    // Temporary
     public int convertStringToInt(String s) {
         if (s == null || s.isEmpty()) {
             return 0;
