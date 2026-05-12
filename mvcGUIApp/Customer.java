@@ -23,10 +23,6 @@ public abstract class Customer {
     public String getName(){
         return this.firstName + " " + this.lastName;
     }
-
-    ArrayList<MedicalCondition> getMedicalCondition(){
-        return this.medicalCondition;
-    }
 }
 
 class ChildCustomer extends Customer {
@@ -35,10 +31,6 @@ class ChildCustomer extends Customer {
 
     ChildCustomer(String firstName, String lastName, int age, AdultCustomer guardian, ArrayList<MedicalCondition> medicalCondition) {
         super(firstName, lastName, age, medicalCondition);
-        this.guardian = guardian;
-    }
-
-    void setGuardian(AdultCustomer guardian) {
         this.guardian = guardian;
     }
 
